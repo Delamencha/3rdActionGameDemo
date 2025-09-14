@@ -21,7 +21,7 @@ public class Targeter : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.name);
+        //Debug.Log(other.name);
         if(other.TryGetComponent<Target>(out Target target))
         {
             targets.Add(target);
@@ -31,7 +31,7 @@ public class Targeter : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log(other.name);
+        //Debug.Log(other.name);
 
         if(other.TryGetComponent<Target>(out Target target))
         {

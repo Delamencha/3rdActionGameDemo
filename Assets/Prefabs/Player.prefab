@@ -794,6 +794,103 @@ Transform:
   - {fileID: 9193140881524644668}
   m_Father: {fileID: 6093171075592128907}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2322517301860789280
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 416576429960438214}
+  - component: {fileID: 2855213430526953887}
+  - component: {fileID: 2271252566143807651}
+  - component: {fileID: 5447058090546152159}
+  m_Layer: 0
+  m_Name: WeaponDamage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &416576429960438214
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2322517301860789280}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.008894971, y: 0.029506851, z: -0.12389177, w: 0.9918171}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2557814006374179021}
+  m_LocalEulerAnglesHint: {x: 1.43, y: 3.23, z: -14.2}
+--- !u!136 &2855213430526953887
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2322517301860789280}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.2
+  m_Height: 1.1
+  m_Direction: 0
+  m_Center: {x: -0.31, y: 0.09, z: 0.02}
+--- !u!114 &2271252566143807651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2322517301860789280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16d8791416bd50a4abcc2f6b5c21461c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myCollider: {fileID: 5142911598070070627}
+--- !u!54 &5447058090546152159
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2322517301860789280}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &2376535899618101971
 GameObject:
   m_ObjectHideFlags: 0
@@ -1760,6 +1857,7 @@ Transform:
   - {fileID: 3506191944394931450}
   - {fileID: 1632129719281577485}
   - {fileID: 3896910803613835543}
+  - {fileID: 416576429960438214}
   m_Father: {fileID: 5358490126755118653}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5460470835484043250
@@ -2990,6 +3088,8 @@ GameObject:
   - component: {fileID: 8612391755208282060}
   - component: {fileID: 5142911598070070627}
   - component: {fileID: 8121290863832965275}
+  - component: {fileID: 3865864081618303137}
+  - component: {fileID: 4601627173820501399}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3047,17 +3147,33 @@ MonoBehaviour:
   <Controller>k__BackingField: {fileID: 5142911598070070627}
   <Animator>k__BackingField: {fileID: 8612391755208282060}
   <Targeter>k__BackingField: {fileID: 1994598945021293959}
+  <WeaponDamage>k__BackingField: {fileID: 2271252566143807651}
   <FreeLookMoveSpeed>k__BackingField: 5
   <TargetingMoveSpeed>k__BackingField: 3.5
   <RotationDamping>k__BackingField: 10
   <ForceReceiver>k__BackingField: {fileID: 8121290863832965275}
   <Attacks>k__BackingField:
   - <AnimationName>k__BackingField: Attack1
-    <TransitionDuration>k__BackingField: 0
+    <TransitionDuration>k__BackingField: 0.1
+    <ComboStateIndex>k__BackingField: 1
+    <ComboAttackTime>k__BackingField: 0.5
+    <ForceTime>k__BackingField: 0.35
+    <AttackForce>k__BackingField: 15
+    <DamageValue>k__BackingField: 10
   - <AnimationName>k__BackingField: Attack2
-    <TransitionDuration>k__BackingField: 0
+    <TransitionDuration>k__BackingField: 0.1
+    <ComboStateIndex>k__BackingField: 2
+    <ComboAttackTime>k__BackingField: 0.5
+    <ForceTime>k__BackingField: 0.35
+    <AttackForce>k__BackingField: 15
+    <DamageValue>k__BackingField: 10
   - <AnimationName>k__BackingField: Attack3
-    <TransitionDuration>k__BackingField: 0
+    <TransitionDuration>k__BackingField: 0.2
+    <ComboStateIndex>k__BackingField: -1
+    <ComboAttackTime>k__BackingField: 0.5
+    <ForceTime>k__BackingField: 0.35
+    <AttackForce>k__BackingField: 20
+    <DamageValue>k__BackingField: 15
 --- !u!95 &8612391755208282060
 Animator:
   serializedVersion: 5
@@ -3118,3 +3234,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 5142911598070070627}
+  drag: 0.1
+--- !u!114 &3865864081618303137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9125300065465813966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 947073c343cea334ab07ad9a338d0ec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponDamage: {fileID: 2322517301860789280}
+--- !u!114 &4601627173820501399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9125300065465813966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 015ef5273fb393a42b4a8cd5952b4099, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100

@@ -13,14 +13,17 @@ public class PlayerTargetingState : PlayerBaseState
 
     private const float AnimatorDampTime = 0.1f;
 
+    private const float CrossFadeDuration = 0.1f;
+
     public PlayerTargetingState(PlayerStateMachine stateMachine) : base(stateMachine){}
 
     public override void Enter()
     {
-        Debug.Log("Entering Targeting State");
-        stateMachine.InputReader.CancelEvent += OnCancel; 
+        //Debug.Log("Entering Targeting State");
+        stateMachine.InputReader.CancelEvent += OnCancel;
 
-        stateMachine.Animator.Play(TargetingHash);
+        //stateMachine.Animator.Play(TargetingHash);
+        stateMachine.Animator.CrossFadeInFixedTime(TargetingHash, CrossFadeDuration);
     }
 
 
@@ -50,7 +53,7 @@ public class PlayerTargetingState : PlayerBaseState
 
     public override void Exit()
     {
-        Debug.Log("Exiting Targeting State");
+        //Debug.Log("Exiting Targeting State");
         stateMachine.InputReader.CancelEvent -= OnCancel;
 
     }

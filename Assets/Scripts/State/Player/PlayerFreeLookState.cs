@@ -9,15 +9,18 @@ public class PlayerFreeLookState : PlayerBaseState
 
     private const float AnimatorDampTime = 0.1f;
 
+    private const float CrossFadeDuration = 0.1f;
+
     public PlayerFreeLookState(PlayerStateMachine stateMachine) : base(stateMachine){}
 
     public override void Enter()
     {
-        Debug.Log("Enter");
+       // Debug.Log("Enter");
         //stateMachine.InputReader.JumpEvent += OnJump;
         stateMachine.InputReader.TargetEvent += OnTargeting;
 
-        stateMachine.Animator.Play(FreeLookHash);
+        //stateMachine.Animator.Play(FreeLookHash);
+        stateMachine.Animator.CrossFadeInFixedTime(FreeLookHash, CrossFadeDuration);
 
     }
 
@@ -61,7 +64,7 @@ public class PlayerFreeLookState : PlayerBaseState
 
     public override void Exit()
     {
-        Debug.Log("Exit");
+        //Debug.Log("Exit");
 
         //stateMachine.InputReader.JumpEvent -= OnJump;
         stateMachine.InputReader.TargetEvent -= OnTargeting;
