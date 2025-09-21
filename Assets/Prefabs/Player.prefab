@@ -3151,6 +3151,9 @@ MonoBehaviour:
   <FreeLookMoveSpeed>k__BackingField: 5
   <TargetingMoveSpeed>k__BackingField: 3.5
   <RotationDamping>k__BackingField: 10
+  <DodgeDuration>k__BackingField: 0.5
+  <DodgeDistance>k__BackingField: 2.5
+  <JumpForce>k__BackingField: 4
   <ForceReceiver>k__BackingField: {fileID: 8121290863832965275}
   <Attacks>k__BackingField:
   - <AnimationName>k__BackingField: Attack1

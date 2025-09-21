@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerTargetingState : PlayerBaseState
 {
-    
+
     private readonly int TargetingHash = Animator.StringToHash("TargetingBlendTree");
 
     private readonly int TargetingRightBlendHash = Animator.StringToHash("TargetingRightSpeed");
@@ -21,12 +21,12 @@ public class PlayerTargetingState : PlayerBaseState
     {
         //Debug.Log("Entering Targeting State");
         stateMachine.InputReader.CancelEvent += OnCancel;
+        stateMachine.InputReader.DogeEvent += OnDoge;
+        stateMachine.InputReader.JumpEvent += OnJump;
 
         //stateMachine.Animator.Play(TargetingHash);
         stateMachine.Animator.CrossFadeInFixedTime(TargetingHash, CrossFadeDuration);
     }
-
-
 
     public override void Tick(float deltaTime)
     {
@@ -42,7 +42,7 @@ public class PlayerTargetingState : PlayerBaseState
             return;
         }
 
-        Move(CalculateMovement() * stateMachine.TargetingMoveSpeed, deltaTime);
+        Move(CalculateMovement(deltaTime) * stateMachine.TargetingMoveSpeed, deltaTime);
 
         //Face the target
         FaceTarget();
@@ -55,6 +55,8 @@ public class PlayerTargetingState : PlayerBaseState
     {
         //Debug.Log("Exiting Targeting State");
         stateMachine.InputReader.CancelEvent -= OnCancel;
+        stateMachine.InputReader.CancelEvent -= OnDoge;
+        stateMachine.InputReader.JumpEvent -= OnJump;
 
     }
 
@@ -64,7 +66,24 @@ public class PlayerTargetingState : PlayerBaseState
         stateMachine.SwitchState(new PlayerFreeLookState(stateMachine));
     }
 
-    private Vector3 CalculateMovement()
+    private void OnDoge()
+    {
+        if(stateMachine.InputReader.MovementValue == Vector2.zero)
+        {
+            return;
+        }
+
+        stateMachine.SwitchState(new PlayerDodgeState(stateMachine, stateMachine.InputReader.MovementValue));
+        //在锁定状态下的闪避，应该是绕目标转圈或径向移动而非简单前后左右移动
+
+    }
+
+    private void OnJump()
+    {
+        stateMachine.SwitchState(new PlayerJumpState(stateMachine));
+    }
+
+    private Vector3 CalculateMovement(float deltaTime)
     {
 
         Vector3 movement = new Vector3();

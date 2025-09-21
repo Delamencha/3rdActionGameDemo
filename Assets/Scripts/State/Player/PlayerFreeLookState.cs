@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,8 +17,8 @@ public class PlayerFreeLookState : PlayerBaseState
     public override void Enter()
     {
        // Debug.Log("Enter");
-        //stateMachine.InputReader.JumpEvent += OnJump;
         stateMachine.InputReader.TargetEvent += OnTargeting;
+        stateMachine.InputReader.JumpEvent += OnJump;
 
         //stateMachine.Animator.Play(FreeLookHash);
         stateMachine.Animator.CrossFadeInFixedTime(FreeLookHash, CrossFadeDuration);
@@ -66,7 +67,7 @@ public class PlayerFreeLookState : PlayerBaseState
     {
         //Debug.Log("Exit");
 
-        //stateMachine.InputReader.JumpEvent -= OnJump;
+        stateMachine.InputReader.JumpEvent -= OnJump;
         stateMachine.InputReader.TargetEvent -= OnTargeting;
     }
 
@@ -109,5 +110,9 @@ public class PlayerFreeLookState : PlayerBaseState
         
     }
 
+    private void OnJump()
+    {
+        stateMachine.SwitchState(new PlayerJumpState(stateMachine));
+    }
 
 }
