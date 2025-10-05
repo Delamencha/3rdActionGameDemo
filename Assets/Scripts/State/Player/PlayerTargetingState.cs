@@ -20,7 +20,7 @@ public class PlayerTargetingState : PlayerBaseState
     public override void Enter()
     {
         //Debug.Log("Entering Targeting State");
-        stateMachine.InputReader.CancelEvent += OnCancel;
+        stateMachine.InputReader.TargetEvent += OnTarget;
         stateMachine.InputReader.DogeEvent += OnDoge;
         stateMachine.InputReader.JumpEvent += OnJump;
 
@@ -30,6 +30,12 @@ public class PlayerTargetingState : PlayerBaseState
 
     public override void Tick(float deltaTime)
     {
+        if (stateMachine.InputReader.IsBlocking)
+        {
+            stateMachine.SwitchState(new PlayerBlockState(stateMachine));
+            return;
+        }
+
         if (stateMachine.InputReader.IsAttacking)
         {
             stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
@@ -54,13 +60,13 @@ public class PlayerTargetingState : PlayerBaseState
     public override void Exit()
     {
         //Debug.Log("Exiting Targeting State");
-        stateMachine.InputReader.CancelEvent -= OnCancel;
-        stateMachine.InputReader.CancelEvent -= OnDoge;
+        stateMachine.InputReader.TargetEvent -= OnTarget;
+        stateMachine.InputReader.DogeEvent -= OnDoge;
         stateMachine.InputReader.JumpEvent -= OnJump;
 
     }
 
-    private void OnCancel()
+    private void OnTarget()
     {
         stateMachine.Targeter.Cancel();
         stateMachine.SwitchState(new PlayerFreeLookState(stateMachine));

@@ -29,7 +29,7 @@ public class PlayerDodgeState : PlayerBaseState
         stateMachine.Animator.CrossFadeInFixedTime(DodgeHash, CrossFadeDuration);
 
         //…¡±‹ÃÌº”Œﬁµ–÷°
-        //stateMachine.Health.SetInvulnerable(true);
+        stateMachine.Health.SetInvulnerable(true);
 
 
     }
@@ -55,7 +55,7 @@ public class PlayerDodgeState : PlayerBaseState
 
     public override void Exit()
     {
-        //stateMachine.Health.SetInvulnerable(false);
+        stateMachine.Health.SetInvulnerable(false);
     }
 
 

@@ -20,7 +20,11 @@ public class Attack
 
     [field: SerializeField] public float ForceTime { get; private set; }
 
+    //攻击时自己的位移
     [field: SerializeField] public float AttackForce { get; private set; }
 
     [field: SerializeField] public float DamageValue { get; private set; }
+
+    //攻击对目标的冲击力
+    [field: SerializeField] public float Knockback { get; private set; }
 }

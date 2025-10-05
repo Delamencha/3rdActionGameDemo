@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,9 @@ public class PlayerStateMachine : StateMachine
     [field: SerializeField] public CharacterController Controller { get; private set; }
     [field: SerializeField] public Animator Animator { get; private set; }
     [field: SerializeField] public Targeter Targeter { get; private set; }
+    [field: SerializeField] public Health Health { get; private set; }
+    [field: SerializeField] public Ragdoll Ragdoll { get; private set; }
+    [field: SerializeField] public LedgeDetector LedgeDetector { get; private set; }
     [field: SerializeField] public WeaponDamage WeaponDamage { get; private set; }
     [field: SerializeField] public float FreeLookMoveSpeed { get; private set; }
     [field: SerializeField] public float TargetingMoveSpeed { get; private set; }
@@ -25,12 +29,37 @@ public class PlayerStateMachine : StateMachine
 
     private void Start()
     {
-        MainCameraTransform = Camera.main.transform;
 
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        MainCameraTransform = Camera.main.transform;
 
         SwitchState(new PlayerFreeLookState(this));
 
     }
 
+    private void OnEnable()
+    {
+        Health.OnTakeDamage += HandleTakeDamage;
+        Health.OnDie += HandleDeath;
+    }
 
+
+
+    private void OnDisable()
+    {
+        Health.OnTakeDamage -= HandleTakeDamage;
+        Health.OnDie -= HandleDeath;
+    }
+
+    private void HandleTakeDamage()
+    {
+        SwitchState(new PlayerImpactState(this));
+    }
+
+    private void HandleDeath()
+    {
+        SwitchState(new PlayerDeadState(this));
+    }
 }

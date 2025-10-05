@@ -51,7 +51,8 @@ public class Targeter : MonoBehaviour
         foreach(Target target in targets)
         {
             Vector2 screenPos = mainCamera.WorldToViewportPoint(target.transform.position);
-            if(screenPos.x < 0 || screenPos.x > 1 ||  screenPos.y < 0 || screenPos.y > 1)
+            //if(screenPos.x < 0 || screenPos.x > 1 ||  screenPos.y < 0 || screenPos.y > 1)
+            if(!target.GetComponentInChildren<Renderer>().isVisible)
             {
                 continue;
             }

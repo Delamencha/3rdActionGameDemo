@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ForceReceiver : MonoBehaviour
 {
     [SerializeField] private CharacterController controller;
+    [SerializeField] private NavMeshAgent agent;
     [SerializeField] private float drag = 0.3f;
 
 
@@ -28,14 +30,30 @@ public class ForceReceiver : MonoBehaviour
         }
 
         //持续使力衰减
-
+        //impact以及AddForce的设计使得人物从力中恢复的时间与ImpactState的duration无关
         impact = Vector3.SmoothDamp(impact, Vector3.zero, ref dampingVelocity, drag);
+
+        if(agent != null && impact.sqrMagnitude <  0.2f * 0.2f)
+        {
+            impact = Vector3.zero;
+            agent.enabled = true;
+        }
 
     }
 
     public void AddForce(Vector3 force)
     {
         impact += force;
+        if(agent != null)
+        {
+            agent.enabled = false;
+        }
+    }
+
+    public void ResetForce()
+    {
+        impact = Vector3.zero;
+        verticalVelocity = 0;
     }
 
     public void Jump(float jumpForce)

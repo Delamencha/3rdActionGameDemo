@@ -12,7 +12,12 @@ public class PlayerFreeLookState : PlayerBaseState
 
     private const float CrossFadeDuration = 0.1f;
 
-    public PlayerFreeLookState(PlayerStateMachine stateMachine) : base(stateMachine){}
+    private bool shouldFade;
+
+    public PlayerFreeLookState(PlayerStateMachine stateMachine,bool shouldFade = true) : base(stateMachine)
+    {
+        this.shouldFade = shouldFade;
+    }
 
     public override void Enter()
     {
@@ -20,13 +25,28 @@ public class PlayerFreeLookState : PlayerBaseState
         stateMachine.InputReader.TargetEvent += OnTargeting;
         stateMachine.InputReader.JumpEvent += OnJump;
 
+        stateMachine.Animator.SetFloat(FreeLookSpeedHash, 0);
         //stateMachine.Animator.Play(FreeLookHash);
-        stateMachine.Animator.CrossFadeInFixedTime(FreeLookHash, CrossFadeDuration);
+        if (shouldFade)
+        {
+            stateMachine.Animator.CrossFadeInFixedTime(FreeLookHash, CrossFadeDuration);
+        }
+        else
+        {
+            stateMachine.Animator.Play(FreeLookHash);
+        }
+        
 
     }
 
     public override void Tick(float deltaTime)
     {
+        if (stateMachine.InputReader.IsBlocking)
+        {
+            stateMachine.SwitchState(new PlayerBlockState(stateMachine));
+            return;
+        }
+
         if (stateMachine.InputReader.IsAttacking)
         {
             stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
@@ -56,7 +76,7 @@ public class PlayerFreeLookState : PlayerBaseState
             return;
         }
 
-        stateMachine.Animator.SetFloat(FreeLookSpeedHash, 1, AnimatorDampTime, deltaTime);
+        stateMachine.Animator.SetFloat(FreeLookSpeedHash, 1f, AnimatorDampTime, deltaTime);
 
         FaceMovemnetDirection(movement, deltaTime);
 

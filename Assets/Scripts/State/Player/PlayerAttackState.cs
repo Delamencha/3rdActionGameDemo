@@ -20,7 +20,7 @@ public class PlayerAttackState : PlayerBaseState
     {
         //Debug.Log("turing into animation" + currentAttack.AnimationName);
         stateMachine.Animator.CrossFadeInFixedTime(currentAttack.AnimationName, currentAttack.TransitionDuration);
-        stateMachine.WeaponDamage.SetAttack(currentAttack.DamageValue);
+        stateMachine.WeaponDamage.SetAttack(currentAttack.DamageValue, currentAttack.Knockback);
     }
 
     public override void Tick(float deltaTime)
@@ -29,7 +29,7 @@ public class PlayerAttackState : PlayerBaseState
         FaceTarget();
 
         //通过normalizedTime 判断是否进入自由移动状态或是下一个攻击状态 
-        float normalizedTime = GetNormalizedTime();
+        float normalizedTime = GetNormalizedTime(stateMachine.Animator, "Attack");
 
         if(normalizedTime > previousFrameTime && normalizedTime < 1f)
         {
@@ -69,27 +69,7 @@ public class PlayerAttackState : PlayerBaseState
         
     }
 
-    //在各种动画机的状态下获取 该状态下的normalizedTime 以衡量是否可以转换状态
-    private float GetNormalizedTime()
-    {
-        AnimatorStateInfo currentInfo = stateMachine.Animator.GetCurrentAnimatorStateInfo( 0 );
 
-        AnimatorStateInfo nextInfo = stateMachine.Animator.GetNextAnimatorStateInfo(0);
-
-        if (stateMachine.Animator.IsInTransition(0) && nextInfo.IsTag("Attack"))
-        {
-            return nextInfo.normalizedTime;
-
-        } else if (!stateMachine.Animator.IsInTransition(0) && currentInfo.IsTag("Attack"))
-        {
-            return currentInfo.normalizedTime;
-        }
-        else
-        {
-            return 0;
-        }
-
-    }
 
     private void TryComboAttack(float normalizedTime)
     {

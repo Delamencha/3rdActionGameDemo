@@ -52,18 +52,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Cancel",
+                    "name": "Attack",
                     "type": "Button",
-                    "id": "55159c10-ae4a-4ef5-ad37-09106eec9142",
+                    "id": "4a36de7e-30bf-4dcb-975b-35784a5ed5e1",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Attack",
+                    "name": "Block",
                     "type": "Button",
-                    "id": "4a36de7e-30bf-4dcb-975b-35784a5ed5e1",
+                    "id": "a3a93fb1-faa0-4a06-bd08-f923676f7f6c",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -227,28 +227,6 @@
                 },
                 {
                     "name": "",
-                    "id": "e8365ee1-5cbf-4a42-9f93-c2415fe38570",
-                    "path": "<Keyboard>/capsLock",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Mouse & Keyboard",
-                    "action": "Cancel",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2abfe549-dfaf-4626-aa9e-6c0f286820b5",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";GamePad",
-                    "action": "Cancel",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "3a0d0eb6-1c5c-42d5-800d-4b3496cdb86d",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
@@ -266,6 +244,28 @@
                     "processors": "",
                     "groups": ";GamePad",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bd952e7f-d0f5-47f8-bcdd-287e4d77b1e1",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Mouse & Keyboard",
+                    "action": "Block",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8c8f6934-a863-4e9e-b01b-9e5107a6b263",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";GamePad",
+                    "action": "Block",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
