@@ -10,11 +10,27 @@ public class PlayerImpactState : PlayerBaseState
 
     private float duration = 1f;
 
-    public PlayerImpactState(PlayerStateMachine stateMachine) : base(stateMachine){}
+    private bool isLargeImpact;
+
+    public PlayerImpactState(PlayerStateMachine stateMachine, bool isLargeImpact) : base(stateMachine)
+    {
+        this.isLargeImpact = isLargeImpact;
+    }
 
     public override void Enter()
     {
-        stateMachine.Animator.CrossFadeInFixedTime(ImpactHash, CrossFadeDuration);
+        if (isLargeImpact)
+        {
+            stateMachine.Animator.CrossFadeInFixedTime("LargeImpact", CrossFadeDuration);
+            duration = 4.2f;
+            stateMachine.Health.SetInvulnerable(true);
+        }
+        else
+        {
+            stateMachine.Animator.CrossFadeInFixedTime(ImpactHash, CrossFadeDuration);
+        }
+
+        
     }
 
     public override void Tick(float deltaTime)
@@ -25,6 +41,7 @@ public class PlayerImpactState : PlayerBaseState
         duration -= deltaTime;
         if(duration <= 0)
         {
+            stateMachine.Health.SetInvulnerable(false);
             ReturnToLocomotion();
         }
 

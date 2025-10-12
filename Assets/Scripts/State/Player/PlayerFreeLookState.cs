@@ -14,6 +14,8 @@ public class PlayerFreeLookState : PlayerBaseState
 
     private bool shouldFade;
 
+    private float unGroundedTimer = 0;
+
     public PlayerFreeLookState(PlayerStateMachine stateMachine,bool shouldFade = true) : base(stateMachine)
     {
         this.shouldFade = shouldFade;
@@ -21,9 +23,12 @@ public class PlayerFreeLookState : PlayerBaseState
 
     public override void Enter()
     {
+
        // Debug.Log("Enter");
         stateMachine.InputReader.TargetEvent += OnTargeting;
         stateMachine.InputReader.JumpEvent += OnJump;
+        stateMachine.InputReader.RunEvent += OnRun;
+        stateMachine.InputReader.SkillEvent += OnSkill;
 
         stateMachine.Animator.SetFloat(FreeLookSpeedHash, 0);
         //stateMachine.Animator.Play(FreeLookHash);
@@ -39,6 +44,8 @@ public class PlayerFreeLookState : PlayerBaseState
 
     }
 
+
+
     public override void Tick(float deltaTime)
     {
         if (stateMachine.InputReader.IsBlocking)
@@ -51,6 +58,19 @@ public class PlayerFreeLookState : PlayerBaseState
         {
             stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
             return;
+        }
+
+        if (!stateMachine.Controller.isGrounded)
+        {
+            unGroundedTimer += deltaTime;
+            if(unGroundedTimer > 0.5f)
+            {
+                stateMachine.SwitchState(new PlayerFallState(stateMachine));
+            }
+        }
+        else
+        {
+            unGroundedTimer = 0;
         }
 
         //Debug.Log(stateMachine.InputReader.MovementValue);
@@ -89,6 +109,8 @@ public class PlayerFreeLookState : PlayerBaseState
 
         stateMachine.InputReader.JumpEvent -= OnJump;
         stateMachine.InputReader.TargetEvent -= OnTargeting;
+        stateMachine.InputReader.RunEvent -= OnRun;
+        stateMachine.InputReader.SkillEvent -= OnSkill;
     }
 
     private Vector3 calculateMovement()
@@ -133,6 +155,17 @@ public class PlayerFreeLookState : PlayerBaseState
     private void OnJump()
     {
         stateMachine.SwitchState(new PlayerJumpState(stateMachine));
+    }
+
+
+    private void OnRun()
+    {
+        stateMachine.SwitchState(new PlayerFreeRunState(stateMachine));
+    }
+
+    private void OnSkill()
+    {
+        stateMachine.SwitchState(new PlayerSkillState(stateMachine));
     }
 
 }

@@ -22,7 +22,11 @@ public class PlayerJumpState : PlayerBaseState
 
         stateMachine.Animator.CrossFadeInFixedTime(JumpHash, CrossFadeDuration);
 
-        stateMachine.LedgeDetector.OnLedgeDetect += HandleLedgeDetect;
+        if(stateMachine.LedgeDetector != null)
+        {
+            stateMachine.LedgeDetector.OnLedgeDetect += HandleLedgeDetect;
+        }
+        
     }
 
     public override void Tick(float deltaTime)
@@ -39,8 +43,12 @@ public class PlayerJumpState : PlayerBaseState
     }
 
     public override void Exit()
-    {
-        stateMachine.LedgeDetector.OnLedgeDetect -= HandleLedgeDetect;
+    {   
+        if(stateMachine.LedgeDetector != null)
+        {
+            stateMachine.LedgeDetector.OnLedgeDetect -= HandleLedgeDetect;
+        }
+        
     }
 
     private void HandleLedgeDetect( Vector3 ledgeForward, Vector3 closestPoint)

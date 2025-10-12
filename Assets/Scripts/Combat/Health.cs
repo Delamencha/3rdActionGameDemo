@@ -12,7 +12,7 @@ public class Health : MonoBehaviour
 
     private bool isInvunerable;
 
-    public event Action OnTakeDamage;
+    public event Action<bool> OnTakeDamage;
     public event Action OnDie;
 
     public bool IsDead => health == 0;
@@ -27,7 +27,7 @@ public class Health : MonoBehaviour
         this.isInvunerable = isInvunerable;
     }
 
-    public void DealDamage(float damageValue)
+    public void DealDamage(float damageValue, bool isLargeImpact)
     {
         if (health <= 0) return;
 
@@ -36,7 +36,7 @@ public class Health : MonoBehaviour
         health = Mathf.Max(0, health - damageValue);
 
         //在stateMachine中触发impactState,更广的触发层面
-        OnTakeDamage?.Invoke();
+        OnTakeDamage?.Invoke(isLargeImpact);
 
         if(health <= 0)
         {

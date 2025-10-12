@@ -17,7 +17,8 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
     public event Action JumpEvent;
     public event Action DogeEvent;
     public event Action TargetEvent;
-
+    public event Action RunEvent;
+    public event Action SkillEvent;
 
     private Controls controls;
 
@@ -61,6 +62,7 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
 
     public void OnTargeting(InputAction.CallbackContext context)
     {
+        if (!context.performed) return;
         TargetEvent?.Invoke();
     }
 
@@ -85,5 +87,19 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
         {
             IsBlocking = false;
         }
+    }
+
+    public void OnRun(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        RunEvent?.Invoke();
+    }
+
+    public void OnSkill(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        SkillEvent?.Invoke();
     }
 }

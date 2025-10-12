@@ -5,9 +5,12 @@ using UnityEngine;
 public class PlayerFallState : PlayerBaseState
 {
     private readonly int FallHash = Animator.StringToHash("Fall");
+    private readonly int GroundedHash = Animator.StringToHash("Grounded");
     private const float CrossFadeDuration = 0.1f;
 
     private Vector3 momentum;
+
+    private bool hasLand;
 
     public PlayerFallState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
@@ -18,25 +21,53 @@ public class PlayerFallState : PlayerBaseState
         momentum = stateMachine.Controller.velocity;
         momentum.y = 0;
 
-        stateMachine.LedgeDetector.OnLedgeDetect += HandleLedgeDetect;
+        hasLand = false;
+
+        if (stateMachine.LedgeDetector != null)
+        {
+            stateMachine.LedgeDetector.OnLedgeDetect += HandleLedgeDetect;
+        }
+        
 
     }
 
     public override void Tick(float deltaTime)
     {
-        Move(momentum, deltaTime);
+        
 
         if (stateMachine.Controller.isGrounded)
         {
-            ReturnToLocomotion();
+            //ReturnToLocomotion();
+            if (!hasLand)
+            {
+
+                stateMachine.Animator.CrossFadeInFixedTime(GroundedHash, CrossFadeDuration);
+                hasLand = true;
+            }
+            else
+            {
+                if(GetNormalizedTime(stateMachine.Animator, "Grounded") >= 1f)
+                {
+                    ReturnToLocomotion();
+                }
+            }
+        }
+        else
+        {
+            Move(momentum, deltaTime);
+            FaceTarget();
         }
 
-        FaceTarget();
+        
     }
 
     public override void Exit()
-    {
-        stateMachine.LedgeDetector.OnLedgeDetect -= HandleLedgeDetect;
+    {   
+        if(stateMachine.LedgeDetector != null)
+        {
+            stateMachine.LedgeDetector.OnLedgeDetect -= HandleLedgeDetect;
+        }
+        
     }
 
     private void HandleLedgeDetect( Vector3 ledgeForward, Vector3 colsestPoint)

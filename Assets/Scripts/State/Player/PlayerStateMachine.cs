@@ -15,6 +15,8 @@ public class PlayerStateMachine : StateMachine
     [field: SerializeField] public LedgeDetector LedgeDetector { get; private set; }
     [field: SerializeField] public WeaponDamage WeaponDamage { get; private set; }
     [field: SerializeField] public float FreeLookMoveSpeed { get; private set; }
+    [field: SerializeField] public float FreeRunSpeed { get; private set; }
+    [field: SerializeField] public float BlockWalkSpeed { get; private set; }
     [field: SerializeField] public float TargetingMoveSpeed { get; private set; }
     [field: SerializeField] public float RotationDamping { get; private set; }
     [field: SerializeField] public float DodgeDuration { get; private set; }
@@ -33,6 +35,7 @@ public class PlayerStateMachine : StateMachine
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        //记录主相机transform用于在非锁定状态下移动
         MainCameraTransform = Camera.main.transform;
 
         SwitchState(new PlayerFreeLookState(this));
@@ -53,9 +56,9 @@ public class PlayerStateMachine : StateMachine
         Health.OnDie -= HandleDeath;
     }
 
-    private void HandleTakeDamage()
+    private void HandleTakeDamage(bool isLargeImpact)
     {
-        SwitchState(new PlayerImpactState(this));
+        SwitchState(new PlayerImpactState(this, isLargeImpact));
     }
 
     private void HandleDeath()

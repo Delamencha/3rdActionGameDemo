@@ -49,7 +49,7 @@ public class EnemyStateMachine : StateMachine
         Health.OnDie -= HandleDeath;
     }
 
-    private void HandleTakeDamage()
+    private void HandleTakeDamage(bool isLargeImpact)
     {
         SwitchState(new EnemyImpactState(this));
     }

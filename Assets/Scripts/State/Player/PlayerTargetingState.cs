@@ -23,6 +23,9 @@ public class PlayerTargetingState : PlayerBaseState
         stateMachine.InputReader.TargetEvent += OnTarget;
         stateMachine.InputReader.DogeEvent += OnDoge;
         stateMachine.InputReader.JumpEvent += OnJump;
+        stateMachine.InputReader.SkillEvent += OnSkill;
+
+        stateMachine.InputReader.RunEvent += OnRun;
 
         //stateMachine.Animator.Play(TargetingHash);
         stateMachine.Animator.CrossFadeInFixedTime(TargetingHash, CrossFadeDuration);
@@ -32,7 +35,7 @@ public class PlayerTargetingState : PlayerBaseState
     {
         if (stateMachine.InputReader.IsBlocking)
         {
-            stateMachine.SwitchState(new PlayerBlockState(stateMachine));
+            stateMachine.SwitchState(new PlayerTargetBlockState(stateMachine));;
             return;
         }
 
@@ -63,6 +66,9 @@ public class PlayerTargetingState : PlayerBaseState
         stateMachine.InputReader.TargetEvent -= OnTarget;
         stateMachine.InputReader.DogeEvent -= OnDoge;
         stateMachine.InputReader.JumpEvent -= OnJump;
+        stateMachine.InputReader.SkillEvent -= OnSkill;
+
+        stateMachine.InputReader.RunEvent -= OnRun;
 
     }
 
@@ -87,6 +93,16 @@ public class PlayerTargetingState : PlayerBaseState
     private void OnJump()
     {
         stateMachine.SwitchState(new PlayerJumpState(stateMachine));
+    }
+
+    private void OnRun()
+    {
+        stateMachine.SwitchState(new PlayerTargetRunState(stateMachine));
+    }
+
+    private void OnSkill()
+    {
+        stateMachine.SwitchState(new PlayerSkillState(stateMachine));
     }
 
     private Vector3 CalculateMovement(float deltaTime)
