@@ -2939,6 +2939,14 @@ MonoBehaviour:
     <AttackForce>k__BackingField: 0
     <DamageValue>k__BackingField: 9
     <Knockback>k__BackingField: 5
+  - <AnimationName>k__BackingField: Attack5
+    <TransitionDuration>k__BackingField: 0.1
+    <ComboStateIndex>k__BackingField: -1
+    <ComboAttackTime>k__BackingField: 0.5
+    <ForceTime>k__BackingField: 1.5
+    <AttackForce>k__BackingField: 4
+    <DamageValue>k__BackingField: 8
+    <Knockback>k__BackingField: 7
 --- !u!143 &8540260697606583193
 CharacterController:
   m_ObjectHideFlags: 0

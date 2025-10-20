@@ -37,7 +37,7 @@ public class PlayerTargetRunState : PlayerBaseState
 
         if (stateMachine.InputReader.IsAttacking)
         {
-            stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
+            stateMachine.SwitchState(new PlayerAttackState(stateMachine, 4));
             return;
         }
 

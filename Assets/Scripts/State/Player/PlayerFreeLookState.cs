@@ -29,6 +29,7 @@ public class PlayerFreeLookState : PlayerBaseState
         stateMachine.InputReader.JumpEvent += OnJump;
         stateMachine.InputReader.RunEvent += OnRun;
         stateMachine.InputReader.SkillEvent += OnSkill;
+        stateMachine.InputReader.DogeEvent += OnDodge;
 
         stateMachine.Animator.SetFloat(FreeLookSpeedHash, 0);
         //stateMachine.Animator.Play(FreeLookHash);
@@ -43,7 +44,6 @@ public class PlayerFreeLookState : PlayerBaseState
         
 
     }
-
 
 
     public override void Tick(float deltaTime)
@@ -111,6 +111,7 @@ public class PlayerFreeLookState : PlayerBaseState
         stateMachine.InputReader.TargetEvent -= OnTargeting;
         stateMachine.InputReader.RunEvent -= OnRun;
         stateMachine.InputReader.SkillEvent -= OnSkill;
+        stateMachine.InputReader.DogeEvent -= OnDodge;
     }
 
     private Vector3 calculateMovement()
@@ -166,6 +167,27 @@ public class PlayerFreeLookState : PlayerBaseState
     private void OnSkill()
     {
         stateMachine.SwitchState(new PlayerSkillState(stateMachine));
+    }
+
+    //非锁定状态Dodge :  有方向输入时，快速完成转向然后Forward dodge; 无方向输入时，back dodge
+    private void OnDodge()
+    {
+
+        if (stateMachine.InputReader.MovementValue == Vector2.zero)
+        {
+            stateMachine.SwitchState(new PlayerDodgeState(stateMachine, new Vector2(0, -1)));
+        }
+        else
+        {
+            Vector3 movement = calculateMovement();
+
+            stateMachine.transform.rotation = Quaternion.LookRotation(movement);
+            stateMachine.SwitchState(new PlayerDodgeState(stateMachine, new Vector2(0, 1)));
+        }
+
+        
+
+
     }
 
 }

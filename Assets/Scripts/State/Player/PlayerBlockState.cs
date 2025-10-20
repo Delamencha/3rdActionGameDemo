@@ -21,6 +21,8 @@ public class PlayerBlockState : PlayerBaseState
         stateMachine.InputReader.TargetEvent += OnTargeting;
         stateMachine.InputReader.JumpEvent += OnJump;
 
+        stateMachine.InputReader.DogeEvent += OnDodge;
+
         stateMachine.Animator.SetFloat(FreeLookSpeedHash, 0);
 
         stateMachine.Animator.CrossFadeInFixedTime(BlockBlendHash, CrossFadeDuration);
@@ -100,6 +102,8 @@ public class PlayerBlockState : PlayerBaseState
         stateMachine.InputReader.TargetEvent -= OnTargeting;
 
         stateMachine.Health.SetInvulnerable(false);
+
+        stateMachine.InputReader.DogeEvent -= OnDodge;
     }
 
     private void OnJump()
@@ -115,5 +119,20 @@ public class PlayerBlockState : PlayerBaseState
         }
     }
 
+    private void OnDodge()
+    {
 
+        if (stateMachine.InputReader.MovementValue == Vector2.zero)
+        {
+            stateMachine.SwitchState(new PlayerDodgeState(stateMachine, new Vector2(0, -1)));
+        }
+        else
+        {
+            Vector3 movement = calculateMovement();
+
+            stateMachine.transform.rotation = Quaternion.LookRotation(movement);
+            stateMachine.SwitchState(new PlayerDodgeState(stateMachine, new Vector2(0, 1)));
+        }
+
+    }
 }
