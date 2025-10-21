@@ -15,7 +15,13 @@ public class PlayerTargetingState : PlayerBaseState
 
     private const float CrossFadeDuration = 0.1f;
 
-    public PlayerTargetingState(PlayerStateMachine stateMachine) : base(stateMachine){}
+    public PlayerTargetingState(PlayerStateMachine stateMachine, bool shouldReset = false) : base(stateMachine){
+        if (shouldReset)
+        {
+            stateMachine.Animator.SetFloat(TargetingRightBlendHash, 0);
+            stateMachine.Animator.SetFloat(TargetingForwardBlendHash, 0);
+        }
+    }
 
     public override void Enter()
     {
@@ -82,17 +88,22 @@ public class PlayerTargetingState : PlayerBaseState
     {
         if(stateMachine.InputReader.MovementValue == Vector2.zero)
         {
-            return;
+            stateMachine.SwitchState(new PlayerDodgeState(stateMachine, new Vector2(0, -1)));
+        }
+        else
+        {
+            stateMachine.SwitchState(new PlayerDodgeState(stateMachine, stateMachine.InputReader.MovementValue));
+            //在锁定状态下的闪避，应该是绕目标转圈或径向移动而非简单前后左右移动
         }
 
-        stateMachine.SwitchState(new PlayerDodgeState(stateMachine, stateMachine.InputReader.MovementValue));
-        //在锁定状态下的闪避，应该是绕目标转圈或径向移动而非简单前后左右移动
+
 
     }
 
     private void OnJump()
     {
-        stateMachine.SwitchState(new PlayerJumpState(stateMachine));
+
+        stateMachine.SwitchState(new PlayerTargetJumpState(stateMachine, stateMachine.InputReader.MovementValue));
     }
 
     private void OnRun()

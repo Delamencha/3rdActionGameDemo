@@ -503,7 +503,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 508721811}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.120772004, y: 0.20072295, z: -0.024943754, w: 0.97185504}
+  m_LocalRotation: {x: 0.12024483, y: 0.22026677, z: -0.02737246, w: 0.9676128}
   m_LocalPosition: {x: 0.3513627, y: 2.183, z: -15.257578}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1335,7 +1335,7 @@ PrefabInstance:
     - target: {fileID: 9188122288836352085, guid: de65d36ffc170d24094fdbb90257157d,
         type: 3}
       propertyPath: <Attacks>k__BackingField.Array.data[0].<ForceTime>k__BackingField
-      value: 0.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9188122288836352085, guid: de65d36ffc170d24094fdbb90257157d,
         type: 3}
@@ -1360,22 +1360,22 @@ PrefabInstance:
     - target: {fileID: 9188122288836352085, guid: de65d36ffc170d24094fdbb90257157d,
         type: 3}
       propertyPath: <Attacks>k__BackingField.Array.data[0].<AttackForce>k__BackingField
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 9188122288836352085, guid: de65d36ffc170d24094fdbb90257157d,
-        type: 3}
-      propertyPath: <Attacks>k__BackingField.Array.data[1].<AttackForce>k__BackingField
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 9188122288836352085, guid: de65d36ffc170d24094fdbb90257157d,
-        type: 3}
-      propertyPath: <Attacks>k__BackingField.Array.data[2].<AttackForce>k__BackingField
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 9188122288836352085, guid: de65d36ffc170d24094fdbb90257157d,
         type: 3}
-      propertyPath: <Attacks>k__BackingField.Array.data[3].<AttackForce>k__BackingField
+      propertyPath: <Attacks>k__BackingField.Array.data[1].<AttackForce>k__BackingField
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 9188122288836352085, guid: de65d36ffc170d24094fdbb90257157d,
+        type: 3}
+      propertyPath: <Attacks>k__BackingField.Array.data[2].<AttackForce>k__BackingField
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9188122288836352085, guid: de65d36ffc170d24094fdbb90257157d,
+        type: 3}
+      propertyPath: <Attacks>k__BackingField.Array.data[3].<AttackForce>k__BackingField
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9188122288836352085, guid: de65d36ffc170d24094fdbb90257157d,
         type: 3}
@@ -1488,7 +1488,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1138146231466859821}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17493807, y: 0.42342442, z: -0.02241477, w: 0.8885978}
+  m_LocalRotation: {x: 0.17325206, y: 0.4415634, z: -0.023375006, w: 0.8800336}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1742,7 +1742,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3390374047344961458}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17493808, y: 0.42342445, z: -0.022414772, w: 0.8885978}
+  m_LocalRotation: {x: 0.17325206, y: 0.4415634, z: -0.023375006, w: 0.8800336}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1796,7 +1796,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8030675051644067513}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.17493808, y: 0.42342445, z: -0.022414772, w: 0.8885978}
+  m_LocalRotation: {x: 0.17325206, y: 0.4415634, z: -0.023375006, w: 0.8800336}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2563,6 +2563,16 @@ MonoBehaviour:
     m_ParentHash: 756556552
   - m_Hash: 362158271
     m_ParentHash: 756556552
+  - m_Hash: -933314893
+    m_ParentHash: 756556552
+  - m_Hash: 272492124
+    m_ParentHash: -933314893
+  - m_Hash: 1920803586
+    m_ParentHash: -933314893
+  - m_Hash: 1268859113
+    m_ParentHash: -933314893
+  - m_Hash: -2019267669
+    m_ParentHash: -933314893
 --- !u!4 &8703166386294582574
 Transform:
   m_ObjectHideFlags: 3

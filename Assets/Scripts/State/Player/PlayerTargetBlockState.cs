@@ -26,7 +26,7 @@ public class PlayerTargetBlockState : PlayerBaseState
         stateMachine.InputReader.JumpEvent += OnJump;
 
         stateMachine.Animator.CrossFadeInFixedTime(TargetBlockHash, CrossFadeDuration);
-
+        stateMachine.Health.SetInvulnerable(true);
     }
 
 
@@ -72,6 +72,8 @@ public class PlayerTargetBlockState : PlayerBaseState
         stateMachine.InputReader.TargetEvent -= OnTarget;
         stateMachine.InputReader.DogeEvent -= OnDoge;
         stateMachine.InputReader.JumpEvent -= OnJump;
+
+        stateMachine.Health.SetInvulnerable(false);
     }
 
     private void OnJump()

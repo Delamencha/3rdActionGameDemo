@@ -48,7 +48,9 @@ public class PlayerFallState : PlayerBaseState
             {
                 if(GetNormalizedTime(stateMachine.Animator, "Grounded") >= 1f)
                 {
-                    ReturnToLocomotion();
+
+
+                    ReturnToLocomotion(true);
                 }
             }
         }

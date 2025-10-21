@@ -52,5 +52,17 @@ public abstract class PlayerBaseState : State
         }
     }
 
+    protected void ReturnToLocomotion(bool shouldReset)
+    {
+        if (stateMachine.Targeter.CurrentTarget != null)
+        {
+            stateMachine.SwitchState(new PlayerTargetingState(stateMachine, shouldReset));
+        }
+        else
+        {
+            stateMachine.SwitchState(new PlayerFreeLookState(stateMachine));
+        }
+    }
+
 
 }
