@@ -1,0 +1,63 @@
+# Unity generated/cache directories
+[Ll]ibrary/**
+[Tt]emp/**
+[Oo]bj/**
+[Bb]uild/**
+[Bb]uilds/**
+[Ll]ogs/**
+[Uu]ser[Ss]ettings/**
+.vs/**
+.gradle/**
+
+# Addressables and recordings/captures
+[Mm]emoryCaptures/**
+[Rr]ecordings/**
+ServerData/**
+[Aa]ssets/StreamingAssets/aa*/**
+[Aa]ssets/AddressableAssetsData/**/*
+[Aa]ssets/Addressables_Temp*/**
+
+# Package cache
+[Ll]ibrary/PackageCache/**
+
+# Project/DB and build artifacts
+*.csproj
+*.sln
+*.unitypackage
+*.opendb
+*.VC.db
+*.pidb
+*.pdb
+*.mdb
+
+# Large binary assets usually not needed for code search
+**/*.png
+**/*.jpg
+**/*.jpeg
+**/*.tga
+**/*.psd
+**/*.tif
+**/*.tiff
+**/*.exr
+**/*.hdr
+**/*.mp3
+**/*.wav
+**/*.ogg
+**/*.fbx
+**/*.obj
+**/*.blend
+**/*.mp4
+**/*.mov
+**/*.avi
+**/*.webm
+**/*.dll
+**/*.aab
+**/*.apk
+**/*.app
+
+# Consider ignoring meta files to cut noise; comment out if you search GUIDs
+**/*.meta
+
+
+
+

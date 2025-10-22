@@ -7,13 +7,16 @@ public class PlayerAttackState : PlayerBaseState
 {
     private float previousFrameTime = -1;
 
-    private Attack currentAttack;
+    private AttackData currentAttack;
 
     private bool hasAddForce;
 
     public PlayerAttackState(PlayerStateMachine stateMachine, int attackIndex) : base(stateMachine)
     {
-        currentAttack = stateMachine.Attacks[attackIndex];
+        if (stateMachine.ComboSequence != null && stateMachine.ComboSequence.attacks != null && attackIndex >= 0 && attackIndex < stateMachine.ComboSequence.attacks.Count)
+        {
+            currentAttack = stateMachine.ComboSequence.attacks[attackIndex];
+        }
     }
 
     public override void Enter()
@@ -28,7 +31,7 @@ public class PlayerAttackState : PlayerBaseState
         Move(deltaTime);
         FaceTarget();
 
-        //Í¨¹ýnormalizedTime ÅÐ¶ÏÊÇ·ñ½øÈë×ÔÓÉÒÆ¶¯×´Ì¬»òÊÇÏÂÒ»¸ö¹¥»÷×´Ì¬ 
+        //Í¨ï¿½ï¿½normalizedTime ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ 
         float normalizedTime = GetNormalizedTime(stateMachine.Animator, "Attack");
 
         if(normalizedTime > previousFrameTime && normalizedTime < 1f)
@@ -45,7 +48,7 @@ public class PlayerAttackState : PlayerBaseState
         }
         else
         {
-            //¶¯»­²¥Íê£¬½øÈëÏÂÒ»×´Ì¬
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»×´Ì¬
             //Debug.Log("normalizedTime: " + normalizedTime + "previousFrameTime" + previousFrameTime);
             //Debug.Log("return from Attack State" + currentAttack.AnimationName);
             if(stateMachine.Targeter.CurrentTarget != null)

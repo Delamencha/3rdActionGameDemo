@@ -1,0 +1,27 @@
+{
+  "search.exclude": {
+    "**/[Ll]ibrary/**": true,
+    "**/[Tt]emp/**": true,
+    "**/[Oo]bj/**": true,
+    "**/[Bb]uild*/**": true,
+    "**/[Ll]ogs/**": true,
+    "**/[Uu]ser[Ss]ettings/**": true,
+    "**/.vs/**": true,
+    "**/.gradle/**": true,
+    "**/*.csproj": true,
+    "**/*.sln": true,
+    "**/*.unitypackage": true
+  },
+  "files.watcherExclude": {
+    "**/[Ll]ibrary/**": true,
+    "**/[Tt]emp/**": true,
+    "**/[Oo]bj/**": true,
+    "**/[Bb]uild*/**": true,
+    "**/[Ll]ogs/**": true,
+    "**/[Uu]ser[Ss]ettings/**": true
+  }
+}
+
+
+
+

@@ -24,6 +24,7 @@ public class PlayerStateMachine : StateMachine
     [field: SerializeField] public float JumpForce { get; private set; }
     [field: SerializeField] public ForceReceiver ForceReceiver { get;private set; }
     [field: SerializeField] public Attack[] Attacks { get; private set; }
+    [field: SerializeField] public ComboSequenceSO ComboSequence { get; private set; }
 
     public float PreviousDodgeTime { get; private set; } = Mathf.NegativeInfinity;
 
@@ -35,7 +36,7 @@ public class PlayerStateMachine : StateMachine
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        //¼ÇÂ¼Ö÷Ïà»útransformÓÃÓÚÔÚ·ÇËø¶¨×´Ì¬ÏÂÒÆ¶¯
+        //ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½transformï¿½ï¿½ï¿½ï¿½ï¿½Ú·ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½Æ¶ï¿½
         MainCameraTransform = Camera.main.transform;
 
         SwitchState(new PlayerFreeLookState(this));
