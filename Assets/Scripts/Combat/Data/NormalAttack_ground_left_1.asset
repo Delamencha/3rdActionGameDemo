@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AnimationName: Attack1
   TransitionDuration: 0.1
-  ComboStateIndex: -1
+  ComboStateIndex: 1
   ComboAttackTime: 0.5
-  ForceTime: 0.35
+  ForceTime: 0
   AttackForce: 15
   DamageValue: 10
   Knockback: 5

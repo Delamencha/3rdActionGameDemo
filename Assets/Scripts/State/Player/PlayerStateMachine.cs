@@ -30,6 +30,7 @@ public class PlayerStateMachine : StateMachine
 
     public Transform MainCameraTransform { get; private set; }
 
+
     private void Start()
     {
 
@@ -66,4 +67,7 @@ public class PlayerStateMachine : StateMachine
     {
         SwitchState(new PlayerDeadState(this));
     }
+
+    
+
 }

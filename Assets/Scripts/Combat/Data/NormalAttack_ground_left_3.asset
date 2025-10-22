@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 299597cb8e9d4e4458a37236fd6d1eaf, type: 3}
   m_Name: NormalAttack_ground_left_3
   m_EditorClassIdentifier: 
-  AnimationName: Attack1
+  AnimationName: Attack3
   TransitionDuration: 0.1
-  ComboStateIndex: -1
+  ComboStateIndex: 3
   ComboAttackTime: 0.5
-  ForceTime: 0.35
+  ForceTime: 0
   AttackForce: 15
   DamageValue: 10
   Knockback: 5
