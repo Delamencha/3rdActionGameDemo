@@ -40,6 +40,30 @@ public abstract class PlayerBaseState : State
 
     }
 
+	protected void TryFaceTarget(float degree)
+	{
+		if (stateMachine.Targeter.CurrentTarget == null) return;
+
+		float allowedDelta = Mathf.Clamp(degree, 0f, 180f);
+
+		Vector3 toTarget = stateMachine.Targeter.CurrentTarget.transform.position - stateMachine.transform.position;
+		toTarget.y = 0f;
+		if (toTarget.sqrMagnitude < 0.0001f) return;
+
+		Quaternion targetRotation = Quaternion.LookRotation(toTarget);
+		float currentYaw = stateMachine.transform.eulerAngles.y;
+		float targetYaw = targetRotation.eulerAngles.y;
+
+		float deltaYaw = Mathf.DeltaAngle(currentYaw, targetYaw);
+		float clampedDelta = Mathf.Clamp(deltaYaw, -allowedDelta, allowedDelta);
+
+		float newYaw = currentYaw + clampedDelta;
+		Vector3 euler = stateMachine.transform.eulerAngles;
+		euler.y = newYaw;
+		stateMachine.transform.rotation = Quaternion.Euler(euler);
+       
+	}
+
     protected void ReturnToLocomotion()
     {
         if(stateMachine.Targeter.CurrentTarget != null)

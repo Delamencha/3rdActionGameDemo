@@ -11,6 +11,8 @@ public class PlayerAttackState : PlayerBaseState
 
     private bool hasAddForce;
 
+
+
     public PlayerAttackState(PlayerStateMachine stateMachine, int attackIndex) : base(stateMachine)
     {
         if (stateMachine.ComboSequence != null && stateMachine.ComboSequence.attacks != null && attackIndex >= 0 && attackIndex < stateMachine.ComboSequence.attacks.Count)
@@ -21,17 +23,25 @@ public class PlayerAttackState : PlayerBaseState
 
     public override void Enter()
     {
+
         //Debug.Log("turing into animation" + currentAttack.AnimationName);
         stateMachine.Animator.CrossFadeInFixedTime(currentAttack.AnimationName, currentAttack.TransitionDuration);
         stateMachine.WeaponDamage.SetAttack(currentAttack.DamageValue, currentAttack.Knockback);
+
+        stateMachine.InputReader.JumpEvent += OnJump;
+        stateMachine.InputReader.DogeEvent += OnDodge;
     }
 
     public override void Tick(float deltaTime)
     {
         Move(deltaTime);
-        FaceTarget();
 
-        //ͨ��normalizedTime �ж��Ƿ���������ƶ�״̬������һ������״̬ 
+        if (stateMachine.Targeter.CurrentTarget != null){
+            TryFaceTarget(stateMachine.allowedDelta);
+        }else{
+            TryFaceMovemnetDirection(calculateMovement(), deltaTime);
+        }
+
         float normalizedTime = GetNormalizedTime(stateMachine.Animator, "Attack");
 
         if(normalizedTime > previousFrameTime && normalizedTime < 1f)
@@ -41,14 +51,30 @@ public class PlayerAttackState : PlayerBaseState
                 TryApplyForce();
             }
 
-            if (stateMachine.InputReader.IsAttacking)
+            if (stateMachine.InputReader.IsBlocking)
             {
-                TryComboAttack(normalizedTime);
+                if(stateMachine.IsStateTransitionAllowed("PlayerBlockState")){
+                    stateMachine.SwitchState(new PlayerBlockState(stateMachine));
+                    return;
+                }
+
             }
+            if(stateMachine.InputReader.MovementValue.sqrMagnitude > 0.5f){
+                if(stateMachine.IsStateTransitionAllowed("PlayerFreeLookState")){
+                    stateMachine.SwitchState(new PlayerFreeLookState(stateMachine));
+                    return;
+                }
+            }
+            //弃用
+            // if (stateMachine.InputReader.IsAttacking)
+            // {
+            //     TryComboAttack(normalizedTime);
+            // }
+            TryComboAttack(normalizedTime);
         }
         else
         {
-            //�������꣬������һ״̬
+            
             //Debug.Log("normalizedTime: " + normalizedTime + "previousFrameTime" + previousFrameTime);
             //Debug.Log("return from Attack State" + currentAttack.AnimationName);
             if(stateMachine.Targeter.CurrentTarget != null)
@@ -69,7 +95,12 @@ public class PlayerAttackState : PlayerBaseState
 
     public override void Exit()
     {
-        
+        stateMachine.InputReader.JumpEvent -= OnJump;
+        stateMachine.InputReader.DogeEvent -= OnDodge;
+
+        stateMachine.ResetAllTransitions(false);
+        stateMachine.ResetAllowedDelta();
+
     }
 
 
@@ -78,9 +109,11 @@ public class PlayerAttackState : PlayerBaseState
     {
         if (currentAttack.ComboStateIndex == -1) return;
 
-        if (normalizedTime < currentAttack.ComboAttackTime) return;
-
-        stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.ComboStateIndex));
+        //if (normalizedTime < currentAttack.ComboAttackTime) return;
+        if(stateMachine.IsStateTransitionAllowed("PlayerAttackState")){
+            stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.ComboStateIndex));
+        }
+        
 
     }
 
@@ -89,6 +122,49 @@ public class PlayerAttackState : PlayerBaseState
         if (hasAddForce) return;
         stateMachine.ForceReceiver.AddForce(stateMachine.transform.forward * currentAttack.AttackForce);
         hasAddForce = true;
+    }
+
+    private Vector3 calculateMovement()
+    {
+
+        Vector3 xWeight = stateMachine.MainCameraTransform.right;
+        xWeight.y = 0;
+        xWeight.Normalize();
+        xWeight *= stateMachine.InputReader.MovementValue.x;
+
+        Vector3 zWeight = stateMachine.MainCameraTransform.forward;
+        zWeight.y = 0;
+        zWeight.Normalize();
+        zWeight *= stateMachine.InputReader.MovementValue.y;
+
+        return xWeight + zWeight;
+    }
+
+    private void TryFaceMovemnetDirection(Vector3 movement, float deltaTime)
+    {
+        // stateMachine.transform.rotation = Quaternion.Lerp(
+        //     stateMachine.transform.rotation,
+        //     Quaternion.LookRotation(movement),
+        //     deltaTime * stateMachine.RotationDamping
+        //     );
+        
+    }
+
+    private void OnJump()
+    {
+        if(stateMachine.IsStateTransitionAllowed("PlayerJumpState")){
+            stateMachine.SwitchState(new PlayerJumpState(stateMachine));
+        }
+        
+    }
+
+    private void OnDodge()
+    {
+        if(stateMachine.IsStateTransitionAllowed("PlayerDodgeState")){
+            stateMachine.SwitchState(new PlayerDodgeState(stateMachine, 
+                stateMachine.InputReader.MovementValue == Vector2.zero ? new Vector2(0, -1) : stateMachine.InputReader.MovementValue));
+        }
+        
     }
 
 }
