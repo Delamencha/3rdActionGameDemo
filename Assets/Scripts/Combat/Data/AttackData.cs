@@ -18,6 +18,9 @@ public class AttackData : ScriptableObject
     [Header("Damage / Impact")]
     public float DamageValue = 10f;
     public float Knockback = 5f;
+
+    [Header("Facing / Limits")]
+    public float TotalTurnLimitDeg = 0f; // 0 = unlimited
 }
 
 

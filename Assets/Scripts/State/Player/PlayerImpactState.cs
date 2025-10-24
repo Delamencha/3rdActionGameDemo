@@ -30,6 +30,7 @@ public class PlayerImpactState : PlayerBaseState
             stateMachine.Animator.CrossFadeInFixedTime(ImpactHash, CrossFadeDuration);
         }
 
+        stateMachine.ActivateInputBuffer();
         
     }
 
@@ -42,14 +43,17 @@ public class PlayerImpactState : PlayerBaseState
         if(duration <= 0)
         {
             stateMachine.Health.SetInvulnerable(false);
-            ReturnToLocomotion();
+            if (!stateMachine.ApplyBufferedInput())
+            {
+                ReturnToLocomotion();
+            }
         }
 
     }
 
     public override void Exit()
     {
-        
+        stateMachine.DeactivateInputBuffer(true);
     }
 
 

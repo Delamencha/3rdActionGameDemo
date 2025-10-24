@@ -11,6 +11,8 @@ public class PlayerAttackState : PlayerBaseState
 
     private bool hasAddForce;
 
+    private float accumulatedTurnDeg;
+    private float totalTurnLimitDeg;
 
 
     public PlayerAttackState(PlayerStateMachine stateMachine, int attackIndex) : base(stateMachine)
@@ -30,6 +32,11 @@ public class PlayerAttackState : PlayerBaseState
 
         stateMachine.InputReader.JumpEvent += OnJump;
         stateMachine.InputReader.DogeEvent += OnDodge;
+
+        accumulatedTurnDeg = 0f;
+        totalTurnLimitDeg = (currentAttack != null) ? Mathf.Max(0f, currentAttack.TotalTurnLimitDeg) : 0f;
+
+        stateMachine.ActivateInputBuffer();
     }
 
     public override void Tick(float deltaTime)
@@ -37,7 +44,19 @@ public class PlayerAttackState : PlayerBaseState
         Move(deltaTime);
 
         if (stateMachine.Targeter.CurrentTarget != null){
-            TryFaceTarget(stateMachine.allowedDelta);
+
+            if (totalTurnLimitDeg > 0f)
+            {
+                float remaining = Mathf.Max(0f, totalTurnLimitDeg - accumulatedTurnDeg);
+                if (remaining > 0f)
+                {
+                    float perFrame = Mathf.Min(stateMachine.allowedDelta, remaining);
+                    float beforeYaw = stateMachine.transform.eulerAngles.y;
+                    TryFaceTarget(perFrame, deltaTime);
+                    float afterYaw = stateMachine.transform.eulerAngles.y;
+                    accumulatedTurnDeg += Mathf.Abs(Mathf.DeltaAngle(beforeYaw, afterYaw));
+                }
+            }
         }else{
             TryFaceMovemnetDirection(calculateMovement(), deltaTime);
         }
@@ -65,18 +84,23 @@ public class PlayerAttackState : PlayerBaseState
                     return;
                 }
             }
-            //弃用
-            // if (stateMachine.InputReader.IsAttacking)
-            // {
-            //     TryComboAttack(normalizedTime);
-            // }
-            TryComboAttack(normalizedTime);
+
+            if (stateMachine.InputReader.IsAttacking)
+            {
+                TryComboAttack(normalizedTime);
+            }
+
+
         }
         else
         {
-            
-            //Debug.Log("normalizedTime: " + normalizedTime + "previousFrameTime" + previousFrameTime);
-            //Debug.Log("return from Attack State" + currentAttack.AnimationName);
+            // Leaving attack: first try buffered input; if none, fall back
+            if (stateMachine.ApplyBufferedInput())
+            {
+                previousFrameTime = normalizedTime;
+                return;
+            }
+
             if(stateMachine.Targeter.CurrentTarget != null)
             {
                 stateMachine.SwitchState(new PlayerTargetingState(stateMachine));
@@ -100,6 +124,8 @@ public class PlayerAttackState : PlayerBaseState
 
         stateMachine.ResetAllTransitions(false);
         stateMachine.ResetAllowedDelta();
+
+        stateMachine.DeactivateInputBuffer(true);
 
     }
 
@@ -142,12 +168,39 @@ public class PlayerAttackState : PlayerBaseState
 
     private void TryFaceMovemnetDirection(Vector3 movement, float deltaTime)
     {
-        // stateMachine.transform.rotation = Quaternion.Lerp(
-        //     stateMachine.transform.rotation,
-        //     Quaternion.LookRotation(movement),
-        //     deltaTime * stateMachine.RotationDamping
-        //     );
-        
+        if (totalTurnLimitDeg <= 0f) return; // No rotation allowed for this attack when limit is 0
+        if (movement.sqrMagnitude < 0.0001f) return;
+
+        Vector3 flatMovement = movement;
+        flatMovement.y = 0f;
+        if (flatMovement.sqrMagnitude < 0.0001f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(flatMovement);
+
+        float allowedDelta = Mathf.Clamp(stateMachine.allowedDelta, 0f, 180f);
+        if (allowedDelta < 0.0001f) return;
+
+        float speedDegPerSec = stateMachine.FaceTargetTurnSpeed > 0f ? stateMachine.FaceTargetTurnSpeed : 360f;
+        float maxStepThisFrame = speedDegPerSec * deltaTime;
+
+        float step = Mathf.Min(allowedDelta, maxStepThisFrame);
+
+        // Apply total rotation cap across the whole attack state lifecycle
+        if (totalTurnLimitDeg > 0f)
+        {
+            float remaining = Mathf.Max(0f, totalTurnLimitDeg - accumulatedTurnDeg);
+            if (remaining <= 0f) return;
+            step = Mathf.Min(step, remaining);
+        }
+
+        float beforeYaw = stateMachine.transform.eulerAngles.y;
+        stateMachine.transform.rotation = Quaternion.RotateTowards(stateMachine.transform.rotation, targetRotation, step);
+        float afterYaw = stateMachine.transform.eulerAngles.y;
+
+        if (totalTurnLimitDeg > 0f)
+        {
+            accumulatedTurnDeg += Mathf.Abs(Mathf.DeltaAngle(beforeYaw, afterYaw));
+        }
     }
 
     private void OnJump()

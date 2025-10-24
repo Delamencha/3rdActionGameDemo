@@ -19,6 +19,9 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
     public event Action TargetEvent;
     public event Action RunEvent;
     public event Action SkillEvent;
+    public event Action AttackPressed;
+    public event Action BlockPressed;
+    public event Action BlockReleased;
 
     private Controls controls;
 
@@ -71,6 +74,7 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
         if (context.performed)
         {
             IsAttacking = true;
+            AttackPressed?.Invoke();
         }else if (context.canceled)
         {
             IsAttacking = false;
@@ -82,10 +86,12 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
         if (context.performed)
         {
             IsBlocking = true;
+            BlockPressed?.Invoke();
         }
         else if (context.canceled)
         {
             IsBlocking = false;
+            BlockReleased?.Invoke();
         }
     }
 

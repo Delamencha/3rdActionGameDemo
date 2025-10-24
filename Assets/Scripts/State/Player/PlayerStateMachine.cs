@@ -19,6 +19,7 @@ public class PlayerStateMachine : StateMachine
     [field: SerializeField] public float BlockWalkSpeed { get; private set; }
     [field: SerializeField] public float TargetingMoveSpeed { get; private set; }
     [field: SerializeField] public float RotationDamping { get; private set; }
+    [field: SerializeField] public float FaceTargetTurnSpeed { get; private set; } = 720f;
     [field: SerializeField] public float DodgeDuration { get; private set; }
     [field: SerializeField] public float DodgeDistance { get; private set; }
     [field: SerializeField] public float JumpForce { get; private set; }
@@ -35,6 +36,8 @@ public class PlayerStateMachine : StateMachine
 
     public Transform MainCameraTransform { get; private set; }
 
+    [field: SerializeField] public InputWeightsSO InputWeights { get; private set; }
+    public InputBuffer Buffer { get; private set; } = new InputBuffer();
 
     private void Awake()
     {
@@ -59,6 +62,17 @@ public class PlayerStateMachine : StateMachine
     {
         Health.OnTakeDamage += HandleTakeDamage;
         Health.OnDie += HandleDeath;
+
+        if (InputReader != null)
+        {
+            InputReader.AttackPressed += OnAttackPressedBuffered;
+            InputReader.DogeEvent += OnDogeBuffered;
+            InputReader.JumpEvent += OnJumpBuffered;
+            InputReader.TargetEvent += OnTargetBuffered;
+            InputReader.RunEvent += OnRunBuffered;
+            InputReader.SkillEvent += OnSkillBuffered;
+            InputReader.BlockPressed += OnBlockPressedBuffered;
+        }
     }
 
 
@@ -67,6 +81,108 @@ public class PlayerStateMachine : StateMachine
     {
         Health.OnTakeDamage -= HandleTakeDamage;
         Health.OnDie -= HandleDeath;
+
+        if (InputReader != null)
+        {
+            InputReader.AttackPressed -= OnAttackPressedBuffered;
+            InputReader.DogeEvent -= OnDogeBuffered;
+            InputReader.JumpEvent -= OnJumpBuffered;
+            InputReader.TargetEvent -= OnTargetBuffered;
+            InputReader.RunEvent -= OnRunBuffered;
+            InputReader.SkillEvent -= OnSkillBuffered;
+            InputReader.BlockPressed -= OnBlockPressedBuffered;
+        }
+    }
+
+    private void OnAttackPressedBuffered()
+    {
+        if (!Buffer.IsActive || InputWeights == null) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Attack, InputWeights.AttackWeight);
+    }
+
+    private void OnDogeBuffered()
+    {
+        if (!Buffer.IsActive || InputWeights == null) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Dodge, InputWeights.DodgeWeight);
+    }
+
+    private void OnJumpBuffered()
+    {
+        if (!Buffer.IsActive || InputWeights == null) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Jump, InputWeights.JumpWeight);
+    }
+
+    private void OnTargetBuffered()
+    {
+        if (!Buffer.IsActive || InputWeights == null) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Target, InputWeights.TargetWeight);
+    }
+
+    private void OnRunBuffered()
+    {
+        if (!Buffer.IsActive || InputWeights == null) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Run, InputWeights.RunWeight);
+    }
+
+    private void OnSkillBuffered()
+    {
+        if (!Buffer.IsActive || InputWeights == null) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Skill, InputWeights.SkillWeight);
+    }
+
+    private void OnBlockPressedBuffered()
+    {
+        if (!Buffer.IsActive || InputWeights == null) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Block, InputWeights.BlockWeight);
+    }
+
+    public void ActivateInputBuffer()
+    {
+        Buffer.Activate();
+    }
+
+    public void DeactivateInputBuffer(bool clear)
+    {
+        Buffer.Deactivate(clear);
+    }
+
+    public bool ApplyBufferedInput()
+    {
+        if (!Buffer.TryConsumeTop(out var type)) return false;
+        switch (type)
+        {
+            case PlayerBufferedInputType.Attack:
+                if (IsStateTransitionAllowed("PlayerAttackState"))
+                {
+                    SwitchState(new PlayerAttackState(this, 0));
+                }
+                break;
+            case PlayerBufferedInputType.Dodge:
+                if (IsStateTransitionAllowed("PlayerDodgeState"))
+                {
+                    SwitchState(new PlayerDodgeState(this, InputReader.MovementValue == Vector2.zero ? new Vector2(0, -1) : InputReader.MovementValue));
+                }
+                break;
+            case PlayerBufferedInputType.Jump:
+                if (IsStateTransitionAllowed("PlayerJumpState"))
+                {
+                    SwitchState(new PlayerJumpState(this));
+                }
+                break;
+            case PlayerBufferedInputType.Target:
+                SwitchState(new PlayerTargetingState(this));
+                break;
+            case PlayerBufferedInputType.Run:
+                SwitchState(new PlayerFreeRunState(this));
+                break;
+            case PlayerBufferedInputType.Skill:
+                SwitchState(new PlayerSkillState(this));
+                break;
+            case PlayerBufferedInputType.Block:
+                SwitchState(new PlayerBlockState(this));
+                break;
+        }
+        return true;
     }
 
     private void HandleTakeDamage(bool isLargeImpact)

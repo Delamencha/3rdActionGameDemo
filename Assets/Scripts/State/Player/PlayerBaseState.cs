@@ -40,9 +40,10 @@ public abstract class PlayerBaseState : State
 
     }
 
-	protected void TryFaceTarget(float degree)
+	protected void TryFaceTarget(float degree, float deltaTime)
 	{
 		if (stateMachine.Targeter.CurrentTarget == null) return;
+		if (degree < 0.0001f) return;
 
 		float allowedDelta = Mathf.Clamp(degree, 0f, 180f);
 
@@ -51,17 +52,13 @@ public abstract class PlayerBaseState : State
 		if (toTarget.sqrMagnitude < 0.0001f) return;
 
 		Quaternion targetRotation = Quaternion.LookRotation(toTarget);
-		float currentYaw = stateMachine.transform.eulerAngles.y;
-		float targetYaw = targetRotation.eulerAngles.y;
 
-		float deltaYaw = Mathf.DeltaAngle(currentYaw, targetYaw);
-		float clampedDelta = Mathf.Clamp(deltaYaw, -allowedDelta, allowedDelta);
+		float speedDegPerSec = stateMachine.FaceTargetTurnSpeed > 0f ? stateMachine.FaceTargetTurnSpeed : 360f;
+		float maxStepThisFrame = speedDegPerSec * deltaTime;
+		float step = Mathf.Min(allowedDelta, maxStepThisFrame);
 
-		float newYaw = currentYaw + clampedDelta;
-		Vector3 euler = stateMachine.transform.eulerAngles;
-		euler.y = newYaw;
-		stateMachine.transform.rotation = Quaternion.Euler(euler);
-       
+		stateMachine.transform.rotation = Quaternion.RotateTowards(stateMachine.transform.rotation, targetRotation, step);
+	   
 	}
 
     protected void ReturnToLocomotion()
