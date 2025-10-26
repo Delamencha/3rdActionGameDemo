@@ -5,14 +5,13 @@ using UnityEngine;
 public class PlayerFallState : PlayerBaseState
 {
     private readonly int FallHash = Animator.StringToHash("Fall");
-    private readonly int GroundedHash = Animator.StringToHash("Grounded");
+
     private const float CrossFadeDuration = 0.1f;
 
     private Vector3 momentum;
 
-    private bool hasLand;
 
-    public PlayerFallState(PlayerStateMachine stateMachine) : base(stateMachine) { }
+    public PlayerFallState(PlayerStateMachine stateMachine) : base(stateMachine) {}
 
 
     public override void Enter()
@@ -20,8 +19,6 @@ public class PlayerFallState : PlayerBaseState
         stateMachine.Animator.CrossFadeInFixedTime(FallHash, CrossFadeDuration);
         momentum = stateMachine.Controller.velocity;
         momentum.y = 0;
-
-        hasLand = false;
 
         if (stateMachine.LedgeDetector != null)
         {
@@ -33,31 +30,13 @@ public class PlayerFallState : PlayerBaseState
 
     public override void Tick(float deltaTime)
     {
-        
+
+        Move(momentum, deltaTime);
+        FaceTarget();
 
         if (stateMachine.Controller.isGrounded)
         {
-            //ReturnToLocomotion();
-            if (!hasLand)
-            {
-
-                stateMachine.Animator.CrossFadeInFixedTime(GroundedHash, CrossFadeDuration);
-                hasLand = true;
-            }
-            else
-            {
-                if(GetNormalizedTime(stateMachine.Animator, "Grounded") >= 1f)
-                {
-
-
-                    ReturnToLocomotion(true);
-                }
-            }
-        }
-        else
-        {
-            Move(momentum, deltaTime);
-            FaceTarget();
+            stateMachine.SwitchState(new PlayerGroundedState(stateMachine));
         }
 
         

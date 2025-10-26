@@ -14,6 +14,13 @@ public class PlayerDodgeState : PlayerBaseState
 
     private const float CrossFadeDuration = 0.1f;
 
+    private const float InvulnerableStart = 0.125f;
+    private const float InvulnerableEnd = 0.5625f;
+    private const float PerfectDodgeStart = 0.25f;
+    private const float PerfectDodgeEnd = 0.3125f;
+    private bool isInvulnerable;
+    private bool isPerfectDodge;
+
     public PlayerDodgeState(PlayerStateMachine stateMachine, Vector2 dogeDirectionInput) : base(stateMachine) 
     {
         this.dodgingDirectionInput = dogeDirectionInput;
@@ -21,6 +28,8 @@ public class PlayerDodgeState : PlayerBaseState
 
     public override void Enter()
     {
+        isInvulnerable = false;
+        isPerfectDodge = false;
 
         remainingDodgeTime = stateMachine.DodgeDuration;
 
@@ -28,14 +37,37 @@ public class PlayerDodgeState : PlayerBaseState
         stateMachine.Animator.SetFloat(DodgeRightBlendHash, dodgingDirectionInput.x);
         stateMachine.Animator.CrossFadeInFixedTime(DodgeHash, CrossFadeDuration);
 
-        //闪避添加无敌帧
-        stateMachine.Health.SetInvulnerable(true);
+        //通过normalizedTime添加无敌窗口
 
 
     }
 
     public override void Tick(float deltaTime)
     {
+        //设置无敌帧
+        float normalizedTime = GetNormalizedTime(stateMachine.Animator, "Dodge");
+        if (!isInvulnerable && normalizedTime >= InvulnerableStart && normalizedTime <= InvulnerableEnd )
+        {
+            isInvulnerable = true;
+            stateMachine.Health.ActiveInvulnerable();
+        }else if (isInvulnerable && (normalizedTime < InvulnerableStart || normalizedTime > InvulnerableEnd))
+        {
+            isInvulnerable = false;
+            stateMachine.Health.DeactiveInvulnerable();
+        }
+        //设置完美闪避
+        if (!isPerfectDodge && normalizedTime >= PerfectDodgeStart && normalizedTime <= PerfectDodgeEnd)
+        {
+            isPerfectDodge = true;
+            
+        }
+        else if (isPerfectDodge && (normalizedTime < PerfectDodgeStart || normalizedTime > PerfectDodgeEnd))
+        {
+            isPerfectDodge = false;
+            
+        }
+
+
         Vector3 movement = new Vector3();
 
         movement += stateMachine.transform.right * dodgingDirectionInput.x * stateMachine.DodgeDistance / stateMachine.DodgeDuration;
@@ -52,11 +84,14 @@ public class PlayerDodgeState : PlayerBaseState
             //stateMachine.SwitchState(new PlayerTargetingState(stateMachine));
         }
 
+        
+
     }
 
     public override void Exit()
     {
-        stateMachine.Health.SetInvulnerable(false);
+        
+        stateMachine.Health.DeactiveInvulnerable();
     }
 
 

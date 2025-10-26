@@ -10,6 +10,7 @@ public class AttackData : ScriptableObject
     [Header("Combo / Flow")]
     public int ComboStateIndex = -1;       // -1 means no next
     public float ComboAttackTime = 0.5f;   // normalized time to accept next input
+    public float AnimationCancelTime = 0.5f; //normalized time to cancel current animation & jump to another state
 
     [Header("Timing / Motion")]
     public float ForceTime = 0f;        // normalized time to apply forward force
@@ -20,7 +21,7 @@ public class AttackData : ScriptableObject
     public float Knockback = 5f;
 
     [Header("Facing / Limits")]
-    public float TotalTurnLimitDeg = 0f; // 0 = unlimited
+    public float TotalTurnLimitDeg = 0f; // 
 }
 
 

@@ -22,9 +22,14 @@ public class Health : MonoBehaviour
         health = maxHealth;
     }
 
-    public void SetInvulnerable(bool isInvunerable)
+    public void ActiveInvulnerable()
     {
-        this.isInvunerable = isInvunerable;
+        this.isInvunerable = true;
+    }
+
+    public void DeactiveInvulnerable()
+    {
+        this.isInvunerable = false;
     }
 
     public void DealDamage(float damageValue, bool isLargeImpact)

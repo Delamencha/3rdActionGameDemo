@@ -198989,8 +198989,36 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
+  - time: 0
+    functionName: SetAllowedDelta
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 30
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.016666668
+    functionName: SetStateTransitionAllowed
+    data: PlayerDodgeState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.1
+    functionName: SetStateTransitionBanned
+    data: PlayerDodgeState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.11666667
     functionName: EnableWeapon
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.11666667
+    functionName: SetAllowedDelta
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -199003,7 +199031,21 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.46666667
+  - time: 0.2
+    functionName: ActivateInputBuffer
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 1
+    messageOptions: 0
+  - time: 0.38333333
+    functionName: ActivateInputBufferRead
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 1
+    messageOptions: 0
+  - time: 0.5
     functionName: SetStateTransitionAllowed
     data: PlayerAttackState
     objectReferenceParameter: {fileID: 0}
@@ -199024,9 +199066,16 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.6666667
+  - time: 0.6333333
     functionName: SetStateTransitionAllowed
     data: PlayerJumpState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.81666666
+    functionName: DeactivateInputBuffer
+    data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0

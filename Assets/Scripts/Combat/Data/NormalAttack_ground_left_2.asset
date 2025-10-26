@@ -16,7 +16,9 @@ MonoBehaviour:
   TransitionDuration: 0.1
   ComboStateIndex: 2
   ComboAttackTime: 0.5
+  AnimationCancelTime: 0.5
   ForceTime: 0
-  AttackForce: 15
+  AttackForce: 5
   DamageValue: 10
   Knockback: 5
+  TotalTurnLimitDeg: 30

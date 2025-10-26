@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerAttackState : PlayerBaseState
 {
-    private float previousFrameTime = -1;
+    //private float previousFrameTime = -1;
 
     private AttackData currentAttack;
 
@@ -14,6 +14,7 @@ public class PlayerAttackState : PlayerBaseState
     private float accumulatedTurnDeg;
     private float totalTurnLimitDeg;
 
+    public int NextComboIndex => currentAttack != null ? currentAttack.ComboStateIndex : -1;
 
     public PlayerAttackState(PlayerStateMachine stateMachine, int attackIndex) : base(stateMachine)
     {
@@ -25,7 +26,7 @@ public class PlayerAttackState : PlayerBaseState
 
     public override void Enter()
     {
-
+        stateMachine.ResetAllTransitions(false);
         //Debug.Log("turing into animation" + currentAttack.AnimationName);
         stateMachine.Animator.CrossFadeInFixedTime(currentAttack.AnimationName, currentAttack.TransitionDuration);
         stateMachine.WeaponDamage.SetAttack(currentAttack.DamageValue, currentAttack.Knockback);
@@ -36,7 +37,8 @@ public class PlayerAttackState : PlayerBaseState
         accumulatedTurnDeg = 0f;
         totalTurnLimitDeg = (currentAttack != null) ? Mathf.Max(0f, currentAttack.TotalTurnLimitDeg) : 0f;
 
-        stateMachine.ActivateInputBuffer();
+        //进入AttackState即开启预输入的 写入 或是在动画的帧事件中设置开始写入的时间
+        //stateMachine.ActivateInputBuffer();
     }
 
     public override void Tick(float deltaTime)
@@ -63,8 +65,16 @@ public class PlayerAttackState : PlayerBaseState
 
         float normalizedTime = GetNormalizedTime(stateMachine.Animator, "Attack");
 
-        if(normalizedTime > previousFrameTime && normalizedTime < 1f)
+        if(normalizedTime < 1f)
         {
+            //经过一定时间，对于Attack而言是在打击帧结束之后，开启预输入的 读取 (Data层面限制)
+            // 与stateMachine中ActivateInputBufferRead()有重复，有些冗余 （Animation层面限制）
+            if (normalizedTime >= currentAttack.AnimationCancelTime)
+            {
+
+                stateMachine.ApplyBufferedInput();
+            }
+
             if(normalizedTime >= currentAttack.ForceTime)
             {
                 TryApplyForce();
@@ -94,12 +104,7 @@ public class PlayerAttackState : PlayerBaseState
         }
         else
         {
-            // Leaving attack: first try buffered input; if none, fall back
-            if (stateMachine.ApplyBufferedInput())
-            {
-                previousFrameTime = normalizedTime;
-                return;
-            }
+
 
             if(stateMachine.Targeter.CurrentTarget != null)
             {
@@ -110,9 +115,6 @@ public class PlayerAttackState : PlayerBaseState
                 stateMachine.SwitchState(new PlayerFreeLookState(stateMachine));
             }
         }
-
-
-        previousFrameTime = normalizedTime;
 
     }
 
@@ -125,7 +127,10 @@ public class PlayerAttackState : PlayerBaseState
         stateMachine.ResetAllTransitions(false);
         stateMachine.ResetAllowedDelta();
 
-        stateMachine.DeactivateInputBuffer(true);
+        stateMachine.DeactivateInputBuffer();
+        stateMachine.ResetAllTransitions(false);
+
+        //Debug.Log("accumulatedTurnDeg : " + accumulatedTurnDeg);
 
     }
 

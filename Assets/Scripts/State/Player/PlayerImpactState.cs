@@ -23,14 +23,15 @@ public class PlayerImpactState : PlayerBaseState
         {
             stateMachine.Animator.CrossFadeInFixedTime("LargeImpact", CrossFadeDuration);
             duration = 4.2f;
-            stateMachine.Health.SetInvulnerable(true);
+
+            stateMachine.Health.ActiveInvulnerable();
         }
         else
         {
             stateMachine.Animator.CrossFadeInFixedTime(ImpactHash, CrossFadeDuration);
         }
 
-        stateMachine.ActivateInputBuffer();
+        //stateMachine.ActivateInputBuffer();
         
     }
 
@@ -39,21 +40,22 @@ public class PlayerImpactState : PlayerBaseState
 
         Move(deltaTime);
 
+        // 尝试在窗口内应用预输入，命中则直接切换并返回
+        //在特定时间后开始检测预输入，需考量使用time还是normalizedTime
+        //if (stateMachine.ApplyBufferedInput()) return;
+
         duration -= deltaTime;
         if(duration <= 0)
         {
-            stateMachine.Health.SetInvulnerable(false);
-            if (!stateMachine.ApplyBufferedInput())
-            {
-                ReturnToLocomotion();
-            }
+            stateMachine.Health.DeactiveInvulnerable();
+            ReturnToLocomotion();
         }
 
     }
 
     public override void Exit()
     {
-        stateMachine.DeactivateInputBuffer(true);
+        stateMachine.DeactivateInputBuffer();
     }
 
 
