@@ -4,31 +4,38 @@ using UnityEngine;
 
 public class PlayerImpactState : PlayerBaseState
 {
-    private readonly int ImpactHash = Animator.StringToHash("Impact");
+    private readonly int LigthImpactHash = Animator.StringToHash("LightImpact");
+    private readonly int MediumImpactHash = Animator.StringToHash("MediumImpact");
+    private readonly int HeavyImpactHash = Animator.StringToHash("HeavyImpact");
 
     private const float CrossFadeDuration = 0.1f;
 
     private float duration = 1f;
 
-    private bool isLargeImpact;
+    private ImpactType impactType;
 
-    public PlayerImpactState(PlayerStateMachine stateMachine, bool isLargeImpact) : base(stateMachine)
+    public PlayerImpactState(PlayerStateMachine stateMachine, ImpactType impactType) : base(stateMachine)
     {
-        this.isLargeImpact = isLargeImpact;
+        this.impactType = impactType;
     }
 
     public override void Enter()
     {
-        if (isLargeImpact)
+        if (impactType == ImpactType.Heavy)
         {
-            stateMachine.Animator.CrossFadeInFixedTime("LargeImpact", CrossFadeDuration);
-            duration = 4.2f;
+            stateMachine.Animator.CrossFadeInFixedTime(HeavyImpactHash, CrossFadeDuration);
+            duration = 2.5f;
 
             stateMachine.Health.ActiveInvulnerable();
-        }
-        else
+        }else if(impactType == ImpactType.Medium)
         {
-            stateMachine.Animator.CrossFadeInFixedTime(ImpactHash, CrossFadeDuration);
+            stateMachine.Animator.CrossFadeInFixedTime(MediumImpactHash, CrossFadeDuration);
+            duration = 0.75f;
+        }
+        else if (impactType == ImpactType.Light)
+        {
+            stateMachine.Animator.CrossFadeInFixedTime(LigthImpactHash, CrossFadeDuration);
+            duration = 0.65f;
         }
 
         //stateMachine.ActivateInputBuffer();
@@ -47,8 +54,16 @@ public class PlayerImpactState : PlayerBaseState
         duration -= deltaTime;
         if(duration <= 0)
         {
-            stateMachine.Health.DeactiveInvulnerable();
-            ReturnToLocomotion();
+            if (impactType == ImpactType.Heavy)
+            {
+                stateMachine.SwitchState(new PlayerGetupState(stateMachine));
+            }
+            else
+            {
+                stateMachine.Health.DeactiveInvulnerable();
+                ReturnToLocomotion();
+            }
+
         }
 
     }

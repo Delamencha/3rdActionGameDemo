@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 299597cb8e9d4e4458a37236fd6d1eaf, type: 3}
-  m_Name: NormalAttack_ground_left_2
+  m_Name: Attack_1-4
   m_EditorClassIdentifier: 
-  AnimationName: Attack2
+  AnimationName: Attack1-4
   TransitionDuration: 0.1
-  ComboStateIndex: 2
+  LightComboStateIndex: -1
+  HeavyComboStateIndex: -1
   ComboAttackTime: 0.5
   AnimationCancelTime: 0.5
   ForceTime: 0
-  AttackForce: 5
+  AttackForce: 6
   DamageValue: 10
   Knockback: 5
-  TotalTurnLimitDeg: 30
+  TotalTurnLimitDeg: 45

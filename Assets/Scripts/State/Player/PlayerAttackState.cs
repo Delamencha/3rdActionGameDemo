@@ -14,13 +14,15 @@ public class PlayerAttackState : PlayerBaseState
     private float accumulatedTurnDeg;
     private float totalTurnLimitDeg;
 
-    public int NextComboIndex => currentAttack != null ? currentAttack.ComboStateIndex : -1;
+    //需拓展 -> Light + Heavy
+    public int NextComboIndex => currentAttack != null ? currentAttack.LightComboStateIndex : -1;
 
     public PlayerAttackState(PlayerStateMachine stateMachine, int attackIndex) : base(stateMachine)
     {
-        if (stateMachine.ComboSequence != null && stateMachine.ComboSequence.attacks != null && attackIndex >= 0 && attackIndex < stateMachine.ComboSequence.attacks.Count)
+        if (stateMachine.ComboSequence != null && stateMachine.ComboSequence.Attack_Dic != null && attackIndex >= 0 && attackIndex < stateMachine.ComboSequence.Attack_Dic.Count)
         {
-            currentAttack = stateMachine.ComboSequence.attacks[attackIndex];
+            //currentAttack = stateMachine.ComboSequence.attacks[attackIndex];
+            currentAttack = stateMachine.ComboSequence.Attack_Dic[attackIndex];
         }
     }
 
@@ -138,11 +140,11 @@ public class PlayerAttackState : PlayerBaseState
 
     private void TryComboAttack(float normalizedTime)
     {
-        if (currentAttack.ComboStateIndex == -1) return;
+        if (currentAttack.LightComboStateIndex == -1) return;
 
         //if (normalizedTime < currentAttack.ComboAttackTime) return;
         if(stateMachine.IsStateTransitionAllowed("PlayerAttackState")){
-            stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.ComboStateIndex));
+            stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.LightComboStateIndex));
         }
         
 

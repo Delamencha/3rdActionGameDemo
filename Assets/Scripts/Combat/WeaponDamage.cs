@@ -65,7 +65,7 @@ public class WeaponDamage : MonoBehaviour
             // 2) If the hit belongs to the same Health that blocked with shield, skip damage but still apply force
             if (health != blockedHealth)
             {
-                health.DealDamage(damageValue, knockBack > 8f);
+                health.DealDamage(damageValue, knockBack);
             }
         }
 

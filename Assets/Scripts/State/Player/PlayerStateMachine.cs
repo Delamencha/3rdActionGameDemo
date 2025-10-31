@@ -210,9 +210,9 @@ public class PlayerStateMachine : StateMachine
         allowInputBufferRead = (flag == 1);
     }
 
-    private void HandleTakeDamage(bool isLargeImpact)
+    private void HandleTakeDamage(ImpactType impactType)
     {
-        SwitchState(new PlayerImpactState(this, isLargeImpact));
+        SwitchState(new PlayerImpactState(this, impactType));
     }
 
     private void HandleDeath()

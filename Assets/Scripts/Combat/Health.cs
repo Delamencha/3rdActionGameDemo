@@ -12,7 +12,7 @@ public class Health : MonoBehaviour
 
     private bool isInvunerable;
 
-    public event Action<bool> OnTakeDamage;
+    public event Action<ImpactType> OnTakeDamage;
     public event Action OnDie;
 
     public bool IsDead => health == 0;
@@ -32,7 +32,7 @@ public class Health : MonoBehaviour
         this.isInvunerable = false;
     }
 
-    public void DealDamage(float damageValue, bool isLargeImpact)
+    public void DealDamage(float damageValue, float knockBack)
     {
         if (health <= 0) return;
 
@@ -40,8 +40,27 @@ public class Health : MonoBehaviour
 
         health = Mathf.Max(0, health - damageValue);
 
+        ImpactType currentImacpType = ImpactType.Light;
+
+        switch (knockBack) 
+        {
+            case float k when k <= 2f:
+                currentImacpType = ImpactType.Light;
+                break;
+            case float k when k > 2f && k <= 5f:
+                currentImacpType = ImpactType.Light;
+                break;
+            case float k when k > 5f && k <= 8f:
+                currentImacpType = ImpactType.Medium;
+                break;
+            case float k when k >8f:
+                currentImacpType = ImpactType.Heavy;
+                break;
+        }
+
+
         //在stateMachine中触发impactState,更广的触发层面
-        OnTakeDamage?.Invoke(isLargeImpact);
+        OnTakeDamage?.Invoke(currentImacpType);
 
         if(health <= 0)
         {
