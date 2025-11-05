@@ -30,6 +30,8 @@ public class PlayerFreeLookState : PlayerBaseState
         stateMachine.InputReader.RunEvent += OnRun;
         stateMachine.InputReader.SkillEvent += OnSkill;
         stateMachine.InputReader.DogeEvent += OnDodge;
+        stateMachine.InputReader.AttackEvent += OnAttack;
+        stateMachine.InputReader.HeavyAttackEvent += OnHeavyAttack;
 
         stateMachine.Animator.SetFloat(FreeLookSpeedHash, 0);
         //stateMachine.Animator.Play(FreeLookHash);
@@ -46,6 +48,7 @@ public class PlayerFreeLookState : PlayerBaseState
     }
 
 
+
     public override void Tick(float deltaTime)
     {
         if (stateMachine.InputReader.IsBlocking)
@@ -54,11 +57,11 @@ public class PlayerFreeLookState : PlayerBaseState
             return;
         }
 
-        if (stateMachine.InputReader.IsAttacking)
-        {
-            stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
-            return;
-        }
+        //if (stateMachine.InputReader.IsAttacking)
+        //{
+        //    stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
+        //    return;
+        //}
 
         if (!stateMachine.Controller.isGrounded)
         {
@@ -112,6 +115,8 @@ public class PlayerFreeLookState : PlayerBaseState
         stateMachine.InputReader.RunEvent -= OnRun;
         stateMachine.InputReader.SkillEvent -= OnSkill;
         stateMachine.InputReader.DogeEvent -= OnDodge;
+        stateMachine.InputReader.AttackEvent -= OnAttack;
+        stateMachine.InputReader.HeavyAttackEvent -= OnHeavyAttack;
     }
 
     private Vector3 calculateMovement()
@@ -185,9 +190,16 @@ public class PlayerFreeLookState : PlayerBaseState
             stateMachine.SwitchState(new PlayerDodgeState(stateMachine, new Vector2(0, 1)));
         }
 
-        
+    }
 
+    private void OnAttack()
+    {
+        stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
+    }
 
+    private void OnHeavyAttack()
+    {
+        stateMachine.SwitchState(new PlayerAttackState(stateMachine, 4));
     }
 
 }

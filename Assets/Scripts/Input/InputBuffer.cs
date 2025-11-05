@@ -40,7 +40,7 @@ public sealed class InputBuffer
         }
     }
 
-    public void TryAdd(PlayerBufferedInputType type, int weight)
+    public void TryAdd(PlayerBufferedInputType type)
     {
         if (!IsActive) return;
 
@@ -59,11 +59,11 @@ public sealed class InputBuffer
         entries.Add(new Entry
         {
             Type = type,
-            Weight = weight,
+
             Sequence = ++sequence,
             Time = Time.time
         });
-		Debug.Log($"[InputBuffer] Added: type={type}, weight={weight} | buffer={GetDebugContents()}");
+		Debug.Log($"[InputBuffer] Added: type={type} | buffer={GetDebugContents()}");
     }
 
 

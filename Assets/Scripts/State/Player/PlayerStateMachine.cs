@@ -26,7 +26,7 @@ public class PlayerStateMachine : StateMachine
     [field: SerializeField] public ForceReceiver ForceReceiver { get;private set; }
     [field: SerializeField] public Attack[] Attacks { get; private set; }
     [field: SerializeField] public ComboSequenceSO ComboSequence { get; private set; }
-    [field: SerializeField] public InputWeightsSO InputWeights { get; private set; }
+    //[field: SerializeField] public InputWeightsSO InputWeights { get; private set; }
 
     public float PreviousDodgeTime { get; private set; } = Mathf.NegativeInfinity;
     public InputBuffer Buffer { get; private set; } = new InputBuffer();
@@ -75,6 +75,7 @@ public class PlayerStateMachine : StateMachine
 
         if (InputReader != null)
         {
+            InputReader.HeavyAttackEvent += OnHeavyAttackPressedBuffered;
             InputReader.AttackPressed += OnAttackPressedBuffered;
             InputReader.DogeEvent += OnDogeBuffered;
             InputReader.JumpEvent += OnJumpBuffered;
@@ -94,6 +95,7 @@ public class PlayerStateMachine : StateMachine
 
         if (InputReader != null)
         {
+            InputReader.HeavyAttackEvent -= OnHeavyAttackPressedBuffered;
             InputReader.AttackPressed -= OnAttackPressedBuffered;
             InputReader.DogeEvent -= OnDogeBuffered;
             InputReader.JumpEvent -= OnJumpBuffered;
@@ -104,46 +106,52 @@ public class PlayerStateMachine : StateMachine
         }
     }
 
+    private void OnHeavyAttackPressedBuffered()
+    {
+        if (!Buffer.IsActive) return;
+        Buffer.TryAdd(PlayerBufferedInputType.HeavyAttack);
+    }
+
     private void OnAttackPressedBuffered()
     {
-        if (!Buffer.IsActive || InputWeights == null) return;
-        Buffer.TryAdd(PlayerBufferedInputType.Attack, InputWeights.AttackWeight);
+        if (!Buffer.IsActive ) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Attack);
     }
 
     private void OnDogeBuffered()
     {
-        if (!Buffer.IsActive || InputWeights == null) return;
-        Buffer.TryAdd(PlayerBufferedInputType.Dodge, InputWeights.DodgeWeight);
+        if (!Buffer.IsActive ) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Dodge);
     }
 
     private void OnJumpBuffered()
     {
-        if (!Buffer.IsActive || InputWeights == null) return;
-        Buffer.TryAdd(PlayerBufferedInputType.Jump, InputWeights.JumpWeight);
+        if (!Buffer.IsActive ) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Jump);
     }
 
     private void OnTargetBuffered()
     {
-        if (!Buffer.IsActive || InputWeights == null) return;
-        Buffer.TryAdd(PlayerBufferedInputType.Target, InputWeights.TargetWeight);
+        if (!Buffer.IsActive ) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Target);
     }
 
     private void OnRunBuffered()
     {
-        if (!Buffer.IsActive || InputWeights == null) return;
-        Buffer.TryAdd(PlayerBufferedInputType.Run, InputWeights.RunWeight);
+        if (!Buffer.IsActive ) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Run);
     }
 
     private void OnSkillBuffered()
     {
-        if (!Buffer.IsActive || InputWeights == null) return;
-        Buffer.TryAdd(PlayerBufferedInputType.Skill, InputWeights.SkillWeight);
+        if (!Buffer.IsActive ) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Skill);
     }
 
     private void OnBlockPressedBuffered()
     {
-        if (!Buffer.IsActive || InputWeights == null) return;
-        Buffer.TryAdd(PlayerBufferedInputType.Block, InputWeights.BlockWeight);
+        if (!Buffer.IsActive ) return;
+        Buffer.TryAdd(PlayerBufferedInputType.Block);
     }
 
     public void ActivateInputBuffer()
@@ -195,10 +203,22 @@ public class PlayerStateMachine : StateMachine
             var type = StateInputMap[stateName];
             //无Debug版
             //if (!Buffer.TryConsumeType(type, BufferWindowDuration)) continue;
-            if (!Buffer.TryConsumeType(type, BufferWindowDuration, out var consumedInfo)) continue;
+
+            if (!Buffer.TryConsumeType(type, BufferWindowDuration, out var consumedInfo))
+            {
+                if (type == PlayerBufferedInputType.Attack)
+                {
+                    type = PlayerBufferedInputType.HeavyAttack;
+                    if (!Buffer.TryConsumeType(type, BufferWindowDuration)) continue;
+                }
+                else
+                {
+                    continue;
+                }  
+            }
 
             Debug.Log($"[InputBuffer] consumed for state={stateName}: {consumedInfo}");
-            SwitchByStateName(stateName);
+            SwitchByStateName(stateName, type);
             return true;
         }
 
@@ -288,6 +308,7 @@ public class PlayerStateMachine : StateMachine
         }
     }
 
+    //实际决定预输入优先级
     private void InitializePriorityAndInputMaps()
     {
         // Confirmed priority order (lower is higher priority)
@@ -303,13 +324,15 @@ public class PlayerStateMachine : StateMachine
         StateInputMap["PlayerBlockState"] = PlayerBufferedInputType.Block;
         StateInputMap["PlayerJumpState"] = PlayerBufferedInputType.Jump;
         StateInputMap["PlayerAttackState"] = PlayerBufferedInputType.Attack;
+        //这样HeavyAttack会覆盖掉Attack的预输入读取
+        //StateInputMap["PlayerAttackState"] = PlayerBufferedInputType.HeavyAttack;
         StateInputMap["PlayerTargetingState"] = PlayerBufferedInputType.Target;
         StateInputMap["PlayerFreeRunState"] = PlayerBufferedInputType.Run;
         StateInputMap["PlayerSkillState"] = PlayerBufferedInputType.Skill;
     }
 
 
-    private void SwitchByStateName(string stateName)
+    private void SwitchByStateName(string stateName, PlayerBufferedInputType type)
     {
         switch (stateName)
         {
@@ -331,7 +354,7 @@ public class PlayerStateMachine : StateMachine
                     var currentAttackState = currentState as PlayerAttackState;
                     if (currentAttackState != null)
                     {
-                        int next = currentAttackState.NextComboIndex;
+                        int next = type == PlayerBufferedInputType.Attack ? currentAttackState.NextComboIndex : currentAttackState.NextHeavyComboIndex;
                         if (next >= 0) idx = next;
                     }
                     SwitchState(new PlayerAttackState(this, idx));

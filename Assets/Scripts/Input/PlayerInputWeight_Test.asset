@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8720d62b4e0fbd942920b9df044fdff3, type: 3}
   m_Name: PlayerInputWeight_Test
   m_EditorClassIdentifier: 
-  AttackWeight: 100
+  AttackWeight: 95
+  HeavyAttackWeight: 100
   DodgeWeight: 90
   JumpWeight: 80
   TargetWeight: 70

@@ -19,7 +19,10 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
     public event Action TargetEvent;
     public event Action RunEvent;
     public event Action SkillEvent;
+    public event Action AttackEvent;
+    public event Action HeavyAttackEvent;
     public event Action AttackPressed;
+    public event Action HeavyAttackPressed;
     public event Action BlockPressed;
     public event Action BlockReleased;
 
@@ -69,18 +72,6 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
         TargetEvent?.Invoke();
     }
 
-    public void OnAttack(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            IsAttacking = true;
-            AttackPressed?.Invoke();
-        }else if (context.canceled)
-        {
-            IsAttacking = false;
-        }
-    }
-
     public void OnBlock(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -107,5 +98,30 @@ public class InputReader : MonoBehaviour, Controls.IPlayerActions
         if (!context.performed) return;
 
         SkillEvent?.Invoke();
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            //IsAttacking = true;
+            AttackEvent?.Invoke();
+            AttackPressed?.Invoke();
+        }
+        else if (context.canceled)
+        {
+            //IsAttacking = false;
+        }
+    }
+
+    public void OnHeavyAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+
+            HeavyAttackEvent?.Invoke();
+            HeavyAttackPressed?.Invoke();
+
+        }
     }
 }

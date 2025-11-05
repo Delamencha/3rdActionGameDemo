@@ -16,6 +16,7 @@ public class PlayerAttackState : PlayerBaseState
 
     //需拓展 -> Light + Heavy
     public int NextComboIndex => currentAttack != null ? currentAttack.LightComboStateIndex : -1;
+    public int NextHeavyComboIndex => currentAttack != null ? currentAttack.HeavyComboStateIndex : -1;
 
     public PlayerAttackState(PlayerStateMachine stateMachine, int attackIndex) : base(stateMachine)
     {
@@ -35,6 +36,8 @@ public class PlayerAttackState : PlayerBaseState
 
         stateMachine.InputReader.JumpEvent += OnJump;
         stateMachine.InputReader.DogeEvent += OnDodge;
+        stateMachine.InputReader.AttackEvent += OnAttack;
+        stateMachine.InputReader.HeavyAttackEvent += OnHeavyAttack;
 
         accumulatedTurnDeg = 0f;
         totalTurnLimitDeg = (currentAttack != null) ? Mathf.Max(0f, currentAttack.TotalTurnLimitDeg) : 0f;
@@ -97,10 +100,10 @@ public class PlayerAttackState : PlayerBaseState
                 }
             }
 
-            if (stateMachine.InputReader.IsAttacking)
-            {
-                TryComboAttack(normalizedTime);
-            }
+            //if (stateMachine.InputReader.IsAttacking)
+            //{
+            //    TryComboAttack(normalizedTime);
+            //}
 
 
         }
@@ -125,6 +128,8 @@ public class PlayerAttackState : PlayerBaseState
     {
         stateMachine.InputReader.JumpEvent -= OnJump;
         stateMachine.InputReader.DogeEvent -= OnDodge;
+        stateMachine.InputReader.AttackEvent -= OnAttack;
+        stateMachine.InputReader.HeavyAttackEvent -= OnHeavyAttack;
 
         stateMachine.ResetAllTransitions(false);
         stateMachine.ResetAllowedDelta();
@@ -225,6 +230,26 @@ public class PlayerAttackState : PlayerBaseState
                 stateMachine.InputReader.MovementValue == Vector2.zero ? new Vector2(0, -1) : stateMachine.InputReader.MovementValue));
         }
         
+    }
+
+    private void OnAttack()
+    {
+        if (currentAttack.LightComboStateIndex == -1) return;
+
+        if (stateMachine.IsStateTransitionAllowed("PlayerAttackState"))
+        {
+            stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.LightComboStateIndex));
+        }
+    }
+
+    private void OnHeavyAttack()
+    {
+        if (currentAttack.HeavyComboStateIndex == -1) return;
+
+        if (stateMachine.IsStateTransitionAllowed("PlayerAttackState"))
+        {
+            stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.HeavyComboStateIndex));
+        }
     }
 
 }

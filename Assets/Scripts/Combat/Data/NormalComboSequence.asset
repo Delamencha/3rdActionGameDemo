@@ -13,5 +13,15 @@ MonoBehaviour:
   m_Name: NormalComboSequence
   m_EditorClassIdentifier: 
   comboInfo:
+  - index: 0
+    attack: {fileID: 11400000, guid: 99bd5aa5a1dfab04d8df3d704e2d1bc2, type: 2}
   - index: 1
-    attack: {fileID: 0}
+    attack: {fileID: 11400000, guid: 835c454a7254e0a4d9cd68be51b6d98d, type: 2}
+  - index: 2
+    attack: {fileID: 11400000, guid: 11bea7c658638844aa8fde8abb82203d, type: 2}
+  - index: 3
+    attack: {fileID: 11400000, guid: bf14e63af967f8449b26214a32ab8483, type: 2}
+  - index: 4
+    attack: {fileID: 11400000, guid: 01253b18b476f6a4f97b6b41b235fe1f, type: 2}
+  - index: 5
+    attack: {fileID: 11400000, guid: e417b1f8f9700df4db95272d8d444765, type: 2}

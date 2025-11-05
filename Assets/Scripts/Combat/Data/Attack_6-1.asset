@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 299597cb8e9d4e4458a37236fd6d1eaf, type: 3}
   m_Name: Attack_6-1
   m_EditorClassIdentifier: 
-  AnimationName: Attack13-3
+  AnimationName: Attack6-1
   TransitionDuration: 0.1
   LightComboStateIndex: -1
   HeavyComboStateIndex: -1
