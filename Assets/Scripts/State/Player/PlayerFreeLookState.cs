@@ -199,7 +199,7 @@ public class PlayerFreeLookState : PlayerBaseState
 
     private void OnHeavyAttack()
     {
-        stateMachine.SwitchState(new PlayerAttackState(stateMachine, 4));
+        stateMachine.SwitchState(new PlayerAttackState(stateMachine, 16));
     }
 
 }

@@ -34,7 +34,7 @@ public class PlayerFreeRunState : PlayerBaseState
     {
         if (stateMachine.InputReader.IsAttacking)
         {
-            stateMachine.SwitchState(new PlayerAttackState(stateMachine, 4));
+            stateMachine.SwitchState(new PlayerAttackState(stateMachine, 19));
             return;
         }
 

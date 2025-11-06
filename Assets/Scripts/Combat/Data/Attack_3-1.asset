@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AnimationName: Attack3-1
   TransitionDuration: 0.1
-  LightComboStateIndex: -1
-  HeavyComboStateIndex: -1
+  LightComboStateIndex: 9
+  HeavyComboStateIndex: 9
   ComboAttackTime: 0.5
   AnimationCancelTime: 0.5
   ForceTime: 0

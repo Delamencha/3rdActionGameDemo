@@ -154651,7 +154651,7 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.2
+  - time: 0.18333334
     functionName: EnableWeapon
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -154665,9 +154665,58 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.5
+  - time: 0.26666668
+    functionName: ActivateInputBuffer
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.38333333
+    functionName: ActivateInputBufferRead
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 1
+    messageOptions: 0
+  - time: 0.41666666
     functionName: SetStateTransitionAllowed
     data: PlayerAttackState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.5
+    functionName: SetStateTransitionAllowed
+    data: PlayerDodgeState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.53333336
+    functionName: SetStateTransitionAllowed
+    data: PlayerJumpState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.53333336
+    functionName: SetStateTransitionAllowed
+    data: PlayerBlockState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.6166667
+    functionName: DeactivateInputBuffer
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.6333333
+    functionName: SetStateTransitionAllowed
+    data: PlayerFreeLookState
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0

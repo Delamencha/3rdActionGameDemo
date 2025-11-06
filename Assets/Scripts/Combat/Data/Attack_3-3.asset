@@ -15,7 +15,7 @@ MonoBehaviour:
   AnimationName: Attack3-3
   TransitionDuration: 0.1
   LightComboStateIndex: -1
-  HeavyComboStateIndex: -1
+  HeavyComboStateIndex: 11
   ComboAttackTime: 0.5
   AnimationCancelTime: 0.5
   ForceTime: 0

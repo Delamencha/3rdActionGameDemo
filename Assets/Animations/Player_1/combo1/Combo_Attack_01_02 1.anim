@@ -201768,30 +201768,93 @@ AnimationClip:
     floatParameter: 30
     intParameter: 0
     messageOptions: 0
-  - time: 0.11666667
+  - time: 0.05
+    functionName: SetStateTransitionAllowed
+    data: PlayerDodgeState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.13333334
+    functionName: SetStateTransitionBanned
+    data: PlayerDodgeState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.15
     functionName: EnableWeapon
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.11666667
+  - time: 0.15
     functionName: SetAllowedDelta
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.28333333
+  - time: 0.26666668
     functionName: DisableWeapon
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.6666667
+  - time: 0.28333333
+    functionName: ActivateInputBuffer
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.46666667
+    functionName: ActivateInputBufferRead
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 1
+    messageOptions: 0
+  - time: 0.5
     functionName: SetStateTransitionAllowed
     data: PlayerAttackState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.6333333
+    functionName: SetStateTransitionAllowed
+    data: PlayerDodgeState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.6666667
+    functionName: SetStateTransitionAllowed
+    data: PlayerBlockState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.6666667
+    functionName: SetStateTransitionAllowed
+    data: PlayerJumpState
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.81666666
+    functionName: DeactivateInputBuffer
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.8333333
+    functionName: SetStateTransitionAllowed
+    data: PlayerFreeLookState
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
