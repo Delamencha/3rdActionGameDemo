@@ -19,7 +19,6 @@ public class PlayerStateMachine : StateMachine
     [field: SerializeField] public float BlockWalkSpeed { get; private set; }
     [field: SerializeField] public float TargetingMoveSpeed { get; private set; }
     [field: SerializeField] public float RotationDamping { get; private set; }
-    [field: SerializeField] public float FaceTargetTurnSpeed { get; private set; } = 720f;
     [field: SerializeField] public float DodgeDuration { get; private set; }
     [field: SerializeField] public float DodgeDistance { get; private set; }
     [field: SerializeField] public float JumpForce { get; private set; }
@@ -32,6 +31,7 @@ public class PlayerStateMachine : StateMachine
     public InputBuffer Buffer { get; private set; } = new InputBuffer();
     public Transform MainCameraTransform { get; private set; }
     public float allowedDelta { get; private set; } = 30f;
+    public float faceTargetTurnSpeed { get; private set; } = 360f;
     /// <summary>
     /// 取消跳转白名单：键为状态类名，值为是否允许“当前状态”被该状态打断（取消）。
     /// 注意：该表不用于“普通跳转”的筛选，普通跳转由各状态的 Enter/Update 逻辑决定，
@@ -243,6 +243,11 @@ public class PlayerStateMachine : StateMachine
 
     public void SetStateTransitionAllowed(string stateName)
     {
+        AnimatorStateInfo currentInfo = Animator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo nextInfo = Animator.GetNextAnimatorStateInfo(0);
+        if (Animator.IsInTransition(0) && !nextInfo.IsTag("Attack")) return;
+
+        //Debug.Log("allow state transition : " + stateName);
         StateTransitionMap[stateName] = true;
 
     }
@@ -256,12 +261,15 @@ public class PlayerStateMachine : StateMachine
     public bool IsStateTransitionAllowed(string stateName)
     {
         bool allowed;
+       // Debug.Log("judge if state transition allowed");
+        //Debug.Log(stateName + StateTransitionMap[stateName]);
         return StateTransitionMap.TryGetValue(stateName, out allowed) ? allowed : false;
     }
 
     public void ResetAllTransitions(bool isAllowed)
     {
         // Copy keys to avoid modification during enumeration
+        
         var keys = new List<string>(StateTransitionMap.Keys);
         foreach (var key in keys)
         {
@@ -272,6 +280,11 @@ public class PlayerStateMachine : StateMachine
     public void SetAllowedDelta(float degree)
     {
         allowedDelta = Mathf.Clamp(degree, 0f, 180f);
+    }
+
+    public void SetFaceTargetTurnSpeed(float degree)
+    {
+        faceTargetTurnSpeed = Mathf.Clamp(degree, 0f, 720f);
     }
 
     public void ResetAllowedDelta()

@@ -19,7 +19,7 @@ MonoBehaviour:
   ComboAttackTime: 0.5
   AnimationCancelTime: 0.5
   ForceTime: 0
-  AttackForce: 6
+  AttackForce: 0
   DamageValue: 10
   Knockback: 5
   TotalTurnLimitDeg: 45

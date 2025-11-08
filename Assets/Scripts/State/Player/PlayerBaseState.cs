@@ -43,7 +43,7 @@ public abstract class PlayerBaseState : State
 	protected void TryFaceTarget(float degree, float deltaTime)
 	{
 		if (stateMachine.Targeter.CurrentTarget == null) return;
-		if (degree < 0.0001f) return;
+		if (degree < 0.0001f || stateMachine.faceTargetTurnSpeed <= 0 ) return;
 
 		float allowedDelta = Mathf.Clamp(degree, 0f, 180f);
 
@@ -53,7 +53,7 @@ public abstract class PlayerBaseState : State
 
 		Quaternion targetRotation = Quaternion.LookRotation(toTarget);
 
-		float speedDegPerSec = stateMachine.FaceTargetTurnSpeed > 0f ? stateMachine.FaceTargetTurnSpeed : 360f;
+        float speedDegPerSec = stateMachine.faceTargetTurnSpeed;
 		float maxStepThisFrame = speedDegPerSec * deltaTime;
 		float step = Mathf.Min(allowedDelta, maxStepThisFrame);
 

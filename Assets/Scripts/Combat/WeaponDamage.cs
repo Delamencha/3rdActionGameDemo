@@ -30,7 +30,7 @@ public class WeaponDamage : MonoBehaviour
         
         alreadyColliderWith.Add(other);
 
-        Debug.Log("Other: " + other.gameObject.name);
+        //Debug.Log("Other: " + other.gameObject.name);
 
         // 1) If we hit a shield, perform one-time directional block check and record owner if front-blocked
         if (other.CompareTag("Shield"))

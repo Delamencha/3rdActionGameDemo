@@ -17,7 +17,7 @@ MonoBehaviour:
   LightComboStateIndex: -1
   HeavyComboStateIndex: 11
   ComboAttackTime: 0.5
-  AnimationCancelTime: 0.5
+  AnimationCancelTime: 0.3
   ForceTime: 0
   AttackForce: 0
   DamageValue: 10

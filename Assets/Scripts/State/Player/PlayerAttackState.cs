@@ -31,7 +31,10 @@ public class PlayerAttackState : PlayerBaseState
     {
         stateMachine.ResetAllTransitions(false);
         //Debug.Log("turing into animation" + currentAttack.AnimationName);
-        stateMachine.Animator.CrossFadeInFixedTime(currentAttack.AnimationName, currentAttack.TransitionDuration);
+
+        //使用CrossFadeInFixedTime导致前一个动画的帧事件仍会执行，且没有相对简易的解决方案，故暂用Play()
+        stateMachine.Animator.Play(currentAttack.AnimationName);
+        //stateMachine.Animator.CrossFadeInFixedTime(currentAttack.AnimationName, currentAttack.TransitionDuration);
         stateMachine.WeaponDamage.SetAttack(currentAttack.DamageValue, currentAttack.Knockback);
 
         stateMachine.InputReader.JumpEvent += OnJump;
@@ -48,6 +51,8 @@ public class PlayerAttackState : PlayerBaseState
 
     public override void Tick(float deltaTime)
     {
+        //Debug.Log("Dodge transition value : " + stateMachine.IsStateTransitionAllowed("PlayerDodgeState"));
+
         Move(deltaTime);
 
         if (stateMachine.Targeter.CurrentTarget != null){
@@ -181,7 +186,7 @@ public class PlayerAttackState : PlayerBaseState
     private void TryFaceMovemnetDirection(Vector3 movement, float deltaTime)
     {
         if (totalTurnLimitDeg <= 0f) return; // No rotation allowed for this attack when limit is 0
-        if (movement.sqrMagnitude < 0.0001f) return;
+        if (movement.sqrMagnitude < 0.0001f || stateMachine.faceTargetTurnSpeed <= 0) return;
 
         Vector3 flatMovement = movement;
         flatMovement.y = 0f;
@@ -192,7 +197,7 @@ public class PlayerAttackState : PlayerBaseState
         float allowedDelta = Mathf.Clamp(stateMachine.allowedDelta, 0f, 180f);
         if (allowedDelta < 0.0001f) return;
 
-        float speedDegPerSec = stateMachine.FaceTargetTurnSpeed > 0f ? stateMachine.FaceTargetTurnSpeed : 360f;
+        float speedDegPerSec = stateMachine.faceTargetTurnSpeed;
         float maxStepThisFrame = speedDegPerSec * deltaTime;
 
         float step = Mathf.Min(allowedDelta, maxStepThisFrame);
@@ -226,6 +231,7 @@ public class PlayerAttackState : PlayerBaseState
     private void OnDodge()
     {
         if(stateMachine.IsStateTransitionAllowed("PlayerDodgeState")){
+            Debug.Log("Attack State On dodge");
             stateMachine.SwitchState(new PlayerDodgeState(stateMachine, 
                 stateMachine.InputReader.MovementValue == Vector2.zero ? new Vector2(0, -1) : stateMachine.InputReader.MovementValue));
         }
