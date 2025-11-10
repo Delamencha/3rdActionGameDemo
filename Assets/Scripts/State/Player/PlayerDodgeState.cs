@@ -28,6 +28,8 @@ public class PlayerDodgeState : PlayerBaseState
 
     public override void Enter()
     {
+        stateMachine.Animator.applyRootMotion = true;
+
         isInvulnerable = false;
         isPerfectDodge = false;
 
@@ -73,7 +75,8 @@ public class PlayerDodgeState : PlayerBaseState
         movement += stateMachine.transform.right * dodgingDirectionInput.x * stateMachine.DodgeDistance / stateMachine.DodgeDuration;
         movement += stateMachine.transform.forward * dodgingDirectionInput.y * stateMachine.DodgeDistance / stateMachine.DodgeDuration;
 
-        Move(movement, deltaTime);
+        //Move(movement, deltaTime);
+        Move(deltaTime);
         FaceTarget();
 
         remainingDodgeTime -= deltaTime;
@@ -92,6 +95,7 @@ public class PlayerDodgeState : PlayerBaseState
     {
         
         stateMachine.Health.DeactiveInvulnerable();
+        stateMachine.Animator.applyRootMotion = false;
     }
 
 

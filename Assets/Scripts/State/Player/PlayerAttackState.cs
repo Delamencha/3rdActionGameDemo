@@ -31,6 +31,7 @@ public class PlayerAttackState : PlayerBaseState
     {
         stateMachine.ResetAllTransitions(false);
         //Debug.Log("turing into animation" + currentAttack.AnimationName);
+        stateMachine.Animator.applyRootMotion = true;
 
         //使用CrossFadeInFixedTime导致前一个动画的帧事件仍会执行，且没有相对简易的解决方案，故暂用Play()
         stateMachine.Animator.Play(currentAttack.AnimationName);
@@ -141,6 +142,8 @@ public class PlayerAttackState : PlayerBaseState
 
         stateMachine.DeactivateInputBuffer();
         stateMachine.ResetAllTransitions(false);
+
+        stateMachine.Animator.applyRootMotion = false;
 
         //Debug.Log("accumulatedTurnDeg : " + accumulatedTurnDeg);
 
