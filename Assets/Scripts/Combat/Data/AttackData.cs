@@ -3,6 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Combat/Attack Data")]
 public class AttackData : ScriptableObject
 {
+
+
     [Header("Animation")]
     public string AnimationName;
     public float TransitionDuration = 0.1f;
@@ -21,9 +23,11 @@ public class AttackData : ScriptableObject
     [Header("Damage / Impact")]
     public float DamageValue = 10f;
     public float Knockback = 5f;
+    public KnockbackType knockbackType = KnockbackType.AwayFromAttacker;
 
     [Header("Facing / Limits")]
-    public float TotalTurnLimitDeg = 0f; // 
+    public float TotalTurnLimitDeg = 0f; 
+
 }
 
 

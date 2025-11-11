@@ -36,7 +36,7 @@ public class PlayerAttackState : PlayerBaseState
         //使用CrossFadeInFixedTime导致前一个动画的帧事件仍会执行，且没有相对简易的解决方案，故暂用Play()
         stateMachine.Animator.Play(currentAttack.AnimationName);
         //stateMachine.Animator.CrossFadeInFixedTime(currentAttack.AnimationName, currentAttack.TransitionDuration);
-        stateMachine.WeaponDamage.SetAttack(currentAttack.DamageValue, currentAttack.Knockback);
+        stateMachine.WeaponDamage.SetAttack(currentAttack.DamageValue, currentAttack.Knockback, currentAttack.knockbackType);
 
         stateMachine.InputReader.JumpEvent += OnJump;
         stateMachine.InputReader.DogeEvent += OnDodge;
@@ -101,7 +101,8 @@ public class PlayerAttackState : PlayerBaseState
             }
             if(stateMachine.InputReader.MovementValue.sqrMagnitude > 0.5f){
                 if(stateMachine.IsStateTransitionAllowed("PlayerFreeLookState")){
-                    stateMachine.SwitchState(new PlayerFreeLookState(stateMachine));
+                    //tateMachine.SwitchState(new PlayerFreeLookState(stateMachine));
+                    ReturnToLocomotion();
                     return;
                 }
             }
@@ -119,6 +120,7 @@ public class PlayerAttackState : PlayerBaseState
 
             if(stateMachine.Targeter.CurrentTarget != null)
             {
+                Debug.Log("Getting back to targetting state");
                 stateMachine.SwitchState(new PlayerTargetingState(stateMachine));
             }
             else
@@ -260,5 +262,7 @@ public class PlayerAttackState : PlayerBaseState
             stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.HeavyComboStateIndex));
         }
     }
+
+
 
 }

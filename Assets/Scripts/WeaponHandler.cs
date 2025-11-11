@@ -5,16 +5,32 @@ using UnityEngine;
 public class WeaponHandler : MonoBehaviour
 {
 
-    [SerializeField] private GameObject weaponDamage;
+    [SerializeField] private GameObject[] weaponDamage;
 
-    public void EnableWeapon()
+    public void EnableWeapon(int idx = 0)
     {
-        weaponDamage.SetActive(true);
+        if(idx <= weaponDamage.Length && weaponDamage[idx] != null)
+        {
+            weaponDamage[idx].SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("inValid idx");
+        }
+        
     }
 
-    public void DisableWeapon()
+    public void DisableWeapon(int idx = 0)
     {
-        weaponDamage.SetActive(false);
+        if (idx <= weaponDamage.Length && weaponDamage[idx] != null)
+        {
+            weaponDamage[idx].SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("inValid idx");
+        }
+
     }
 
 }

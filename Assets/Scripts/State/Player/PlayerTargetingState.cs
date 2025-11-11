@@ -30,6 +30,8 @@ public class PlayerTargetingState : PlayerBaseState
         stateMachine.InputReader.DogeEvent += OnDoge;
         stateMachine.InputReader.JumpEvent += OnJump;
         stateMachine.InputReader.SkillEvent += OnSkill;
+        stateMachine.InputReader.AttackEvent += OnAttack;
+        stateMachine.InputReader.HeavyAttackEvent += OnHeavyAttack;
 
         stateMachine.InputReader.RunEvent += OnRun;
 
@@ -45,11 +47,11 @@ public class PlayerTargetingState : PlayerBaseState
             return;
         }
 
-        if (stateMachine.InputReader.IsAttacking)
-        {
-            stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
-            return;
-        }
+        //if (stateMachine.InputReader.IsAttacking)
+        //{
+        //    stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
+        //    return;
+        //}
 
         if (stateMachine.Targeter.CurrentTarget == null)
         {
@@ -73,6 +75,8 @@ public class PlayerTargetingState : PlayerBaseState
         stateMachine.InputReader.DogeEvent -= OnDoge;
         stateMachine.InputReader.JumpEvent -= OnJump;
         stateMachine.InputReader.SkillEvent -= OnSkill;
+        stateMachine.InputReader.AttackEvent -= OnAttack;
+        stateMachine.InputReader.HeavyAttackEvent -= OnHeavyAttack;
 
         stateMachine.InputReader.RunEvent -= OnRun;
 
@@ -114,6 +118,15 @@ public class PlayerTargetingState : PlayerBaseState
     private void OnSkill()
     {
         stateMachine.SwitchState(new PlayerSkillState(stateMachine));
+    }
+    private void OnAttack()
+    {
+        stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
+    }
+
+    private void OnHeavyAttack()
+    {
+        stateMachine.SwitchState(new PlayerAttackState(stateMachine, 16));
     }
 
     private Vector3 CalculateMovement(float deltaTime)

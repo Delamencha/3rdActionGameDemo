@@ -22,6 +22,8 @@ public class PlayerFreeRunState : PlayerBaseState
         stateMachine.InputReader.JumpEvent += OnJump;
         stateMachine.InputReader.RunEvent += OnRun;
         stateMachine.InputReader.DogeEvent += OnDodge;
+        stateMachine.InputReader.AttackEvent += OnAttack;
+        stateMachine.InputReader.HeavyAttackEvent += OnHeavyAttack;
 
         stateMachine.Animator.SetFloat(FreeRunSpeedHash, 1);
         stateMachine.Animator.CrossFadeInFixedTime(FreeRunHash, CrossFadeDuration);
@@ -32,11 +34,11 @@ public class PlayerFreeRunState : PlayerBaseState
 
     public override void Tick(float deltaTime)
     {
-        if (stateMachine.InputReader.IsAttacking)
-        {
-            stateMachine.SwitchState(new PlayerAttackState(stateMachine, 19));
-            return;
-        }
+        //if (stateMachine.InputReader.IsAttacking)
+        //{
+        //    stateMachine.SwitchState(new PlayerAttackState(stateMachine, 19));
+        //    return;
+        //}
 
         if (!stateMachine.Controller.isGrounded)
         {
@@ -71,6 +73,8 @@ public class PlayerFreeRunState : PlayerBaseState
         stateMachine.InputReader.JumpEvent -= OnJump;
         stateMachine.InputReader.RunEvent -= OnRun;
         stateMachine.InputReader.DogeEvent -= OnDodge;
+        stateMachine.InputReader.AttackEvent -= OnAttack;
+        stateMachine.InputReader.HeavyAttackEvent -= OnHeavyAttack;
     }
 
     private Vector3 calculateMovement()
@@ -133,6 +137,15 @@ public class PlayerFreeRunState : PlayerBaseState
             stateMachine.SwitchState(new PlayerDodgeState(stateMachine, new Vector2(0, 1)));
         }
 
+    }
+    private void OnAttack()
+    {
+        stateMachine.SwitchState(new PlayerAttackState(stateMachine, 19));
+    }
+
+    private void OnHeavyAttack()
+    {
+        stateMachine.SwitchState(new PlayerAttackState(stateMachine, 16));
     }
 
 }

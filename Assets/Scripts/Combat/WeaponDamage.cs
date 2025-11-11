@@ -11,6 +11,7 @@ public class WeaponDamage : MonoBehaviour
 
     private float damageValue;
     private float knockBack;
+    private KnockbackType knockBackType;
     //暂时只考虑一次攻击只会与一个盾牌交互
     private Health blockedHealth; // recorded owner of the blocking shield
     
@@ -71,17 +72,49 @@ public class WeaponDamage : MonoBehaviour
 
         if(other.TryGetComponent<ForceReceiver>(out ForceReceiver forceReceiver))
         {
-            Vector3 direction = (other.transform.position - myCollider.transform.position).normalized ;
+            //Vector3 direction = (other.transform.position - myCollider.transform.position).normalized ;
+            Vector3 direction = GetKnockbackDirection(myCollider.transform, other.transform);
             forceReceiver.AddForce(direction * knockBack);
         }
 
     }
 
-    public void SetAttack(float damageValue, float knockBack)
+    public void SetAttack(float damageValue, float knockBack, KnockbackType knockbackType)
     {
         this.damageValue = damageValue;
 
         this.knockBack = knockBack;
+
+        this.knockBackType = knockbackType;
+
+    }
+
+    public Vector3 GetKnockbackDirection(Transform attacker, Transform hitTarget)
+    {
+        Vector3 direction = myCollider.transform.forward;
+
+        switch (knockBackType)
+        {
+            case KnockbackType.Forward:
+                direction = attacker.forward;
+                break;
+
+            case KnockbackType.AwayFromAttacker:
+                direction = hitTarget.position - attacker.position;
+                direction.y = 0; // 保持配置的Y分量
+                break;
+
+            case KnockbackType.TowardsAttacker:
+                direction = attacker.position - hitTarget.position;
+                break;
+
+            case KnockbackType.Upwards:
+                direction = Vector3.up;
+                break;
+
+        }
+
+        return direction.normalized;
 
     }
 

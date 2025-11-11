@@ -156,7 +156,8 @@ Transform:
   m_LocalPosition: {x: 3.5527136e-17, y: 0, z: 1.4210854e-16}
   m_LocalScale: {x: 1.0000008, y: 0.9999995, z: 0.99999905}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 658099179455750652}
   m_Father: {fileID: 5339201976981763039}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &359453516115670234
@@ -1481,8 +1482,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3233282048824782573}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.375, z: 0}
+  m_LocalRotation: {x: 0.000000029802322, y: -0, z: 0.00000004214685, w: 1}
+  m_LocalPosition: {x: 0, y: 1.3750002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2384,6 +2385,101 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &4993141875338571676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 658099179455750652}
+  - component: {fileID: 1592250281143111777}
+  - component: {fileID: 5223001591051513076}
+  - component: {fileID: 9020933412175410360}
+  m_Layer: 0
+  m_Name: weaponLogic_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &658099179455750652
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4993141875338571676}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4070701449623164157}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1592250281143111777
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4993141875338571676}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.66050637, y: 0.33187053, z: 0.97794384}
+  m_Center: {x: 0.0076724943, y: 0.020549618, z: -0.09037108}
+--- !u!54 &5223001591051513076
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4993141875338571676}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &9020933412175410360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4993141875338571676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16d8791416bd50a4abcc2f6b5c21461c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myCollider: {fileID: 8540260697606583193}
 --- !u!1 &5002158448381357361
 GameObject:
   m_ObjectHideFlags: 0
@@ -2841,8 +2937,8 @@ Transform:
   m_Children:
   - {fileID: 6692292949306838247}
   - {fileID: 8668521546458122891}
-  - {fileID: 215199502247768567}
   - {fileID: 7030796145477463067}
+  - {fileID: 215199502247768567}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6434871717194595339
@@ -2903,7 +2999,6 @@ MonoBehaviour:
   <BlockWalkSpeed>k__BackingField: 3
   <TargetingMoveSpeed>k__BackingField: 5
   <RotationDamping>k__BackingField: 10
-  <FaceTargetTurnSpeed>k__BackingField: 720
   <DodgeDuration>k__BackingField: 1
   <DodgeDistance>k__BackingField: 3.5
   <JumpForce>k__BackingField: 4
@@ -2950,7 +3045,6 @@ MonoBehaviour:
     <DamageValue>k__BackingField: 8
     <Knockback>k__BackingField: 7
   <ComboSequence>k__BackingField: {fileID: 0}
-  <InputWeights>k__BackingField: {fileID: 0}
   <BufferWindowDuration>k__BackingField: 0.3
 --- !u!143 &8540260697606583193
 CharacterController:
@@ -3018,7 +3112,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 947073c343cea334ab07ad9a338d0ec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponDamage: {fileID: 4737668766824361787}
+  weaponDamage:
+  - {fileID: 4737668766824361787}
+  - {fileID: 4993141875338571676}
 --- !u!114 &8146023694947223849
 MonoBehaviour:
   m_ObjectHideFlags: 0

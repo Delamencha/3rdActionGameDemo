@@ -27,6 +27,9 @@ public class PlayerTargetRunState : PlayerBaseState
 
         stateMachine.InputReader.RunEvent += OnRun;
 
+        stateMachine.InputReader.AttackEvent += OnAttack;
+        stateMachine.InputReader.HeavyAttackEvent += OnHeavyAttack;
+
         stateMachine.Animator.CrossFadeInFixedTime(TargetRunHash, CrossFadeDuration);
     }
 
@@ -35,11 +38,11 @@ public class PlayerTargetRunState : PlayerBaseState
     public override void Tick(float deltaTime)
     {
 
-        if (stateMachine.InputReader.IsAttacking)
-        {
-            stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
-            return;
-        }
+        //if (stateMachine.InputReader.IsAttacking)
+        //{
+        //    stateMachine.SwitchState(new PlayerAttackState(stateMachine, 0));
+        //    return;
+        //}
 
         if (stateMachine.Targeter.CurrentTarget == null)
         {
@@ -64,6 +67,9 @@ public class PlayerTargetRunState : PlayerBaseState
         stateMachine.InputReader.JumpEvent -= OnJump;
 
         stateMachine.InputReader.RunEvent -= OnRun;
+
+        stateMachine.InputReader.AttackEvent -= OnAttack;
+        stateMachine.InputReader.HeavyAttackEvent -= OnHeavyAttack;
     }
 
 
@@ -142,6 +148,16 @@ public class PlayerTargetRunState : PlayerBaseState
     private void OnRun()
     {
         stateMachine.SwitchState(new PlayerTargetingState(stateMachine));
+    }
+
+    private void OnAttack()
+    {
+        stateMachine.SwitchState(new PlayerAttackState(stateMachine, 19));
+    }
+
+    private void OnHeavyAttack()
+    {
+        stateMachine.SwitchState(new PlayerAttackState(stateMachine, 16));
     }
 
 }
