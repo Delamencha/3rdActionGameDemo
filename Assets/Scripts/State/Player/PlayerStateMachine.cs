@@ -30,7 +30,7 @@ public class PlayerStateMachine : StateMachine
     public float PreviousDodgeTime { get; private set; } = Mathf.NegativeInfinity;
     public InputBuffer Buffer { get; private set; } = new InputBuffer();
     public Transform MainCameraTransform { get; private set; }
-    public float allowedDelta { get; private set; } = 30f;
+    public bool allowTuring { get; private set; } = true;
     public float faceTargetTurnSpeed { get; private set; } = 360f;
     /// <summary>
     /// 取消跳转白名单：键为状态类名，值为是否允许“当前状态”被该状态打断（取消）。
@@ -277,19 +277,21 @@ public class PlayerStateMachine : StateMachine
         }
     }
 
-    public void SetAllowedDelta(float degree)
-    {
-        allowedDelta = Mathf.Clamp(degree, 0f, 180f);
-    }
+
 
     public void SetFaceTargetTurnSpeed(float degree)
     {
         faceTargetTurnSpeed = Mathf.Clamp(degree, 0f, 720f);
     }
 
-    public void ResetAllowedDelta()
+    public void CloseTuring()
     {
-        allowedDelta = 30f;
+        allowTuring = false;
+    }
+
+    public void AllowTuring()
+    {
+        allowTuring = true;
     }
 
     private void InitializeTransitionMap()

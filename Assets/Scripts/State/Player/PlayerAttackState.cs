@@ -48,6 +48,14 @@ public class PlayerAttackState : PlayerBaseState
 
         //进入AttackState即开启预输入的 写入 或是在动画的帧事件中设置开始写入的时间
         //stateMachine.ActivateInputBuffer();
+
+        // Soft lock acquisition by input at the start of attack when no hard lock
+        if (stateMachine.Targeter.CurrentTarget == null)
+        {
+            stateMachine.Targeter.TryAcquireSoftLockByInput(stateMachine.transform, stateMachine.MainCameraTransform.forward);
+        }
+        // Subscribe to hit events to acquire soft lock by hit
+        stateMachine.WeaponDamage.OnTargetHit += OnTargetHit;
     }
 
     public override void Tick(float deltaTime)
@@ -56,23 +64,73 @@ public class PlayerAttackState : PlayerBaseState
 
         Move(deltaTime);
 
-        if (stateMachine.Targeter.CurrentTarget != null){
-
-            if (totalTurnLimitDeg > 0f)
+        // Validate/break soft lock conditions when not hard locked
+        if (stateMachine.Targeter.CurrentTarget == null && stateMachine.Targeter.CurrentSoftLockTarget != null)
+        {
+            if (!stateMachine.Targeter.IsSoftLockValid(stateMachine.transform))
             {
-                float remaining = Mathf.Max(0f, totalTurnLimitDeg - accumulatedTurnDeg);
-                if (remaining > 0f)
+                stateMachine.Targeter.ClearSoftLock();
+            }
+            else
+            {
+                Vector3 move = calculateMovement();
+                if (move.sqrMagnitude > 0.0001f)
                 {
-                    float perFrame = Mathf.Min(stateMachine.allowedDelta, remaining);
-                    float beforeYaw = stateMachine.transform.eulerAngles.y;
-                    TryFaceTarget(perFrame, deltaTime);
-                    float afterYaw = stateMachine.transform.eulerAngles.y;
-                    accumulatedTurnDeg += Mathf.Abs(Mathf.DeltaAngle(beforeYaw, afterYaw));
+                    Vector3 toSoft = (stateMachine.Targeter.CurrentSoftLockTarget.transform.position - stateMachine.transform.position);
+                    toSoft.y = 0f; move.y = 0f;
+                    if (Vector3.Angle(move, toSoft) > 90f)
+                    {
+                        stateMachine.Targeter.ClearSoftLock();
+                    }
                 }
             }
-        }else{
-            TryFaceMovemnetDirection(calculateMovement(), deltaTime);
         }
+
+        if (stateMachine.allowTuring)
+        {
+            if (stateMachine.Targeter.CurrentTarget != null)
+            {
+
+                if (totalTurnLimitDeg > 0f)
+                {
+                    float remaining = Mathf.Max(0f, totalTurnLimitDeg - accumulatedTurnDeg);
+                    if (remaining > 0f)
+                    {
+                        float beforeYaw = stateMachine.transform.eulerAngles.y;
+                        TryFaceTarget(remaining, deltaTime);
+                        float afterYaw = stateMachine.transform.eulerAngles.y;
+                        accumulatedTurnDeg += Mathf.Abs(Mathf.DeltaAngle(beforeYaw, afterYaw));
+                    }
+                }
+            }
+            else
+            {
+                // Use soft lock turning when present
+                if (stateMachine.Targeter.CurrentSoftLockTarget != null && totalTurnLimitDeg > 0f)
+                {
+                    Vector3 toSoft = stateMachine.Targeter.CurrentSoftLockTarget.transform.position - stateMachine.transform.position;
+                    toSoft.y = 0f;
+                    if (toSoft.sqrMagnitude > 0.0001f && stateMachine.faceTargetTurnSpeed > 0f)
+                    {
+                        Quaternion targetRotation = Quaternion.LookRotation(toSoft);
+                        float speedDegPerSec = stateMachine.faceTargetTurnSpeed;
+                        float maxStepThisFrame = speedDegPerSec * deltaTime;
+                        float remaining = Mathf.Max(0f, totalTurnLimitDeg - accumulatedTurnDeg);
+                        if (remaining > 0f)
+                        {
+                            float step = Mathf.Min(maxStepThisFrame, remaining);
+                            float beforeYaw = stateMachine.transform.eulerAngles.y;
+                            stateMachine.transform.rotation = Quaternion.RotateTowards(stateMachine.transform.rotation, targetRotation, step);
+                            float afterYaw = stateMachine.transform.eulerAngles.y;
+                            accumulatedTurnDeg += Mathf.Abs(Mathf.DeltaAngle(beforeYaw, afterYaw));
+                        }
+                    }
+                }
+                //重新设计，AttackState中的方向输入应该作为软锁定选择目标，或脱离软锁定的依据
+                //TryFaceMovemnetDirection(calculateMovement(), deltaTime);
+            }
+        }
+
 
         float normalizedTime = GetNormalizedTime(stateMachine.Animator, "Attack");
 
@@ -138,14 +196,18 @@ public class PlayerAttackState : PlayerBaseState
         stateMachine.InputReader.DogeEvent -= OnDodge;
         stateMachine.InputReader.AttackEvent -= OnAttack;
         stateMachine.InputReader.HeavyAttackEvent -= OnHeavyAttack;
+        stateMachine.WeaponDamage.OnTargetHit -= OnTargetHit;
 
         stateMachine.ResetAllTransitions(false);
-        stateMachine.ResetAllowedDelta();
+        stateMachine.AllowTuring();
 
         stateMachine.DeactivateInputBuffer();
         stateMachine.ResetAllTransitions(false);
 
         stateMachine.Animator.applyRootMotion = false;
+
+        // Ensure soft lock is cleared when exiting attack
+        stateMachine.Targeter.ClearSoftLock();
 
         //Debug.Log("accumulatedTurnDeg : " + accumulatedTurnDeg);
 
@@ -199,13 +261,10 @@ public class PlayerAttackState : PlayerBaseState
 
         Quaternion targetRotation = Quaternion.LookRotation(flatMovement);
 
-        float allowedDelta = Mathf.Clamp(stateMachine.allowedDelta, 0f, 180f);
-        if (allowedDelta < 0.0001f) return;
-
         float speedDegPerSec = stateMachine.faceTargetTurnSpeed;
         float maxStepThisFrame = speedDegPerSec * deltaTime;
 
-        float step = Mathf.Min(allowedDelta, maxStepThisFrame);
+        float step =  maxStepThisFrame;
 
         // Apply total rotation cap across the whole attack state lifecycle
         if (totalTurnLimitDeg > 0f)
@@ -264,5 +323,11 @@ public class PlayerAttackState : PlayerBaseState
     }
 
 
+
+    private void OnTargetHit(Target target)
+    {
+        if (stateMachine.Targeter.CurrentTarget != null) return;
+        stateMachine.Targeter.TryAcquireSoftLockByHit(stateMachine.transform, target);
+    }
 
 }

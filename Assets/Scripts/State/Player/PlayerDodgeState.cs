@@ -69,7 +69,7 @@ public class PlayerDodgeState : PlayerBaseState
             
         }
 
-
+        //弃用，采用RootMotion中自带的固定位移
         Vector3 movement = new Vector3();
 
         movement += stateMachine.transform.right * dodgingDirectionInput.x * stateMachine.DodgeDistance / stateMachine.DodgeDuration;

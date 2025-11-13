@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,7 @@ public class WeaponDamage : MonoBehaviour
     //暂时只考虑一次攻击只会与一个盾牌交互
     private Health blockedHealth; // recorded owner of the blocking shield
     
+    public event Action<Target> OnTargetHit;
 
     private void OnEnable()
     {
@@ -75,6 +77,12 @@ public class WeaponDamage : MonoBehaviour
             //Vector3 direction = (other.transform.position - myCollider.transform.position).normalized ;
             Vector3 direction = GetKnockbackDirection(myCollider.transform, other.transform);
             forceReceiver.AddForce(direction * knockBack);
+        }
+
+        // 3) Notify soft lock system about target hit
+        if (other.TryGetComponent<Target>(out var target))
+        {
+            OnTargetHit?.Invoke(target);
         }
 
     }

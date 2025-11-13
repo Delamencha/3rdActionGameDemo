@@ -25,6 +25,8 @@ public class PlayerTargetingState : PlayerBaseState
 
     public override void Enter()
     {
+        // Ensure soft lock is cleared when entering hard lock state
+        stateMachine.Targeter.ClearSoftLock();
         //Debug.Log("Entering Targeting State");
         stateMachine.InputReader.TargetEvent += OnTarget;
         stateMachine.InputReader.DogeEvent += OnDoge;
@@ -97,7 +99,7 @@ public class PlayerTargetingState : PlayerBaseState
         else
         {
             stateMachine.SwitchState(new PlayerDodgeState(stateMachine, stateMachine.InputReader.MovementValue));
-            //ÔÚËø¶¨×´Ì¬ÏÂµÄÉÁ±Ü£¬Ó¦¸ÃÊÇÈÆÄ¿±ê×ªÈ¦»ò¾¶ÏòÒÆ¶¯¶ø·Ç¼òµ¥Ç°ºó×óÓÒÒÆ¶¯
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½Âµï¿½ï¿½ï¿½ï¿½Ü£ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½×ªÈ¦ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Ç¼ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½
         }
 
 
