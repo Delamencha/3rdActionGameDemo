@@ -207,7 +207,7 @@ public class PlayerAttackState : PlayerBaseState
         stateMachine.Animator.applyRootMotion = false;
 
         // Ensure soft lock is cleared when exiting attack
-        stateMachine.Targeter.ClearSoftLock();
+        //stateMachine.Targeter.ClearSoftLock();
 
         //Debug.Log("accumulatedTurnDeg : " + accumulatedTurnDeg);
 
