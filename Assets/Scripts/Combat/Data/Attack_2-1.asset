@@ -22,4 +22,5 @@ MonoBehaviour:
   AttackForce: 0
   DamageValue: 10
   Knockback: 5
-  TotalTurnLimitDeg: 30
+  knockbackType: 1
+  TotalTurnLimitDeg: 90

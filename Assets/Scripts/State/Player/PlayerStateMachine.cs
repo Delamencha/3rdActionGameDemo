@@ -25,13 +25,14 @@ public class PlayerStateMachine : StateMachine
     [field: SerializeField] public ForceReceiver ForceReceiver { get;private set; }
     [field: SerializeField] public Attack[] Attacks { get; private set; }
     [field: SerializeField] public ComboSequenceSO ComboSequence { get; private set; }
+    [field: SerializeField] public float FaceTargetTurnSpeed { get; private set; } = 360f;
     //[field: SerializeField] public InputWeightsSO InputWeights { get; private set; }
 
     public float PreviousDodgeTime { get; private set; } = Mathf.NegativeInfinity;
     public InputBuffer Buffer { get; private set; } = new InputBuffer();
     public Transform MainCameraTransform { get; private set; }
     public bool allowTuring { get; private set; } = true;
-    public float faceTargetTurnSpeed { get; private set; } = 360f;
+
     /// <summary>
     /// 取消跳转白名单：键为状态类名，值为是否允许“当前状态”被该状态打断（取消）。
     /// 注意：该表不用于“普通跳转”的筛选，普通跳转由各状态的 Enter/Update 逻辑决定，
@@ -281,7 +282,7 @@ public class PlayerStateMachine : StateMachine
 
     public void SetFaceTargetTurnSpeed(float degree)
     {
-        faceTargetTurnSpeed = Mathf.Clamp(degree, 0f, 720f);
+        FaceTargetTurnSpeed = Mathf.Clamp(degree, 0f, 720f);
     }
 
     public void CloseTuring()
@@ -346,7 +347,8 @@ public class PlayerStateMachine : StateMachine
         StateInputMap["PlayerSkillState"] = PlayerBufferedInputType.Skill;
     }
 
-
+    //不把该方法写在AttackState中的原因：ApplyBufferedInput方法和预输入系统的维护在PlayerStateMachine中完成，
+    //而预输入系统设置可能跨状态，故不把状态取消的方法放在具体状态中
     private void SwitchByStateName(string stateName, PlayerBufferedInputType type)
     {
         switch (stateName)
@@ -367,12 +369,33 @@ public class PlayerStateMachine : StateMachine
                 {
                     int idx = 0;
                     var currentAttackState = currentState as PlayerAttackState;
+                    // Attempt sector switch at transition time
+                    if (Targeter.CurrentSoftLockTarget != null && currentAttackState != null)
+                    {
+
+                        Vector3 movement = currentAttackState.movementThisFrame;
+                        if (movement.sqrMagnitude > 0.0001f)
+                        {
+                            Vector3 toSoft = Targeter.CurrentSoftLockTarget.transform.position - transform.position;
+                            toSoft.y = 0f; movement.y = 0f;
+                            if (toSoft.sqrMagnitude > 0.0001f)
+                            {
+                                float angle = Vector3.Angle(movement, toSoft);
+                                if (angle > 40f && angle <= 90f)
+                                {
+                                    Targeter.TrySwitchSoftLockInSectorByInput(transform, movement, 90f, 5f);
+                                }
+                            }
+                        }
+                    }
+
+                    
                     if (currentAttackState != null)
                     {
                         int next = type == PlayerBufferedInputType.Attack ? currentAttackState.NextComboIndex : currentAttackState.NextHeavyComboIndex;
                         if (next >= 0) idx = next;
                     }
-                    SwitchState(new PlayerAttackState(this, idx));
+                    SwitchState(new PlayerAttackState(this, idx, Targeter.CurrentSoftLockTarget));
                 break;
             }
             case "PlayerTargetingState":

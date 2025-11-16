@@ -18,8 +18,16 @@ public class PlayerAttackState : PlayerBaseState
     public int NextComboIndex => currentAttack != null ? currentAttack.LightComboStateIndex : -1;
     public int NextHeavyComboIndex => currentAttack != null ? currentAttack.HeavyComboStateIndex : -1;
 
-    public PlayerAttackState(PlayerStateMachine stateMachine, int attackIndex) : base(stateMachine)
+    // Preserve soft-lock only for attack->attack by passing it in and re-applying on Enter
+    private Target pendingSoftLockTarget;
+
+	// Cache per-frame movement to avoid repeated calculation
+	public Vector3 movementThisFrame;
+
+
+    public PlayerAttackState(PlayerStateMachine stateMachine, int attackIndex, Target curSoftLockTarget = null) : base(stateMachine)
     {
+        pendingSoftLockTarget = curSoftLockTarget;
         if (stateMachine.ComboSequence != null && stateMachine.ComboSequence.Attack_Dic != null && attackIndex >= 0 && attackIndex < stateMachine.ComboSequence.Attack_Dic.Count)
         {
             //currentAttack = stateMachine.ComboSequence.attacks[attackIndex];
@@ -50,9 +58,13 @@ public class PlayerAttackState : PlayerBaseState
         //stateMachine.ActivateInputBuffer();
 
         // Soft lock acquisition by input at the start of attack when no hard lock
-        if (stateMachine.Targeter.CurrentTarget == null)
+        if (pendingSoftLockTarget != null)
         {
-            stateMachine.Targeter.TryAcquireSoftLockByInput(stateMachine.transform, stateMachine.MainCameraTransform.forward);
+            stateMachine.Targeter.SetSoftLock(pendingSoftLockTarget);
+        }
+        else if (stateMachine.Targeter.CurrentTarget == null)
+        {
+			stateMachine.Targeter.TryAcquireSoftLockByInput(stateMachine.transform, stateMachine.MainCameraTransform.forward);
         }
         // Subscribe to hit events to acquire soft lock by hit
         stateMachine.WeaponDamage.OnTargetHit += OnTargetHit;
@@ -61,6 +73,9 @@ public class PlayerAttackState : PlayerBaseState
     public override void Tick(float deltaTime)
     {
         //Debug.Log("Dodge transition value : " + stateMachine.IsStateTransitionAllowed("PlayerDodgeState"));
+
+		// Cache movement at the start of the frame
+		movementThisFrame = calculateMovement();
 
         Move(deltaTime);
 
@@ -73,15 +88,12 @@ public class PlayerAttackState : PlayerBaseState
             }
             else
             {
-                Vector3 move = calculateMovement();
+				Vector3 move = movementThisFrame;
                 if (move.sqrMagnitude > 0.0001f)
                 {
                     Vector3 toSoft = (stateMachine.Targeter.CurrentSoftLockTarget.transform.position - stateMachine.transform.position);
                     toSoft.y = 0f; move.y = 0f;
-                    if (Vector3.Angle(move, toSoft) > 90f)
-                    {
-                        stateMachine.Targeter.ClearSoftLock();
-                    }
+                    // Duplicate >90° break-and-turn removed; handled later with sector switching
                 }
             }
         }
@@ -110,10 +122,10 @@ public class PlayerAttackState : PlayerBaseState
                 {
                     Vector3 toSoft = stateMachine.Targeter.CurrentSoftLockTarget.transform.position - stateMachine.transform.position;
                     toSoft.y = 0f;
-                    if (toSoft.sqrMagnitude > 0.0001f && stateMachine.faceTargetTurnSpeed > 0f)
+                    if (toSoft.sqrMagnitude > 0.0001f && stateMachine.FaceTargetTurnSpeed > 0f)
                     {
                         Quaternion targetRotation = Quaternion.LookRotation(toSoft);
-                        float speedDegPerSec = stateMachine.faceTargetTurnSpeed;
+                        float speedDegPerSec = stateMachine.FaceTargetTurnSpeed;
                         float maxStepThisFrame = speedDegPerSec * deltaTime;
                         float remaining = Mathf.Max(0f, totalTurnLimitDeg - accumulatedTurnDeg);
                         if (remaining > 0f)
@@ -127,7 +139,35 @@ public class PlayerAttackState : PlayerBaseState
                     }
                 }
                 //重新设计，AttackState中的方向输入应该作为软锁定选择目标，或脱离软锁定的依据
-                //TryFaceMovemnetDirection(calculateMovement(), deltaTime);
+				{
+					Vector3 movement = movementThisFrame;
+					// When soft lock exists, interpret input to either break, switch, or face input
+					if (stateMachine.Targeter.CurrentSoftLockTarget != null)
+					{
+						if (movement.sqrMagnitude > 0.0001f)
+						{
+							Vector3 toSoft = (stateMachine.Targeter.CurrentSoftLockTarget.transform.position - stateMachine.transform.position);
+							toSoft.y = 0f; movement.y = 0f;
+							if (toSoft.sqrMagnitude > 0.0001f)
+							{
+								float angle = Vector3.Angle(movement, toSoft);
+								if (angle > 90f)
+								{
+                                    
+									// Opposite enough: clear soft lock and face input
+									stateMachine.Targeter.ClearSoftLock();
+									TryFaceMovemnetDirection(movement, deltaTime);
+								}
+								// else if (angle > 40f) // (40°, 90°]
+								// Sector switching now only happens at transition time (OnAttack / OnHeavyAttack / SwitchByStateName)
+							}
+						}
+					}
+					else
+					{
+						TryFaceMovemnetDirection(movement, deltaTime);
+					}
+				}
             }
         }
 
@@ -175,8 +215,8 @@ public class PlayerAttackState : PlayerBaseState
         else
         {
 
-
-            if(stateMachine.Targeter.CurrentTarget != null)
+            
+            if (stateMachine.Targeter.CurrentTarget != null)
             {
                 Debug.Log("Getting back to targetting state");
                 stateMachine.SwitchState(new PlayerTargetingState(stateMachine));
@@ -206,10 +246,10 @@ public class PlayerAttackState : PlayerBaseState
 
         stateMachine.Animator.applyRootMotion = false;
 
-        // Ensure soft lock is cleared when exiting attack
-        //stateMachine.Targeter.ClearSoftLock();
+        // Always clear soft lock when exiting attack; next attack will re-apply via pendingSoftLockTarget
+        stateMachine.Targeter.ClearSoftLock();
 
-        //Debug.Log("accumulatedTurnDeg : " + accumulatedTurnDeg);
+		Debug.Log($"[PlayerAttackState] Total turned degrees this attack: {accumulatedTurnDeg:F2}");
 
     }
 
@@ -221,7 +261,7 @@ public class PlayerAttackState : PlayerBaseState
 
         //if (normalizedTime < currentAttack.ComboAttackTime) return;
         if(stateMachine.IsStateTransitionAllowed("PlayerAttackState")){
-            stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.LightComboStateIndex));
+            stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.LightComboStateIndex, stateMachine.Targeter.CurrentSoftLockTarget));
         }
         
 
@@ -253,7 +293,7 @@ public class PlayerAttackState : PlayerBaseState
     private void TryFaceMovemnetDirection(Vector3 movement, float deltaTime)
     {
         if (totalTurnLimitDeg <= 0f) return; // No rotation allowed for this attack when limit is 0
-        if (movement.sqrMagnitude < 0.0001f || stateMachine.faceTargetTurnSpeed <= 0) return;
+        if (movement.sqrMagnitude < 0.0001f || stateMachine.FaceTargetTurnSpeed <= 0) return;
 
         Vector3 flatMovement = movement;
         flatMovement.y = 0f;
@@ -261,7 +301,7 @@ public class PlayerAttackState : PlayerBaseState
 
         Quaternion targetRotation = Quaternion.LookRotation(flatMovement);
 
-        float speedDegPerSec = stateMachine.faceTargetTurnSpeed;
+        float speedDegPerSec = stateMachine.FaceTargetTurnSpeed;
         float maxStepThisFrame = speedDegPerSec * deltaTime;
 
         float step =  maxStepThisFrame;
@@ -308,7 +348,9 @@ public class PlayerAttackState : PlayerBaseState
 
         if (stateMachine.IsStateTransitionAllowed("PlayerAttackState"))
         {
-            stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.LightComboStateIndex));
+			// Attempt sector switch only at transition time
+			TrySectorSwitchAtTransition();
+            stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.LightComboStateIndex, stateMachine.Targeter.CurrentSoftLockTarget));
         }
     }
 
@@ -318,7 +360,9 @@ public class PlayerAttackState : PlayerBaseState
 
         if (stateMachine.IsStateTransitionAllowed("PlayerAttackState"))
         {
-            stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.HeavyComboStateIndex));
+			// Attempt sector switch only at transition time
+			TrySectorSwitchAtTransition();
+            stateMachine.SwitchState(new PlayerAttackState(stateMachine, currentAttack.HeavyComboStateIndex, stateMachine.Targeter.CurrentSoftLockTarget));
         }
     }
 
@@ -327,7 +371,33 @@ public class PlayerAttackState : PlayerBaseState
     private void OnTargetHit(Target target)
     {
         if (stateMachine.Targeter.CurrentTarget != null) return;
-        stateMachine.Targeter.TryAcquireSoftLockByHit(stateMachine.transform, target);
+		if (stateMachine.Targeter.CurrentSoftLockTarget != null) return;
+		stateMachine.Targeter.TryAcquireSoftLockByHit(stateMachine.transform, target);
     }
+
+	// Called only at transition moments to attempt soft lock switching
+	private void TrySectorSwitchAtTransition()
+	{
+		if (stateMachine.Targeter.CurrentSoftLockTarget == null) return;
+
+		// Use existing movement calculation
+		Vector3 movement = movementThisFrame;
+		if (movement.sqrMagnitude < 0.0001f) return;
+
+		Vector3 toSoft = stateMachine.Targeter.CurrentSoftLockTarget.transform.position - stateMachine.transform.position;
+		toSoft.y = 0f; movement.y = 0f;
+		if (toSoft.sqrMagnitude < 0.0001f) return;
+
+		float angle = Vector3.Angle(movement, toSoft);
+		if (angle > 40f && angle <= 90f)
+		{
+			stateMachine.Targeter.TrySwitchSoftLockInSectorByInput(
+				stateMachine.transform,
+				movement,
+				90f,
+				5f
+			);
+		}
+	}
 
 }

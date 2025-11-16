@@ -2337,6 +2337,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cineTargetGroup: {fileID: 0}
+  SoftLockConeAngleDeg: 60
+  SoftLockAcquireRange: 5
+  SoftLockBreakDistance: 12
 --- !u!135 &3260811806191969480
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3045,6 +3048,7 @@ MonoBehaviour:
     <DamageValue>k__BackingField: 8
     <Knockback>k__BackingField: 7
   <ComboSequence>k__BackingField: {fileID: 0}
+  <FaceTargetTurnSpeed>k__BackingField: 40
   <BufferWindowDuration>k__BackingField: 0.3
 --- !u!143 &8540260697606583193
 CharacterController:

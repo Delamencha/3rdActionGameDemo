@@ -16,9 +16,9 @@ public class Targeter : MonoBehaviour
 
     // Soft lock support
     public Target CurrentSoftLockTarget { get; private set; }
-    [SerializeField] private float SoftLockConeAngleDeg = 60f;
+    [SerializeField] private float SoftLockConeAngleDeg = 80f;
     [SerializeField] private float SoftLockAcquireRange = 5f;
-    [SerializeField] private float SoftLockBreakDistance = 12f;
+    [SerializeField] private float SoftLockBreakDistance = 10f;
 
     private void Start()
     {
@@ -169,6 +169,74 @@ public class Targeter : MonoBehaviour
         return dist <= SoftLockBreakDistance;
     }
 
+	// Try switching to a new soft lock target within a sector to the side of input
+	// Sector: start edge = projection of player->currentSoftLockTarget on XZ plane, angle = sectorAngleDeg, radius = radiusMeters
+	// Search order: prefer smaller angular offset from the start edge
+	public bool TrySwitchSoftLockInSectorByInput(Transform player, Vector3 inputMoveWorld, float sectorAngleDeg, float radiusMeters)
+	{
+		if (CurrentTarget != null) return false; // hard lock blocks soft lock
+		if (CurrentSoftLockTarget == null) return false;
+
+		Vector3 playerPos = player.position;
+
+		// Start edge (reference) = player -> current soft lock target (flattened)
+		Vector3 refDir = CurrentSoftLockTarget.transform.position - playerPos;
+		refDir.y = 0f;
+		if (refDir.sqrMagnitude < 0.0001f) return false;
+		refDir.Normalize();
+
+		// Input direction (flattened) to determine which side to search
+		Vector3 inputDir = inputMoveWorld;
+		inputDir.y = 0f;
+		if (inputDir.sqrMagnitude < 0.0001f) return false;
+		inputDir.Normalize();
+
+		// Determine side by the sign of the signed angle from refDir to inputDir around +Y
+		float inputSigned = Vector3.SignedAngle(refDir, inputDir, Vector3.up);
+		if (Mathf.Abs(inputSigned) < 1e-3f) return false; // exactly on the edge, no side preference
+		float sideSign = Mathf.Sign(inputSigned); // +1 means left (CCW), -1 means right (CW)
+
+		Target best = null;
+		float bestAngle = Mathf.Infinity;
+
+		foreach (var t in targets)
+		{
+			if (t == null || t == CurrentSoftLockTarget) continue;
+
+			Vector3 to = t.transform.position - playerPos;
+			to.y = 0f;
+			float dist = to.magnitude;
+			if (dist < 0.0001f) continue;
+			if (dist > radiusMeters) continue;
+
+			Vector3 dir = to / dist;
+
+			// Angle from reference edge
+			float unsignedAngle = Vector3.Angle(refDir, dir);
+			if (unsignedAngle > sectorAngleDeg + 1e-3f) continue; // outside the 90° sector
+
+			// Ensure candidate is on the input side
+			float signed = Vector3.SignedAngle(refDir, dir, Vector3.up);
+			if (Mathf.Sign(signed) != sideSign && Mathf.Abs(signed) > 1e-3f) continue;
+
+			// Prefer smaller angular offset
+			if (unsignedAngle < bestAngle)
+			{
+				bestAngle = unsignedAngle;
+				best = t;
+			}
+		}
+
+		if (best != null)
+		{
+            Debug.Log("TrySwitchSoftLockInSectorByInput: " + best.name);
+			SetSoftLock(best);
+			return true;
+		}
+
+		return false;
+	}
+
     // cameraForward should be world-space forward of camera (flattened internally)
     public bool TryAcquireSoftLockByInput(Transform player, Vector3 cameraForward)
     {
@@ -177,9 +245,10 @@ public class Targeter : MonoBehaviour
         Target best = null;
         float bestDist = Mathf.Infinity;
 
-        Vector3 camFwd = cameraForward;
+        //Vector3 camFwd = cameraForward;
+        Vector3 camFwd = player.forward;
         camFwd.y = 0f;
-        if (camFwd.sqrMagnitude < 0.0001f) camFwd = player.forward;
+        //if (camFwd.sqrMagnitude < 0.0001f) camFwd = player.forward;
         camFwd.Normalize();
 
         Vector3 playerPos = player.position;
