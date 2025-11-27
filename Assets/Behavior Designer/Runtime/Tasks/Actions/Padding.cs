@@ -9,7 +9,7 @@ namespace BehaviorDesigner.Runtime.Tasks
 	public class Padding : Action
 	{
 		[Tooltip("The transform to face/strafe around. If null, uses player by tag 'Player'.")]
-		public SharedTransform target;
+		public SharedGameObject target;
 
 		[Tooltip("Strafing speed (m/s).")]
 		public SharedFloat moveSpeed = 2.5f;
@@ -26,6 +26,9 @@ namespace BehaviorDesigner.Runtime.Tasks
 		[Tooltip("Prefer strafe left on start (otherwise right).")]
 		public SharedBool preferLeft = false;
 
+		[Tooltip("Pause time before switching strafe direction (seconds).")]
+		public SharedFloat preTurnPause = 0.2f;
+
 		private EnemyStateMachine esm;
 
 		public override void OnStart()
@@ -35,13 +38,14 @@ namespace BehaviorDesigner.Runtime.Tasks
 
 			if (target == null) return;
 
-			esm.SwitchState(new BossPaddingState(
+			esm.SwitchState(new EnemyPaddingState(
 				esm,
 				moveSpeed.Value,
 				turnSpeed.Value,
 				duration.Value,
 				switchDirectionInterval.Value,
-				preferLeft.Value
+				preferLeft.Value,
+				preTurnPause.Value
 			));
 		}
 
@@ -49,8 +53,13 @@ namespace BehaviorDesigner.Runtime.Tasks
 		{
 			if (esm == null) return TaskStatus.Failure;
 
-            if (esm.currentState is BossPaddingState padding)
+            if (esm.currentState is EnemyPaddingState padding)
             {
+                if (padding.IsFinished)
+                {
+					esm.SwitchState(new EnemyIdleState(esm));
+
+				}
                 return padding.IsFinished ? TaskStatus.Success : TaskStatus.Running;
             }
 
