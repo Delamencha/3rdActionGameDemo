@@ -11,9 +11,6 @@ namespace BehaviorDesigner.Runtime.Tasks
 		[Tooltip("The transform to face/strafe around. If null, uses player by tag 'Player'.")]
 		public SharedTransform target;
 
-		[Tooltip("Desired radius to keep from target (meters).")]
-		public SharedFloat desiredRadius = 6f;
-
 		[Tooltip("Strafing speed (m/s).")]
 		public SharedFloat moveSpeed = 2.5f;
 
@@ -36,14 +33,10 @@ namespace BehaviorDesigner.Runtime.Tasks
 			esm = GetComponent<EnemyStateMachine>();
 			if (esm == null) return;
 
-			Transform tgt = target != null && target.Value != null
-				? target.Value
-				: GameObject.FindGameObjectWithTag("Player")?.transform;
+			if (target == null) return;
 
 			esm.SwitchState(new BossPaddingState(
 				esm,
-				tgt,
-				desiredRadius.Value,
 				moveSpeed.Value,
 				turnSpeed.Value,
 				duration.Value,

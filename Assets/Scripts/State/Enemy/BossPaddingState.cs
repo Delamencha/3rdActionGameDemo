@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class BossPaddingState : EnemyBaseState
 {
-	private readonly Transform target;
-	private readonly float desiredRadius;
+	
 	private readonly float moveSpeed;
 	private readonly float turnSpeed;
 	private readonly float duration;
 	private readonly float switchInterval;
 	private readonly bool preferLeft;
 
+	private Transform target;
 	private float startTime;
 	private float nextSwitchTime;
 	private int dirSign; // -1 left, +1 right
@@ -18,16 +18,13 @@ public class BossPaddingState : EnemyBaseState
 	public bool IsFinished { get; private set; }
 
 	public BossPaddingState(EnemyStateMachine sm,
-		Transform target,
-		float desiredRadius,
 		float moveSpeed,
 		float turnSpeed,
 		float duration,
 		float switchInterval,
 		bool preferLeft) : base(sm)
 	{
-		this.target = target != null ? target : sm.Player != null ? sm.Player.transform : null;
-		this.desiredRadius = desiredRadius;
+		
 		this.moveSpeed = Mathf.Max(0f, moveSpeed);
 		this.turnSpeed = Mathf.Max(0f, turnSpeed);
 		this.duration = duration;
@@ -37,6 +34,9 @@ public class BossPaddingState : EnemyBaseState
 
 	public override void Enter()
 	{
+
+		target = stateMachine.Player.gameObject.transform;
+
 		IsFinished = false;
 		startTime = Time.time;
 		dirSign = preferLeft ? -1 : 1;
@@ -82,17 +82,6 @@ public class BossPaddingState : EnemyBaseState
 			fwd.Normalize();
 			Vector3 right = Vector3.Cross(Vector3.up, fwd);
 			moveVec = right * (dirSign * moveSpeed);
-
-			float dist = to.magnitude;
-			if (dist > 0.001f && desiredRadius > 0f)
-			{
-				float radialError = dist - desiredRadius;
-				if (Mathf.Abs(radialError) > 0.25f)
-				{
-					Vector3 radial = to.normalized * Mathf.Clamp(radialError, -1f, 1f) * (moveSpeed * 0.3f);
-					moveVec += radial;
-				}
-			}
 		}
 
 		// Optional simple obstacle avoidance by side ray
@@ -112,7 +101,7 @@ public class BossPaddingState : EnemyBaseState
 		// Apply movement (CharacterController preferred)
 		if (moveVec.sqrMagnitude > 0.0001f)
 		{
-			stateMachine.Controller.Move(moveVec * deltaTime);
+			Move(moveVec, deltaTime);
 		}
 
 		// Note: external interrupts (impact/death) handled by EnemyStateMachine event handlers
