@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class StateMachine : MonoBehaviour
 {
 
-    protected State currentState;
+    public State currentState;
 
     public void SwitchState(State newState)
     {

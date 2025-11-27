@@ -56,13 +56,13 @@ namespace BehaviorDesigner.Runtime.Tasks
 		{
 			if (esm == null) return TaskStatus.Failure;
 
-			//if (esm.CurrentState is BossPaddingState padding)
-			//{
-			//	return padding.IsFinished ? TaskStatus.Success : TaskStatus.Running;
-			//}
+            if (esm.currentState is BossPaddingState padding)
+            {
+                return padding.IsFinished ? TaskStatus.Success : TaskStatus.Running;
+            }
 
-			// State was interrupted by other higher priority transitions
-			return TaskStatus.Failure;
+            // State was interrupted by other higher priority transitions
+            return TaskStatus.Failure;
 		}
 	}
 }
