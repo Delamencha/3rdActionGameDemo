@@ -11,7 +11,7 @@ public class EnemyMovingState : EnemyBaseState
 
 	private const float AnimatorDampTime = 0.1f;
 	private const float CrossFadeDuration = 0.1f;
-	private const float TurnSpeedDeg = 720f;
+	private const float TurnSpeedDeg = 360f;
 
 	public EnemyMovingState(EnemyStateMachine sm, float speed, bool moveAway) : base(sm)
 	{
@@ -37,12 +37,13 @@ public class EnemyMovingState : EnemyBaseState
 			if (to.sqrMagnitude > 0.0001f)
 			{
 				Vector3 dir = to.normalized;
-				if (moveAway) dir = -dir;
-
+				
 				// Face movement direction
 				Quaternion face = Quaternion.LookRotation(dir, Vector3.up);
 				stateMachine.transform.rotation = Quaternion.RotateTowards(
 					stateMachine.transform.rotation, face, TurnSpeedDeg * deltaTime);
+
+				if (moveAway) dir = -dir;
 
 				moveDir = dir * speed;
 			}

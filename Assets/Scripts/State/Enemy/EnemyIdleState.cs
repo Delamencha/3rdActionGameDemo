@@ -24,13 +24,13 @@ public class EnemyIdleState : EnemyBaseState
 
         Move(deltaTime);
 
-        if (isInChaseRange())
-        {
-            //switch to chasing state
-            //stateMachine.SwitchState(new EnemyChasingState(stateMachine));
+        //if (isInChaseRange())
+        //{
+        //    //switch to chasing state
+        //    //stateMachine.SwitchState(new EnemyChasingState(stateMachine));
 
-            return;
-        }
+        //    return;
+        //}
 
         stateMachine.Animator.SetFloat(SpeedHash, 0, AnimatorDampTime, deltaTime);
 

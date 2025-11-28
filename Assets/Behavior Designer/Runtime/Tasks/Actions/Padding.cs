@@ -55,16 +55,27 @@ namespace BehaviorDesigner.Runtime.Tasks
 
             if (esm.currentState is EnemyPaddingState padding)
             {
-                if (padding.IsFinished)
-                {
-					esm.SwitchState(new EnemyIdleState(esm));
+                // if (padding.IsFinished)
+                // {
+				// 	esm.SwitchState(new EnemyIdleState(esm));
 
-				}
+				// }
                 return padding.IsFinished ? TaskStatus.Success : TaskStatus.Running;
             }
 
             // State was interrupted by other higher priority transitions
             return TaskStatus.Failure;
+		}
+
+		public override void OnEnd()
+		{
+			if (esm == null) return;
+
+			// Only revert to idle if this task still owns the padding state.
+			if (esm.currentState is EnemyPaddingState)
+			{
+				esm.SwitchState(new EnemyIdleState(esm));
+			}
 		}
 	}
 }
