@@ -52,4 +52,17 @@ public abstract class EnemyBaseState : State
         stateMachine.transform.rotation = Quaternion.LookRotation(lookDirection);
     }
 
+    protected void FacePlayer(float turnSpeedDegPerSec, float deltaTime)
+    {
+        if (stateMachine.Player == null) return;
+
+        Vector3 to = stateMachine.Player.transform.position - stateMachine.transform.position;
+        to.y = 0f;
+        if (to.sqrMagnitude < 0.0001f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(to.normalized, Vector3.up);
+        float step = Mathf.Max(0f, turnSpeedDegPerSec) * deltaTime;
+        stateMachine.transform.rotation = Quaternion.RotateTowards(stateMachine.transform.rotation, targetRotation, step);
+    }
+
 }

@@ -13,7 +13,7 @@ public class EnemyStateMachine : StateMachine
     [field: SerializeField] public Health Health { get; private set; }
     [field: SerializeField] public Target Target { get; private set; }
     [field: SerializeField] public Ragdoll Ragdoll { get; private set; }
-    [field: SerializeField] public WeaponDamage Weapon { get; private set; }
+    [field: SerializeField] public WeaponDamage WeaponDamage { get; private set; }
 
     [field: SerializeField] public float ChasingSpeed { get; private set; }
 
@@ -23,6 +23,7 @@ public class EnemyStateMachine : StateMachine
     [field: SerializeField] public float AttackDamage { get; private set; }
 
     [field: SerializeField] public float AttackKnockBack { get; private set; }
+    [field: SerializeField] public EnemyAttackLibrary EnemyAttackLibrary { get; private set; }
 
     public Health Player { get; private set; }
 
@@ -39,14 +40,14 @@ public class EnemyStateMachine : StateMachine
 
     private void OnEnable()
     {
-        Health.OnTakeDamage += HandleTakeDamage;
-        Health.OnDie += HandleDeath;
+        //Health.OnTakeDamage += HandleTakeDamage;
+        //Health.OnDie += HandleDeath;
     }
 
     private void OnDisable()
     {
-        Health.OnTakeDamage -= HandleTakeDamage;
-        Health.OnDie -= HandleDeath;
+        //Health.OnTakeDamage -= HandleTakeDamage;
+        //Health.OnDie -= HandleDeath;
     }
 
     private void HandleTakeDamage(ImpactType impactType)

@@ -34,6 +34,17 @@ namespace BehaviorDesigner.Runtime.Tasks
 			if (esm == null) return TaskStatus.Failure;
 			return TaskStatus.Running; // stopping is decided by other tasks (interrupt)
 		}
+
+		public override void OnEnd()
+		{
+			if (esm == null) return;
+
+			// Only revert to idle if this task still owns the movement state.
+			if (esm.currentState is EnemyMovingState)
+			{
+				esm.SwitchState(new EnemyIdleState(esm));
+			}
+		}
 	}
 }
 

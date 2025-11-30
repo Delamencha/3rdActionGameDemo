@@ -10,6 +10,7 @@ public class EnemyChasingState : EnemyBaseState
 
     private const float AnimatorDampTime = 0.1f;
     private const float CrossFadeDuration = 0.1f;
+    private const float TurnSpeedDeg = 720f;
 
     public EnemyChasingState(EnemyStateMachine stateMachine) : base(stateMachine){}
 
@@ -32,7 +33,7 @@ public class EnemyChasingState : EnemyBaseState
         }
 
         MoveToPlayer(deltaTime);
-        FacePlayer();
+        FacePlayer(TurnSpeedDeg, deltaTime);
 
         stateMachine.Animator.SetFloat(SpeedHash, 1f, AnimatorDampTime, deltaTime);
 

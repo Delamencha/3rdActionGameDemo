@@ -9,6 +9,7 @@ public class EnemyIdleState : EnemyBaseState
 
     private const float AnimatorDampTime = 0.1f;
     private const float CrossFadeDuration = 0.1f;
+    private const float TurnSpeedDeg = 180f;
 
     public EnemyIdleState(EnemyStateMachine stateMachine) : base(stateMachine) { }
 
@@ -23,6 +24,11 @@ public class EnemyIdleState : EnemyBaseState
     {
 
         Move(deltaTime);
+
+        if (stateMachine.Player != null)
+        {
+            FacePlayer(TurnSpeedDeg, deltaTime);
+        }
 
         //if (isInChaseRange())
         //{

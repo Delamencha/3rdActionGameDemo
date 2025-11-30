@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fdced29a94446946a80e21050308e71, type: 3}
+  m_Name: EliteEnemyAttackLibrary
+  m_EditorClassIdentifier: 
+  attackInfo:
+  - index: MeleeAttack1
+    attack: {fileID: 11400000, guid: 9410f28b4733dfb40b9962b41f215159, type: 2}
+  - index: RangeAttack1
+    attack: {fileID: 11400000, guid: d8b69ecffddfb8d43b96a666c43011bd, type: 2}
+  - index: DashAttack1
+    attack: {fileID: 11400000, guid: 4298a70175d257b489a53ce8f1591863, type: 2}
