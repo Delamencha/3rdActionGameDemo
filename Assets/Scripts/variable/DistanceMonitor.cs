@@ -9,8 +9,19 @@ public class DistanceMonitor : MonoBehaviour
     public Transform player;
     public Transform enemy;
 
+    private Health enemyHealth;
+
     [Header("Blackboard Variables")]
     public string distanceVariableName = "PlayerDis";
+    public string enemyHealthVariableName = "ownHealth";
+
+
+    private void Start()
+    {
+
+        enemyHealth = GetComponent<Health>();
+
+    }
 
     void Update()
     {
@@ -20,6 +31,8 @@ public class DistanceMonitor : MonoBehaviour
 
             // 直接设置行为树黑板变量
             behaviorTree.SetVariableValue(distanceVariableName, currentDistance);
+
+            behaviorTree.SetVariableValue(enemyHealthVariableName, enemyHealth.getHealth());  
         }
     }
 }

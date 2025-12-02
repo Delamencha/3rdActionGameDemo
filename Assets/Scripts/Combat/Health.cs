@@ -71,5 +71,10 @@ public class Health : MonoBehaviour
 
     }
 
+    public float getHealth()
+    {
+        return health;
+    }
+
 
 }
