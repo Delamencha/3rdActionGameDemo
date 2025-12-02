@@ -17,6 +17,8 @@ public class EnemyMovingState : EnemyBaseState
 	{
 		this.speed = Mathf.Max(0f, speed);
 		this.moveAway = moveAway;
+
+		
 	}
 
 	public override void Enter()
@@ -59,8 +61,8 @@ public class EnemyMovingState : EnemyBaseState
 
 	public override void Exit()
 	{
-		stateMachine.Animator.SetFloat(TargetingRightBlendHash, 0f);
-		stateMachine.Animator.SetFloat(TargetingForwardBlendHash, 0f);
+		stateMachine.Animator.SetFloat(TargetingRightBlendHash, 0f, AnimatorDampTime, Time.deltaTime);
+		stateMachine.Animator.SetFloat(TargetingForwardBlendHash, 0f, AnimatorDampTime, Time.deltaTime);
 	}
 
 	private void UpdateAnimator(Vector3 worldMove, float deltaTime)

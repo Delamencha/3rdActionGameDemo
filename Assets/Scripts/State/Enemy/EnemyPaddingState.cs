@@ -49,6 +49,7 @@ public class EnemyPaddingState : EnemyBaseState
 		sm.Animator.SetFloat(TargetingRightBlendHash, 0);
 		sm.Animator.SetFloat(TargetingForwardBlendHash, 0);
 
+		Debug.Log("Enter new padding State");
 
 	}
 
