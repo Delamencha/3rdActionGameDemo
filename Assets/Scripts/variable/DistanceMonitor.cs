@@ -32,7 +32,9 @@ public class DistanceMonitor : MonoBehaviour
             // 直接设置行为树黑板变量
             behaviorTree.SetVariableValue(distanceVariableName, currentDistance);
 
-            behaviorTree.SetVariableValue(enemyHealthVariableName, enemyHealth.getHealth());  
+            behaviorTree.SetVariableValue(enemyHealthVariableName, enemyHealth.getHealth());
+
+            
         }
     }
 }

@@ -28,6 +28,8 @@ public class PlayerDodgeState : PlayerBaseState
 
     public override void Enter()
     {
+
+
         stateMachine.Animator.applyRootMotion = true;
 
         isInvulnerable = false;

@@ -20,6 +20,8 @@ namespace BehaviorDesigner.Runtime.Tasks
 			esm = GetComponent<EnemyStateMachine>();
 			if (esm == null) return;
 
+			Debug.Log("Enter Dodge Task");
+
 			Vector2 dir = DodgeDirection != null ? DodgeDirection.Value : new Vector2(0, -1);
 			esm.SwitchState(new EnemyDodgeState(esm, dir));
 		}
@@ -30,6 +32,12 @@ namespace BehaviorDesigner.Runtime.Tasks
 
 			if (esm.currentState is EnemyDodgeState dodge)
 			{
+                if (dodge.IsFinished)
+                {
+					Debug.Log(" Dodge Task Success");
+				}
+				
+
 				return dodge.IsFinished ? TaskStatus.Success : TaskStatus.Running;
 			}
 

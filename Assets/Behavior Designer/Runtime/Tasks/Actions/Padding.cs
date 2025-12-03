@@ -38,13 +38,16 @@ namespace BehaviorDesigner.Runtime.Tasks
 
 			if (target == null) return;
 
+			// Randomize initial strafe direction each time padding starts
+			bool startLeft = Random.value < 0.5f;
+
 			esm.SwitchState(new EnemyPaddingState(
 				esm,
 				moveSpeed.Value,
 				turnSpeed.Value,
 				duration.Value,
 				switchDirectionInterval.Value,
-				preferLeft.Value,
+				startLeft,
 				preTurnPause.Value
 			));
 		}

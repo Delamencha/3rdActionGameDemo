@@ -24,8 +24,8 @@ public class EnemyMovingState : EnemyBaseState
 	public override void Enter()
 	{
 		stateMachine.Animator.CrossFadeInFixedTime(TargetingHash, CrossFadeDuration);
-		stateMachine.Animator.SetFloat(TargetingRightBlendHash, 0f);
-		stateMachine.Animator.SetFloat(TargetingForwardBlendHash, 0f);
+		stateMachine.Animator.SetFloat(TargetingRightBlendHash, 0f, AnimatorDampTime, Time.deltaTime);
+		stateMachine.Animator.SetFloat(TargetingForwardBlendHash, 0f, AnimatorDampTime, Time.deltaTime);
 	}
 
 	public override void Tick(float deltaTime)

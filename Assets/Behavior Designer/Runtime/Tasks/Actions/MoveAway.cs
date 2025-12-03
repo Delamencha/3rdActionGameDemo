@@ -22,6 +22,9 @@ namespace BehaviorDesigner.Runtime.Tasks
 			if (esm == null) return;
 			if (target == null || target.Value == null) return;
 
+			// Already moving: avoid re-enter to prevent jitter/re-crossfade
+			if (esm.currentState is EnemyMovingState) return;
+
 			esm.SwitchState(new EnemyMovingState(
 				esm,
 				Mathf.Max(0f, speed.Value),
@@ -37,13 +40,8 @@ namespace BehaviorDesigner.Runtime.Tasks
 
 		public override void OnEnd()
 		{
+			// Do not force Idle here to avoid 1-frame idle jitter on sibling task aborts.
 			if (esm == null) return;
-
-			// Only revert to idle if this task still owns the movement state.
-			if (esm.currentState is EnemyMovingState)
-			{
-				esm.SwitchState(new EnemyIdleState(esm));
-			}
 		}
 	}
 }

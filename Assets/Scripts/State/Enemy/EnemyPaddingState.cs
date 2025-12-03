@@ -63,6 +63,12 @@ public class EnemyPaddingState : EnemyBaseState
 		dirSign = preferLeft ? -1 : 1;
 		nextSwitchTime = switchInterval > 0f ? Time.time + switchInterval : Mathf.Infinity;
 		pendingSwitch = false;
+		pendingNewDir = 0;
+		switchReadyTime = 0f;
+
+		// Reset animator blend values to avoid inheriting previous padding state
+		stateMachine.Animator.SetFloat(TargetingRightBlendHash, 0f);
+		stateMachine.Animator.SetFloat(TargetingForwardBlendHash, 0f);
 
 		stateMachine.Animator.CrossFadeInFixedTime(TargetingHash, CrossFadeDuration);
 
@@ -125,13 +131,14 @@ public class EnemyPaddingState : EnemyBaseState
 			// Optional simple obstacle avoidance by side ray
 			RaycastHit hit;
 			bool shouldSwitch = false;
-			if (Physics.Raycast(stateMachine.transform.position + Vector3.up * 0.5f,
-				stateMachine.transform.right * dirSign, out hit, 0.75f))
-			{
-				shouldSwitch = true;
+            if (Physics.Raycast(stateMachine.transform.position + Vector3.up * 0.5f,
+                stateMachine.transform.right * dirSign, out hit, 0.75f, LayerMask.GetMask("Wall")))
+            {
+                shouldSwitch = true;
+
 			}
-			else if (Time.time >= nextSwitchTime)
-			{
+            else if (Time.time >= nextSwitchTime)
+            {
 				shouldSwitch = true;
 			}
 
@@ -165,8 +172,8 @@ public class EnemyPaddingState : EnemyBaseState
 	public override void Exit()
 	{
 		// Reset animator flags if set in Enter
-		stateMachine.Animator.SetFloat(TargetingRightBlendHash, 0);
-		stateMachine.Animator.SetFloat(TargetingForwardBlendHash, 0);
+		stateMachine.Animator.SetFloat(TargetingRightBlendHash, 0, 0.1f, Time.deltaTime);
+		stateMachine.Animator.SetFloat(TargetingForwardBlendHash, 0, 0.1f, Time.deltaTime);
 	}
 
 	private void UpdateAnimator(Vector3 move, float deltaTime)

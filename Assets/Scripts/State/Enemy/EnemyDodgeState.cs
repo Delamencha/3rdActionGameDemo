@@ -24,6 +24,9 @@ public class EnemyDodgeState : EnemyBaseState
 
 	public override void Enter()
 	{
+		Debug.Log("Enter Dodge State");
+
+
 		IsFinished = false;
 
 		isInvulnerable = false;
