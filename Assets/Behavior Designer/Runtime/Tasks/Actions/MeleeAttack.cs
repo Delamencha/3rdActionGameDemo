@@ -15,7 +15,8 @@ namespace BehaviorDesigner.Runtime.Tasks
 
 		private EnemyStateMachine esm;
 
-	
+		public SharedInt taskAllowed;
+
 
 		public override void OnStart()
 		{
@@ -57,6 +58,16 @@ namespace BehaviorDesigner.Runtime.Tasks
 			if (target != null) target.Value = null;
 			if (AttackName != null) AttackName.Value = string.Empty;
 		}
+
+		public override void OnBehaviorRestart()
+		{
+
+			base.OnBehaviorRestart();
+
+			taskAllowed.Value = 100;
+
+		}
+
 	}
 }
 

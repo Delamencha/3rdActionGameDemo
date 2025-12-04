@@ -15,6 +15,8 @@ namespace BehaviorDesigner.Runtime.Tasks
 
 		private EnemyStateMachine esm;
 
+		public SharedInt taskAllowed;
+
 		public override void OnStart()
 		{
 			esm = GetComponent<EnemyStateMachine>();
@@ -60,6 +62,15 @@ namespace BehaviorDesigner.Runtime.Tasks
 			{
 				esm.SwitchState(new EnemyIdleState(esm));
 			}
+		}
+
+		public override void OnBehaviorRestart()
+		{
+
+			base.OnBehaviorRestart();
+
+			taskAllowed.Value = 100;
+
 		}
 	}
 }
