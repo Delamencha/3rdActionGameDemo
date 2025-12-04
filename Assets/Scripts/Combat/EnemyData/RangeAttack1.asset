@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AnimationName: RangeAttack1
   TransitionDuration: 0.1
-  applyRootMotion: 0
+  applyRootMotion: 1
   curveName: 
   EnemyAttackType: 1
   damageValue:
