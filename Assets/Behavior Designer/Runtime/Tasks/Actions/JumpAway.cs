@@ -10,14 +10,23 @@ namespace BehaviorDesigner.Runtime.Tasks
 	{
 		private EnemyStateMachine esm;
 
+		public SharedInt jumpAwayCounter;
 		public SharedInt taskAllowed;
+		[Tooltip("How far the enemy should jump away (meters).")]
+		public SharedFloat JumpAwayDistance = 5f;
+		[Tooltip("How long the jump-away movement should take (seconds).")]
+		public SharedFloat JumpAwayDuration = 1.2f;
 
 		public override void OnStart()
 		{
 			esm = GetComponent<EnemyStateMachine>();
 			if (esm == null) return;
 
-			esm.SwitchState(new EnemyJumpAwayState(esm));
+			esm.SwitchState(new EnemyJumpAwayState(
+				esm,
+				JumpAwayDistance != null ? Mathf.Max(0f, JumpAwayDistance.Value) : 0f,
+				JumpAwayDuration != null ? Mathf.Max(0.01f, JumpAwayDuration.Value) : 0.01f
+			));
 		}
 
 		public override TaskStatus OnUpdate()
@@ -42,6 +51,8 @@ namespace BehaviorDesigner.Runtime.Tasks
 			{
 				esm.SwitchState(new EnemyIdleState(esm));
 			}
+
+			//jumpAwayCounter.Value = 0;
 		}
 
 		public override void OnBehaviorRestart()
