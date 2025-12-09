@@ -10,7 +10,7 @@ public class AttackData : ScriptableObject
     public float TransitionDuration = 0.1f;
 
     [Header("Combo / Flow")]
-    //������������
+    //������������
     public int LightComboStateIndex = -1;       // -1 means no next
     public int HeavyComboStateIndex = -1;
     public float ComboAttackTime = 0.5f;   // normalized time to accept next input
@@ -26,7 +26,11 @@ public class AttackData : ScriptableObject
     public KnockbackType knockbackType = KnockbackType.AwayFromAttacker;
 
     [Header("Facing / Limits")]
-    public float TotalTurnLimitDeg = 0f; 
+    public float TotalTurnLimitDeg = 0f;
+
+    [Header("VFX / SFX")]
+    [Tooltip("本次攻击使用的特效与音效配置，如果为空则不播放额外效果。")]
+    public AttackEffectData AttackEffect;
 
 }
 

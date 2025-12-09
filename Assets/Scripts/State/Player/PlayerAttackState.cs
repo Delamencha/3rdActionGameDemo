@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Combat;
 
 public class PlayerAttackState : PlayerBaseState
 {
@@ -373,6 +374,22 @@ public class PlayerAttackState : PlayerBaseState
         if (stateMachine.Targeter.CurrentTarget != null) return;
 		if (stateMachine.Targeter.CurrentSoftLockTarget != null) return;
 		stateMachine.Targeter.TryAcquireSoftLockByHit(stateMachine.transform, target);
+
+        // 在命中目标时抛出攻击事件，供 EffectsManager 等系统使用
+        // if (currentAttack != null && currentAttack.AttackEffect != null)
+        // {
+        //     Vector3 hitPoint = target != null ? target.transform.position : stateMachine.transform.position;
+
+        //     var args = new AttackEventArgs
+        //     {
+        //         Attacker = stateMachine.gameObject,
+        //         Target = target != null ? target.gameObject : null,
+        //         HitPoint = hitPoint,
+        //         EffectData = currentAttack.AttackEffect
+        //     };
+
+        //     CombatEvents.RaiseAttackPerformed(args);
+        // }
     }
 
 	// Called only at transition moments to attempt soft lock switching
