@@ -25,6 +25,8 @@ public class PlayerAttackState : PlayerBaseState
 	// Cache per-frame movement to avoid repeated calculation
 	public Vector3 movementThisFrame;
 
+    private bool hasPlayVFX;
+
 
     public PlayerAttackState(PlayerStateMachine stateMachine, int attackIndex, Target curSoftLockTarget = null) : base(stateMachine)
     {
@@ -75,8 +77,8 @@ public class PlayerAttackState : PlayerBaseState
     {
         //Debug.Log("Dodge transition value : " + stateMachine.IsStateTransitionAllowed("PlayerDodgeState"));
 
-		// Cache movement at the start of the frame
-		movementThisFrame = calculateMovement();
+        // Cache movement at the start of the frame
+        movementThisFrame = calculateMovement();
 
         Move(deltaTime);
 
@@ -177,6 +179,27 @@ public class PlayerAttackState : PlayerBaseState
 
         if(normalizedTime < 1f)
         {
+            // Play swing VFX at configured normalized time (only once)
+            if (!hasPlayVFX && currentAttack != null && currentAttack.AttackEffect != null)
+            {
+                float vfxTime = Mathf.Clamp01(currentAttack.AttackEffect.SwingVfxSpawnNormalizedTime);
+                if (normalizedTime >= vfxTime)
+                {
+                    hasPlayVFX = true;
+                    Vector3 hitPoint = stateMachine.transform.position;
+
+                    var args = new AttackEventArgs
+                    {
+                        Attacker = stateMachine.gameObject,
+                        Target = null,
+                        HitPoint = hitPoint,
+                        EffectData = currentAttack.AttackEffect
+                    };
+
+                    CombatEvents.RaiseAttackPerformed(args);
+                }
+            }
+
             //经过一定时间，对于Attack而言是在打击帧结束之后，开启预输入的 读取 (Data层面限制)
             // 与stateMachine中ActivateInputBufferRead()有重复，有些冗余 （Animation层面限制）
             if (normalizedTime >= currentAttack.AnimationCancelTime)

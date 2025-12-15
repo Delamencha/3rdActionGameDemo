@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c423e011155b03546888181dcb31b1da, type: 3}
+  m_Name: AttackVFX1-1
+  m_EditorClassIdentifier: 
+  EffectId: ss11
+  SwingVfxPrefab: {fileID: 1840690549904964, guid: a8a6ba91edbeef2439175ecf0e08e6fb,
+    type: 3}
+  SwingVfxLocalPosition: {x: -0.03, y: 1, z: 0.473}
+  SwingVfxLocalEuler: {x: 62.372, y: 363.673, z: 118.139}
+  SwingVfxScale: {x: 0.7, y: 0.7, z: 0.7}
+  SwingVfxSpawnNormalizedTime: 0.1
+  SwingVfxDuration: 2
+  HitVfxPrefab: {fileID: 0}
+  HitVfxDuration: 0
+  HitVfxOffset: {x: 0, y: 0, z: 0}
+  SwingSfx: {fileID: 8300000, guid: 63eeddf38319c4525bd023205b16a37a, type: 3}
+  HitSfx: {fileID: 0}
+  SpawnHitVfxAtHitPoint: 0

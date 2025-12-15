@@ -11,8 +11,31 @@ public class AttackEffectData : ScriptableObject
     [Tooltip("攻击挥舞或起手时播放的特效（可选）。")]
     public GameObject SwingVfxPrefab;
 
+    [Header("Swing VFX Transform")]
+    [Tooltip("SwingVfxPrefab 生成时相对攻击者(Attacker)的本地偏移位置（单位：米）。")]
+    public Vector3 SwingVfxLocalPosition = Vector3.zero;
+
+    [Tooltip("SwingVfxPrefab 生成时相对攻击者(Attacker)的欧拉角旋转偏移（单位：度）。")]
+    public Vector3 SwingVfxLocalEuler = Vector3.zero;
+
+    [Tooltip("SwingVfxPrefab 实例的缩放（世界缩放；通常 1,1,1）。")]
+    public Vector3 SwingVfxScale = Vector3.one;
+
+    [Header("Swing VFX Timing")]
+    [Tooltip("SwingVfxPrefab 出现时间（动画归一化时间，范围 [0,1]）。当 Attack normalizedTime >= 该值时触发一次。")]
+    [Range(0f, 1f)]
+    public float SwingVfxSpawnNormalizedTime = 0f;
+
+    [Tooltip("SwingVfxPrefab 实例的持续时间（秒）。<= 0 表示不强制使用该值（EffectsManager 会尝试从粒子系统自动估算）。")]
+    [Min(0f)]
+    public float SwingVfxDuration = 0f;
+
     [Tooltip("命中目标时播放的特效（常用）。")]
     public GameObject HitVfxPrefab;
+
+    [Tooltip("HitVfxPrefab 实例的持续时间（秒）。<= 0 表示不强制使用该值（EffectsManager 会尝试从粒子系统自动估算）。")]
+    [Min(0f)]
+    public float HitVfxDuration = 0f;
 
     [Tooltip("命中特效生成在命中点时的偏移量。")]
     public Vector3 HitVfxOffset = Vector3.zero;

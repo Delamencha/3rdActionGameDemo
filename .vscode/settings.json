@@ -19,7 +19,8 @@
     "**/[Bb]uild*/**": true,
     "**/[Ll]ogs/**": true,
     "**/[Uu]ser[Ss]ettings/**": true
-  }
+  },
+  "git.ignoreLimitWarning": true
 }
 
 
