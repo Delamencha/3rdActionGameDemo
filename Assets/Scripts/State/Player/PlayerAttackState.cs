@@ -26,6 +26,7 @@ public class PlayerAttackState : PlayerBaseState
 	public Vector3 movementThisFrame;
 
     private bool hasPlayVFX;
+    private bool hasPlayImpulse;
 
 
     public PlayerAttackState(PlayerStateMachine stateMachine, int attackIndex, Target curSoftLockTarget = null) : base(stateMachine)
@@ -56,6 +57,9 @@ public class PlayerAttackState : PlayerBaseState
 
         accumulatedTurnDeg = 0f;
         totalTurnLimitDeg = (currentAttack != null) ? Mathf.Max(0f, currentAttack.TotalTurnLimitDeg) : 0f;
+
+        hasPlayVFX = false;
+        hasPlayImpulse = false;
 
         //进入AttackState即开启预输入的 写入 或是在动画的帧事件中设置开始写入的时间
         //stateMachine.ActivateInputBuffer();
@@ -193,7 +197,28 @@ public class PlayerAttackState : PlayerBaseState
                         Attacker = stateMachine.gameObject,
                         Target = null,
                         HitPoint = hitPoint,
-                        EffectData = currentAttack.AttackEffect
+                        EffectData = currentAttack.AttackEffect,
+                        Trigger = AttackEffectTrigger.Swing
+                    };
+
+                    CombatEvents.RaiseAttackPerformed(args);
+                }
+            }
+
+            // Play camera impulse at configured normalized time (only once)
+            if (!hasPlayImpulse && currentAttack != null && currentAttack.AttackEffect != null && currentAttack.AttackEffect.EnableCameraImpulse)
+            {
+                float impulseTime = Mathf.Clamp01(currentAttack.AttackEffect.CameraImpulseNormalizedTime);
+                if (normalizedTime >= impulseTime)
+                {
+                    hasPlayImpulse = true;
+                    var args = new AttackEventArgs
+                    {
+                        Attacker = stateMachine.gameObject,
+                        Target = null,
+                        HitPoint = stateMachine.transform.position,
+                        EffectData = currentAttack.AttackEffect,
+                        Trigger = AttackEffectTrigger.CameraImpulse
                     };
 
                     CombatEvents.RaiseAttackPerformed(args);

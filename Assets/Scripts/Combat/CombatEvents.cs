@@ -3,6 +3,15 @@ using UnityEngine;
 
 namespace Combat
 {
+    [System.Flags]
+    public enum AttackEffectTrigger
+    {
+        None = 0,
+        Swing = 1 << 0,
+        Hit = 1 << 1,
+        CameraImpulse = 1 << 2,
+    }
+
     /// <summary>
     /// 攻击事件参数：由攻击状态（例如 PlayerAttackState）在攻击生效时构造并抛出。
     /// </summary>
@@ -19,6 +28,11 @@ namespace Combat
 
         /// <summary>本次攻击所使用的特效/音效配置。</summary>
         public AttackEffectData EffectData;
+
+        /// <summary>
+        /// 本次事件希望触发的表现类型（用于将 State 的“时机”与 Effects 的“执行”解耦）。
+        /// </summary>
+        public AttackEffectTrigger Trigger;
     }
 
     /// <summary>

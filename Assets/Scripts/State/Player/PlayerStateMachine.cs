@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PlayerStateMachine : StateMachine
 {
@@ -25,6 +26,7 @@ public class PlayerStateMachine : StateMachine
     [field: SerializeField] public ForceReceiver ForceReceiver { get;private set; }
     [field: SerializeField] public Attack[] Attacks { get; private set; }
     [field: SerializeField] public ComboSequenceSO ComboSequence { get; private set; }
+    [field: SerializeField] public CinemachineImpulseSource ImpulseSource { get; private set; }
     [field: SerializeField] public float FaceTargetTurnSpeed { get; private set; } = 360f;
     //[field: SerializeField] public InputWeightsSO InputWeights { get; private set; }
 
