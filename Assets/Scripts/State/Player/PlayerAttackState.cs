@@ -48,7 +48,7 @@ public class PlayerAttackState : PlayerBaseState
         //使用CrossFadeInFixedTime导致前一个动画的帧事件仍会执行，且没有相对简易的解决方案，故暂用Play()
         stateMachine.Animator.Play(currentAttack.AnimationName);
         //stateMachine.Animator.CrossFadeInFixedTime(currentAttack.AnimationName, currentAttack.TransitionDuration);
-        stateMachine.WeaponDamage.SetAttack(currentAttack.DamageValue, currentAttack.Knockback, currentAttack.knockbackType);
+        stateMachine.WeaponDamage.SetAttack(currentAttack.DamageValue, currentAttack.Knockback, currentAttack.knockbackType, currentAttack.AttackEffect);
 
         stateMachine.InputReader.JumpEvent += OnJump;
         stateMachine.InputReader.DogeEvent += OnDodge;

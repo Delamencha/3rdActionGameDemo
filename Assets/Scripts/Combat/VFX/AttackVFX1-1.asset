@@ -26,3 +26,63 @@ MonoBehaviour:
   SwingSfx: {fileID: 8300000, guid: 63eeddf38319c4525bd023205b16a37a, type: 3}
   HitSfx: {fileID: 0}
   SpawnHitVfxAtHitPoint: 0
+  EnableHitstop: 1
+  HitstopAttackerDuration: 0.03
+  HitstopVictimDuration: 0.05
+  EnableCameraImpulse: 1
+  CameraImpulseNormalizedTime: 0.1
+  CameraImpulseDirection: {x: 0, y: 1, z: 0}
+  CameraImpulseDirectionIsLocalToAttacker: 1
+  CameraImpulseAmplitude: 0.06
+  CameraImpulseDuration: 0.05
+  CameraImpulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.25730896
+      value: 0.5061226
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.50106514
+      value: -0.0041270643
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.74087894
+      value: -0.3076731
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1.0002279
+      value: 0.0016450831
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

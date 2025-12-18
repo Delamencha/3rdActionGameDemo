@@ -48,7 +48,7 @@ public class EnemyAttackState : EnemyBaseState
 		float transition = Mathf.Max(0f, attackData.TransitionDuration);
 		stateMachine.Animator.CrossFadeInFixedTime(animationHash, transition);
 
-		stateMachine.WeaponDamage.SetAttack(attackData.damageValue[0], attackData.knockbackValue[0], attackData.knockbackType);
+		stateMachine.WeaponDamage.SetAttack(attackData.damageValue[0], attackData.knockbackValue[0], attackData.knockbackType, null);
 
 		// Initialize turning limits for this attack
 		accumulatedTurnDeg = 0f;

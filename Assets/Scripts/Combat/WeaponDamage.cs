@@ -2,17 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Combat;
 
 public class WeaponDamage : MonoBehaviour
 {
     [SerializeField] private Collider myCollider;
-    
 
     private List<Collider> alreadyColliderWith = new List<Collider>();
 
     private float damageValue;
     private float knockBack;
     private KnockbackType knockBackType;
+    private AttackEffectData currentAttackEffect;
     //暂时只考虑一次攻击只会与一个盾牌交互
     private Health blockedHealth; // recorded owner of the blocking shield
     
@@ -69,6 +70,21 @@ public class WeaponDamage : MonoBehaviour
             if (health != blockedHealth)
             {
                 health.DealDamage(damageValue, knockBack);
+
+                // Raise "Hit" event for VFX/SFX/Hitstop systems (do not raise on shield hits).
+                if (currentAttackEffect != null)
+                {
+                    var args = new AttackEventArgs
+                    {
+                        Attacker =  myCollider != null ? myCollider.gameObject : null,
+                        Target = health.gameObject,
+                        HitPoint = other.ClosestPoint(myCollider != null ? myCollider.transform.position : transform.position),
+                        EffectData = currentAttackEffect,
+                        Trigger = AttackEffectTrigger.Hit
+                    };
+
+                    CombatEvents.RaiseAttackPerformed(args);
+                }
             }
         }
 
@@ -87,13 +103,14 @@ public class WeaponDamage : MonoBehaviour
 
     }
 
-    public void SetAttack(float damageValue, float knockBack, KnockbackType knockbackType)
+    public void SetAttack(float damageValue, float knockBack, KnockbackType knockbackType, AttackEffectData attackEffect)
     {
         this.damageValue = damageValue;
 
         this.knockBack = knockBack;
 
         this.knockBackType = knockbackType;
+        this.currentAttackEffect = attackEffect;
 
     }
 

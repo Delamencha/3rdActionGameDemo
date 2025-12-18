@@ -51,6 +51,18 @@ public class AttackEffectData : ScriptableObject
     [Tooltip("如果为 true，则命中特效优先生成在 WeaponDamage 命中点附近；否则生成在目标位置。")]
     public bool SpawnHitVfxAtHitPoint = true;
 
+    [Header("Hitstop")]
+    [Tooltip("是否启用命中时停顿（仅停攻击者+受击者，不影响全局时间）。")]
+    public bool EnableHitstop = false;
+
+    [Tooltip("命中后攻击者停顿时长（秒）。")]
+    [Min(0f)]
+    public float HitstopAttackerDuration = 0.03f;
+
+    [Tooltip("命中后受击者停顿时长（秒）。")]
+    [Min(0f)]
+    public float HitstopVictimDuration = 0.05f;
+
     [Header("Camera Impulse (Cinemachine)")]
     [Tooltip("是否启用攻击镜头震动（通过 Cinemachine Impulse Source/Listener）。")]
     public bool EnableCameraImpulse = false;
