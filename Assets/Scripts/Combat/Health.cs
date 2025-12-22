@@ -12,6 +12,12 @@ public class Health : MonoBehaviour
 
     private bool isInvunerable;
 
+    /// <summary>
+    /// Whether this character is currently in a blocking state.
+    /// This should be set/reset by the character's state machine (e.g. Block states).
+    /// </summary>
+    public bool IsBlocking { get; set; }
+
     public event Action<ImpactType> OnTakeDamage;
     public event Action OnDie;
 
@@ -59,7 +65,7 @@ public class Health : MonoBehaviour
         }
 
 
-        //ÔÚstateMachineÖÐ´¥·¢impactState,¸ü¹ãµÄ´¥·¢²ãÃæ
+        //ï¿½ï¿½stateMachineï¿½Ð´ï¿½ï¿½ï¿½impactState,ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         OnTakeDamage?.Invoke(currentImacpType);
 
         if(health <= 0)

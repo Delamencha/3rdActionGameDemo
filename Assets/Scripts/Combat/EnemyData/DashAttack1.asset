@@ -18,8 +18,8 @@ MonoBehaviour:
   curveName: 
   EnemyAttackType: 2
   damageValue:
-  - 15
+  - 10
   knockbackValue:
-  - 8
+  - 4
   knockbackType: 1
   TotalTurnLimitDeg: 60

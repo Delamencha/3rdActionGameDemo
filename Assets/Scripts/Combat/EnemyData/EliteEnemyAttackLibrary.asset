@@ -21,3 +21,5 @@ MonoBehaviour:
     attack: {fileID: 11400000, guid: 4298a70175d257b489a53ce8f1591863, type: 2}
   - index: MeleeAttack2
     attack: {fileID: 11400000, guid: 15b46be47b668ab408de615477708162, type: 2}
+  - index: MeleeAttack3
+    attack: {fileID: 11400000, guid: 4ccf23e1e6745ef4a96987571b51183a, type: 2}

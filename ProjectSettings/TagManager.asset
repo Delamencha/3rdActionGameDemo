@@ -14,13 +14,13 @@ TagManager:
   - Water
   - UI
   - Player
+  - Weapon
   - Ragdoll
-  - Climbing
   - Defence
+  - Climbing
   - Wall
-  - 
-  - 
-  - 
+  - Enemy
+  - Targeter
   - 
   - 
   - 

@@ -16,15 +16,15 @@ public class ShieldReference : MonoBehaviour
         if (col == null) return;
 
         BoxCollider box = col as BoxCollider;
-        if (box != null)
-        {
-            Matrix4x4 old = Gizmos.matrix;
-            Transform t = box.transform;
-            Gizmos.matrix = Matrix4x4.TRS(t.position, t.rotation, t.lossyScale);
-            Gizmos.DrawWireCube(box.center, box.size);
-            Gizmos.matrix = old;
-            return;
-        }
+        //if (box != null)
+        //{
+        //    Matrix4x4 old = Gizmos.matrix;
+        //    Transform t = box.transform;
+        //    Gizmos.matrix = Matrix4x4.TRS(t.position, t.rotation, t.lossyScale);
+        //    Gizmos.DrawWireCube(box.center, box.size);
+        //    Gizmos.matrix = old;
+        //    return;
+        //}
 
 
     }

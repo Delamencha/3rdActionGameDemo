@@ -27,7 +27,11 @@ public class PlayerTargetBlockState : PlayerBaseState
 
         stateMachine.Animator.CrossFadeInFixedTime(TargetBlockHash, CrossFadeDuration);
 
-        //ÅÐ¶¨¹¥»÷·½Ïò¾ö¶¨ÊÇ·ñÊÜ»÷
+        //ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ü»ï¿½
+        if (stateMachine.Health != null)
+        {
+            stateMachine.Health.IsBlocking = true;
+        }
         
     }
 
@@ -74,6 +78,11 @@ public class PlayerTargetBlockState : PlayerBaseState
         stateMachine.InputReader.TargetEvent -= OnTarget;
         stateMachine.InputReader.DogeEvent -= OnDoge;
         stateMachine.InputReader.JumpEvent -= OnJump;
+
+        if (stateMachine.Health != null)
+        {
+            stateMachine.Health.IsBlocking = false;
+        }
 
     }
 

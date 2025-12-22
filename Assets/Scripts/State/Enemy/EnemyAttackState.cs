@@ -69,7 +69,7 @@ public class EnemyAttackState : EnemyBaseState
 
 	public override void Exit()
 	{
-		Debug.Log($"[EnemyAttackState] Total turned degrees this attack: {accumulatedTurnDeg:F2}");
+		//Debug.Log($"[EnemyAttackState] Total turned degrees this attack: {accumulatedTurnDeg:F2}");
 		// Reset root motion to default (disabled) after attack
 		stateMachine.Animator.applyRootMotion = false;
 	}
