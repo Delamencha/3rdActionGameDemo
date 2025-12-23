@@ -15,6 +15,10 @@ MonoBehaviour:
   AnimationName: DashAttack1
   TransitionDuration: 0.1
   applyRootMotion: 1
+  enableDistanceMatch: 1
+  clipRootDistance: 7.4
+  minRootScale: 0
+  maxRootScale: 3
   curveName: 
   EnemyAttackType: 2
   damageValue:

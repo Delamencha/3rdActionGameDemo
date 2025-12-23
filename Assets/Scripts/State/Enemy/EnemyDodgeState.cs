@@ -33,6 +33,8 @@ public class EnemyDodgeState : EnemyBaseState
 
 		// Dodge uses root motion for displacement
 		stateMachine.Animator.applyRootMotion = true;
+		// Ensure dodge doesn't inherit any previous attack's root-motion tuning
+		stateMachine.ClearRootMotionTuning();
 
 		// Set blend values for directional dodge and play animation
 		stateMachine.Animator.SetFloat(DodgeForwardBlendHash, dodgeDirection.y);
@@ -68,6 +70,7 @@ public class EnemyDodgeState : EnemyBaseState
 	public override void Exit()
 	{
 		stateMachine.Animator.applyRootMotion = false;
+		stateMachine.ClearRootMotionTuning();
 	}
 }
 
