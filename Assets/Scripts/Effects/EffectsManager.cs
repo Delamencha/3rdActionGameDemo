@@ -23,6 +23,7 @@ public class EffectsManager : MonoBehaviour
     [SerializeField] private string vfxRootName = "VFXRoot";
 
     private Transform vfxRoot;
+    private Transform mainCameraTransform;
 
     private void Awake()
     {
@@ -32,6 +33,13 @@ public class EffectsManager : MonoBehaviour
         }
 
         EnsureVfxRoot();
+        CacheMainCameraTransform();
+    }
+    
+    private void CacheMainCameraTransform()
+    {
+        if (mainCameraTransform != null) return;
+        if (Camera.main != null) mainCameraTransform = Camera.main.transform;
     }
 
     private void EnsureVfxRoot()
@@ -114,12 +122,55 @@ public class EffectsManager : MonoBehaviour
             TriggerCameraImpulse(args.Attacker, effectData);
         }
 
-        // Hit: (reserved, currently not wired)
+        // Hit: VFX + SFX
+        if ((trigger & AttackEffectTrigger.Hit) != 0)
+        {
+            // Hit SFX
+            if (effectData.HitSfx != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(effectData.HitSfx);
+            }
 
-        //if (effectData.HitSfx != null && audioSource != null)
-        //{
-        //    audioSource.PlayOneShot(effectData.HitSfx);
-        //}
+            // Hit VFX
+            if (effectData.HitVfxPrefab != null)
+            {
+                Vector3 spawnPos;
+
+                // Prefer hit point if enabled and valid
+                if (effectData.SpawnHitVfxAtHitPoint && args.HitPoint != Vector3.zero)
+                {
+                    spawnPos = args.HitPoint;
+                }
+                else if (args.Target != null)
+                {
+                    spawnPos = args.Target.transform.position;
+                }
+                else if (args.Attacker != null)
+                {
+                    spawnPos = args.Attacker.transform.position;
+                }
+                else
+                {
+                    spawnPos = Vector3.zero;
+                }
+
+                spawnPos += effectData.HitVfxOffset;
+
+                EnsureVfxRoot();
+                Quaternion spawnRot = Quaternion.identity;
+                if (effectData.AlignHitVfxToCamera)
+                {
+                    CacheMainCameraTransform();
+                    if (mainCameraTransform != null)
+                    {
+                        spawnRot = BuildCameraOrientedHitVfxRotation(mainCameraTransform, effectData.HitVfxScreenRollDeg);
+                    }
+                }
+
+                var instance = Instantiate(effectData.HitVfxPrefab, spawnPos, spawnRot, vfxRoot);
+                ScheduleDestroyVfx(instance, effectData.HitVfxDuration);
+            }
+        }
     }
 
     /// <summary>
@@ -240,6 +291,49 @@ public class EffectsManager : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null;
         }
+    }
+
+    /// <summary>
+    /// 构造一个“更容易观看”的命中特效旋转：
+    /// - 让特效的本地 +X（YOZ 平面的法线）尽量朝向相机（使用 -camera.forward）
+    /// - 让特效的本地 +Y 近似对齐相机 up，保证屏幕空间的稳定
+    /// - 最后绕本地 +X 做一次 roll（屏幕空间角度），用于体现攻击方向（右->左为 0 度）
+    /// </summary>
+    private static Quaternion BuildCameraOrientedHitVfxRotation(Transform cam, float screenRollDeg)
+    {
+        Vector3 x = -cam.forward;
+        if (x.sqrMagnitude < 0.0001f) x = Vector3.forward;
+        x.Normalize();
+
+        Vector3 y = cam.up;
+        if (y.sqrMagnitude < 0.0001f) y = Vector3.up;
+        y.Normalize();
+
+        // Orthonormalize
+        Vector3 z = Vector3.Cross(x, y);
+        if (z.sqrMagnitude < 0.0001f)
+        {
+            // Fallback in degenerate case
+            y = Vector3.up;
+            z = Vector3.Cross(x, y);
+        }
+        z.Normalize();
+        y = Vector3.Cross(z, x).normalized;
+
+        // Build rotation where local axes map to world axes: X=x, Y=y, Z=z
+        Matrix4x4 m = Matrix4x4.identity;
+        m.SetColumn(0, new Vector4(x.x, x.y, x.z, 0f));
+        m.SetColumn(1, new Vector4(y.x, y.y, y.z, 0f));
+        m.SetColumn(2, new Vector4(z.x, z.y, z.z, 0f));
+        Quaternion rot = m.rotation;
+
+        // Roll around local X axis (screen space rotation)
+        if (Mathf.Abs(screenRollDeg) > 0.0001f)
+        {
+            rot = rot * Quaternion.AngleAxis(screenRollDeg, Vector3.right);
+        }
+
+        return rot;
     }
 }
 

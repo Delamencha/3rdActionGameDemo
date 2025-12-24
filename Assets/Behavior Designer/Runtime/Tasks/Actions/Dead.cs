@@ -7,8 +7,7 @@ namespace BehaviorDesigner.Runtime.Tasks
 	[TaskDescription("Switch the enemy into the Dead state and wait for the death animation to finish.")]
 	public class Dead : Action
 	{
-		[Tooltip("Optional target reference (not used, kept for consistency with other tasks).")]
-		public SharedGameObject target;
+
 
 		private EnemyStateMachine esm;
 
@@ -40,7 +39,6 @@ namespace BehaviorDesigner.Runtime.Tasks
 
 		public override void OnReset()
 		{
-			if (target != null) target.Value = null;
 		}
 	}
 }

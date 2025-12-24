@@ -40,6 +40,13 @@ public class AttackEffectData : ScriptableObject
     [Tooltip("命中特效生成在命中点时的偏移量。")]
     public Vector3 HitVfxOffset = Vector3.zero;
 
+    [Header("Hit VFX Rotation (Camera Oriented)")]
+    [Tooltip("若启用，则命中特效会按相机朝向调整旋转，使其在屏幕空间更明显（视线尽量垂直于特效的 YOZ 平面）。")]
+    public bool AlignHitVfxToCamera = true;
+
+    [Tooltip("命中特效在屏幕空间的旋转角（度）。当攻击为水平从右向左时可设为 0 度。")]
+    public float HitVfxScreenRollDeg = 0f;
+
     [Header("SFX")]
     [Tooltip("攻击挥舞/出手时播放的音效。")]
     public AudioClip SwingSfx;

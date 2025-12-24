@@ -9,6 +9,7 @@ public class WeaponDamage : MonoBehaviour
     [SerializeField] private Collider myCollider;
 
     private List<Collider> alreadyColliderWith = new List<Collider>();
+    private HashSet<Health> alreadyDamagedHealth = new HashSet<Health>();
 
     private float damageValue;
     private float knockBack;
@@ -20,6 +21,7 @@ public class WeaponDamage : MonoBehaviour
     private void OnEnable()
     {
         alreadyColliderWith.Clear();
+        alreadyDamagedHealth.Clear();
         
     }
 
@@ -35,13 +37,22 @@ public class WeaponDamage : MonoBehaviour
 
         //Debug.Log("Other: " + other.gameObject.name);
 
-        // Only drive combat resolution when we hit a collider that belongs to something with Health.
-        // Use GetComponentInParent to support child colliders (common in character rigs).
-        var health = other.GetComponentInParent<Health>();
+        // Only interact with Hurtbox colliders (Weapon layer <-> Hurtbox layer should also be configured in Physics matrix).
+        var hurtbox = other.GetComponent<Hurtbox>();
+        if (hurtbox == null || hurtbox.OwnerHealth == null)
+        {
+            return;
+        }
+
+        // Resolve Health from Hurtbox (avoid ambiguity with CharacterController capsule collider).
+        var health = hurtbox.OwnerHealth;
         bool isBlocked = false;
 
         if (health != null)
         {
+            // Avoid multi-hit when multiple hurtbox colliders belong to the same target within one swing.
+            if (alreadyDamagedHealth.Contains(health)) return;
+
             // Prevent self-hit (attacker's weapon hitting attacker's own colliders).
             var selfHealth = myCollider != null ? myCollider.GetComponentInParent<Health>() : null;
             if (selfHealth != null && selfHealth == health) return;
@@ -53,6 +64,7 @@ public class WeaponDamage : MonoBehaviour
             }
             else
             {
+                alreadyDamagedHealth.Add(health);
                 health.DealDamage(damageValue, knockBack);
 
                 // Raise "Hit" event for VFX/SFX/Hitstop systems only on successful damage.
@@ -73,7 +85,7 @@ public class WeaponDamage : MonoBehaviour
         }
 
         // Apply knockback force even if blocked (feels better and matches prior behavior).
-        var forceReceiver = other.GetComponentInParent<ForceReceiver>();
+        var forceReceiver = health.GetComponentInParent<ForceReceiver>();
         if (forceReceiver != null)
         {
             Vector3 direction = GetKnockbackDirection(myCollider != null ? myCollider.transform : transform, other.transform);
@@ -81,7 +93,7 @@ public class WeaponDamage : MonoBehaviour
         }
 
         // Notify soft lock system about target hit (blocked or not).
-        var target = other.GetComponentInParent<Target>();
+        var target = health.GetComponentInParent<Target>();
         if (target != null)
         {
             OnTargetHit?.Invoke(target);

@@ -7,6 +7,8 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [SerializeField] private float maxHealth = 100f;
+    [Header("Hit Flash (optional)")]
+    [SerializeField] private HitFlashController hitFlashController;
 
     private float health;
 
@@ -45,6 +47,12 @@ public class Health : MonoBehaviour
         if (isInvunerable) return;
 
         health = Mathf.Max(0, health - damageValue);
+
+        // Visual feedback: victim hit flash (optional)
+        if (hitFlashController != null)
+        {
+            hitFlashController.Play();
+        }
 
         ImpactType currentImacpType = ImpactType.Light;
 

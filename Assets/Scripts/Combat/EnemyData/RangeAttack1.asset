@@ -15,11 +15,23 @@ MonoBehaviour:
   AnimationName: RangeAttack1
   TransitionDuration: 0.1
   applyRootMotion: 1
+  enableDistanceMatch: 0
+  clipRootDistance: 3.1
+  minRootScale: 0
+  maxRootScale: 3
   curveName: 
   EnemyAttackType: 1
+  projectilePrefab: {fileID: 6001497346205687364, guid: a952fc62f99690040bb003fa160a5201,
+    type: 3}
+  projectileSpawnNormalizedTime: 0.1
+  projectileSpawnOffset: {x: 0, y: 0, z: 0}
+  projectileSpeed: 5
+  projectileLifetime: 10
+  projectileColliderEnableDelay: 0
+  projectileHoming: 1
+  projectileHomingTurnSpeedDeg: 360
   damageValue:
   - 6
-  knockbackValue:
-  - 2
+  knockbackValue: []
   knockbackType: 1
   TotalTurnLimitDeg: 60

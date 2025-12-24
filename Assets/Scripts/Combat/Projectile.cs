@@ -29,7 +29,10 @@ public class Projectile : MonoBehaviour
 	private KnockbackType knockbackType;
 
 	private GameObject attacker;
+	private Transform attackerRoot;
+	private Health attackerHealth;
 	private Transform target;
+	private float targetYOffset = 1.0f;
 
 	private bool initialized;
 	private bool hasHit;
@@ -40,9 +43,11 @@ public class Projectile : MonoBehaviour
 	/// Initialize the projectile. Call right after Instantiate.
 	/// </summary>
 	public void Initialize(GameObject attacker, Transform target, float damage, float knockBack, KnockbackType knockbackType,
-		float speed, float lifetime, float colliderEnableDelay, TrajectoryMode trajectory, float homingTurnSpeedDeg)
+		float speed, float lifetime, float colliderEnableDelay, TrajectoryMode trajectory, float homingTurnSpeedDeg, float targetYOffset = 1.0f)
 	{
 		this.attacker = attacker;
+		this.attackerRoot = attacker != null ? attacker.transform.root : null;
+		this.attackerHealth = attacker != null ? attacker.GetComponentInParent<Health>() : null;
 		this.target = target;
 		this.damage = Mathf.Max(0f, damage);
 		this.knockBack = Mathf.Max(0f, knockBack);
@@ -53,6 +58,7 @@ public class Projectile : MonoBehaviour
 		this.colliderEnableDelay = Mathf.Max(0f, colliderEnableDelay);
 		this.trajectory = trajectory;
 		this.homingTurnSpeedDeg = Mathf.Max(0f, homingTurnSpeedDeg);
+		this.targetYOffset = targetYOffset;
 
 		initialized = true;
 		aliveTime = 0f;
@@ -112,7 +118,8 @@ public class Projectile : MonoBehaviour
 
 		if (trajectory == TrajectoryMode.Homing && target != null)
 		{
-			Vector3 to = target.position - transform.position;
+			Vector3 targetPos = target.position + Vector3.up * targetYOffset;
+			Vector3 to = targetPos - transform.position;
 			if (to.sqrMagnitude > 0.0001f)
 			{
 				Quaternion targetRot = Quaternion.LookRotation(to.normalized, Vector3.up);
@@ -129,14 +136,24 @@ public class Projectile : MonoBehaviour
 		if (other == null) return;
 		if (hitCollider != null && other == hitCollider) return;
 
-		// Only hit something that has Health, and prefer "Player" as target.
-		var health = other.GetComponentInParent<Health>();
+		// Prevent self-hit by hierarchy (covers Hurtboxes, weapon colliders, etc.).
+		if (attackerRoot != null && other.transform.root == attackerRoot) return;
+
+		// Resolve victim health (prefer Hurtbox for rigged characters).
+		Health health = null;
+		if (other.TryGetComponent<Hurtbox>(out var hurtbox) && hurtbox.OwnerHealth != null)
+		{
+			health = hurtbox.OwnerHealth;
+		}
+		else
+		{
+			health = other.GetComponentInParent<Health>();
+		}
 		if (health == null) return;
 
 		// Prevent self-hit.
 		if (attacker != null)
 		{
-			var attackerHealth = attacker.GetComponentInParent<Health>();
 			if (attackerHealth != null && attackerHealth == health) return;
 		}
 
@@ -146,22 +163,23 @@ public class Projectile : MonoBehaviour
 		// Block logic: if player is blocking and projectile is in front, do no damage.
 		if (health.IsBlocking && IsFrontalHit(health.transform, transform))
 		{
-			ApplyKnockback(other);
+			ApplyKnockback(health, other);
 			hasHit = true;
 			Destroy(gameObject);
 			return;
 		}
 
 		health.DealDamage(damage, knockBack);
-		ApplyKnockback(other);
+		ApplyKnockback(health, other);
 
 		hasHit = true;
 		Destroy(gameObject);
 	}
 
-	private void ApplyKnockback(Collider other)
+	private void ApplyKnockback(Health victimHealth, Collider other)
 	{
-		var forceReceiver = other.GetComponentInParent<ForceReceiver>();
+		if (victimHealth == null) return;
+		var forceReceiver = victimHealth.GetComponentInParent<ForceReceiver>();
 		if (forceReceiver == null) return;
 
 		Vector3 dir = GetKnockbackDirection(transform, other.transform, knockbackType);

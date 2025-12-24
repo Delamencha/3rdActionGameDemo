@@ -15,8 +15,20 @@ MonoBehaviour:
   AnimationName: MeleeAttack2
   TransitionDuration: 0.1
   applyRootMotion: 1
+  enableDistanceMatch: 1
+  clipRootDistance: 2.5
+  minRootScale: 0
+  maxRootScale: 1.5
   curveName: 
   EnemyAttackType: 0
+  projectilePrefab: {fileID: 0}
+  projectileSpawnNormalizedTime: 0.3
+  projectileSpawnOffset: {x: 0, y: 0, z: 0}
+  projectileSpeed: 12
+  projectileLifetime: 5
+  projectileColliderEnableDelay: 0
+  projectileHoming: 0
+  projectileHomingTurnSpeedDeg: 720
   damageValue:
   - 8
   knockbackValue:
