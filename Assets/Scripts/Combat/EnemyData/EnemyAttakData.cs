@@ -55,6 +55,10 @@ public class EnemyAttakData : ScriptableObject
     public List<float> knockbackValue = new List<float>();
     public KnockbackType knockbackType = KnockbackType.AwayFromAttacker;
 
+    [Header("VFX / SFX")]
+    [Tooltip("本次攻击使用的特效与音效配置，如果为空则不播放额外效果。")]
+    public AttackEffectData AttackEffect;
+
     [Header("Facing / Limits")]
     public float TotalTurnLimitDeg = 60f;
 }

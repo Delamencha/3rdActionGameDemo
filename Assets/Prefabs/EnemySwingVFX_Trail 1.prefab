@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5938040176716673495}
   - component: {fileID: 6056492793042227937}
   m_Layer: 0
-  m_Name: SwingVFX_Trail
+  m_Name: EnemySwingVFX_Trail 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 4170d8a2a084d0f48a29feb53278c077, type: 2}
-  - {fileID: 2100000, guid: 1a966bdbfd00bae40b23dadc423c13bf, type: 2}
+  - {fileID: 2100000, guid: 9c57733e28443e841bc9eebaf9d91a59, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

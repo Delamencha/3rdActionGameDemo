@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: AttackVFX2-3
   m_EditorClassIdentifier: 
   EffectId: ss11
-  SwingVfxPrefab: {fileID: 0}
+  SwingVfxPrefab: {fileID: 5047021554874287247, guid: c49f6f9aed0b7ff4ea62d41256613050,
+    type: 3}
   SwingVfxLocalPosition: {x: -0.03, y: 1, z: 0.473}
   SwingVfxLocalEuler: {x: 62.372, y: 363.673, z: 118.139}
   SwingVfxScale: {x: 0.7, y: 0.7, z: 0.7}
   SwingVfxSpawnNormalizedTime: 0.1
-  SwingVfxDuration: 2
+  SwingVfxDuration: 0.5
   HitVfxPrefab: {fileID: 1233249760495725985, guid: 44c5c3416e33bea45aafaad467b46ee0,
     type: 3}
   HitVfxDuration: 2

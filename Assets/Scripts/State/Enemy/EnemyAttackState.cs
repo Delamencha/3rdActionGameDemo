@@ -1,4 +1,5 @@
 using UnityEngine;
+using Combat;
 
 public class EnemyAttackState : EnemyBaseState
 {
@@ -14,6 +15,9 @@ public class EnemyAttackState : EnemyBaseState
 	private float accumulatedTurnDeg;
 	private float totalTurnLimitDeg;
 	private const float TurnSpeedDeg = 360f;
+
+	private bool hasPlayVFX;
+	private bool hasPlayImpulse;
 
 	public EnemyAttackState(EnemyStateMachine stateMachine, string attackName) : base(stateMachine)
 	{
@@ -37,6 +41,8 @@ public class EnemyAttackState : EnemyBaseState
 	{
 		IsFinished = false;
 		projectileSpawned = false;
+		hasPlayVFX = false;
+		hasPlayImpulse = false;
 
 		if (attackData == null || animationHash == 0)
 		{
@@ -71,7 +77,8 @@ public class EnemyAttackState : EnemyBaseState
 			weaponDamageWasActive = false;
 			if (stateMachine.WeaponDamage != null)
 			{
-				stateMachine.WeaponDamage.SetAttack(damage0, knock0, attackData.knockbackType, null);
+				// Pass AttackEffect so WeaponDamage can raise Hit events for VFX/SFX/Hitstop on successful damage.
+				stateMachine.WeaponDamage.SetAttack(damage0, knock0, attackData.knockbackType, attackData.AttackEffect);
 			}
 		}
 
@@ -117,6 +124,49 @@ public class EnemyAttackState : EnemyBaseState
 	{
 		// Face player with per-attack total turning limit
 		TryFacePlayerLimited(deltaTime);
+
+		// Effects timing (Swing / CameraImpulse) mirrors PlayerAttackState.
+		float normalizedTime = GetNormalizedTime(stateMachine.Animator, "Attack");
+		if (normalizedTime < 1f && attackData != null && attackData.AttackEffect != null)
+		{
+			// Swing VFX + SFX
+			if (!hasPlayVFX)
+			{
+				float vfxTime = Mathf.Clamp01(attackData.AttackEffect.SwingVfxSpawnNormalizedTime);
+				if (normalizedTime >= vfxTime)
+				{
+					hasPlayVFX = true;
+					var args = new AttackEventArgs
+					{
+						Attacker = stateMachine.gameObject,
+						Target = null,
+						HitPoint = stateMachine.transform.position,
+						EffectData = attackData.AttackEffect,
+						Trigger = AttackEffectTrigger.Swing
+					};
+					CombatEvents.RaiseAttackPerformed(args);
+				}
+			}
+
+			// Camera impulse
+			if (!hasPlayImpulse && attackData.AttackEffect.EnableCameraImpulse)
+			{
+				float impulseTime = Mathf.Clamp01(attackData.AttackEffect.CameraImpulseNormalizedTime);
+				if (normalizedTime >= impulseTime)
+				{
+					hasPlayImpulse = true;
+					var args = new AttackEventArgs
+					{
+						Attacker = stateMachine.gameObject,
+						Target = null,
+						HitPoint = stateMachine.transform.position,
+						EffectData = attackData.AttackEffect,
+						Trigger = AttackEffectTrigger.CameraImpulse
+					};
+					CombatEvents.RaiseAttackPerformed(args);
+				}
+			}
+		}
 
 		// Spawn projectile for ranged attacks at configured timing.
 		if (!projectileSpawned && attackData != null && attackData.EnemyAttackType == EnemyAttackType.RangeAttack)

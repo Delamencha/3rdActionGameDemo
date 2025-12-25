@@ -21,9 +21,18 @@ MonoBehaviour:
   maxRootScale: 3
   curveName: 
   EnemyAttackType: 2
+  projectilePrefab: {fileID: 0}
+  projectileSpawnNormalizedTime: 0.3
+  projectileSpawnOffset: {x: 0, y: 0, z: 0}
+  projectileSpeed: 12
+  projectileLifetime: 5
+  projectileColliderEnableDelay: 0
+  projectileHoming: 0
+  projectileHomingTurnSpeedDeg: 720
   damageValue:
   - 10
   knockbackValue:
   - 4
   knockbackType: 1
+  AttackEffect: {fileID: 11400000, guid: 8ca6c3f8b5cf0ed48bb6744418dba7a5, type: 2}
   TotalTurnLimitDeg: 60

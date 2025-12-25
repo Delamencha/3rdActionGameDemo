@@ -34,4 +34,5 @@ MonoBehaviour:
   knockbackValue:
   - 3
   knockbackType: 1
+  AttackEffect: {fileID: 11400000, guid: dcda222b9d1e4f34684b88a82c995a1b, type: 2}
   TotalTurnLimitDeg: 90

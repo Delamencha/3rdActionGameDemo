@@ -19,10 +19,10 @@ MonoBehaviour:
   SwingVfxLocalEuler: {x: 0, y: 0, z: 0}
   SwingVfxScale: {x: 1, y: 1, z: 1}
   SwingVfxSpawnNormalizedTime: 0
-  SwingVfxDuration: 10
+  SwingVfxDuration: 0.5
   HitVfxPrefab: {fileID: 5001413565762599041, guid: b964f8c024ce0fe4cb69c9f31efc2444,
     type: 3}
-  HitVfxDuration: 2
+  HitVfxDuration: 1
   HitVfxOffset: {x: 0, y: 0, z: 0}
   AlignHitVfxToCamera: 1
   HitVfxScreenRollDeg: -135
