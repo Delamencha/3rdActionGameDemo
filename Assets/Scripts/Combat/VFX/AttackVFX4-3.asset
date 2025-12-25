@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c423e011155b03546888181dcb31b1da, type: 3}
+  m_Name: AttackVFX4-3
+  m_EditorClassIdentifier: 
+  EffectId: ss11
+  SwingVfxPrefab: {fileID: 0}
+  SwingVfxLocalPosition: {x: -0.03, y: 1, z: 0.473}
+  SwingVfxLocalEuler: {x: 62.372, y: 363.673, z: 118.139}
+  SwingVfxScale: {x: 0.7, y: 0.7, z: 0.7}
+  SwingVfxSpawnNormalizedTime: 0.1
+  SwingVfxDuration: 2
+  HitVfxPrefab: {fileID: 5001413565762599041, guid: b964f8c024ce0fe4cb69c9f31efc2444,
+    type: 3}
+  HitVfxDuration: 2
+  HitVfxOffset: {x: 0, y: 0, z: 0}
+  AlignHitVfxToCamera: 1
+  HitVfxScreenRollDeg: 45
+  SwingSfx: {fileID: 8300000, guid: 63eeddf38319c4525bd023205b16a37a, type: 3}
+  HitSfx: {fileID: 8300000, guid: 2eb8c0bc5a19f45528b382c3c14f6b9a, type: 3}
+  SpawnHitVfxAtHitPoint: 1
+  EnableHitstop: 1
+  HitstopAttackerDuration: 0.03
+  HitstopVictimDuration: 0.05
+  EnableCameraImpulse: 1
+  CameraImpulseNormalizedTime: 0.1
+  CameraImpulseDirection: {x: 0, y: 1, z: 0}
+  CameraImpulseDirectionIsLocalToAttacker: 1
+  CameraImpulseAmplitude: 0.06
+  CameraImpulseDuration: 0.05
+  CameraImpulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.25730896
+      value: 0.5061226
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.50106514
+      value: -0.0041270643
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.74087894
+      value: -0.3076731
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1.0002279
+      value: 0.0016450831
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

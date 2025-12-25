@@ -4,6 +4,14 @@ using System.Collections;
 using Cinemachine;
 
 /// <summary>
+/// Optional hook for VFX prefabs instantiated by EffectsManager to receive the AttackEventArgs context.
+/// </summary>
+public interface IAttackVfxInitializable
+{
+    void Initialize(AttackEventArgs args);
+}
+
+/// <summary>
 /// 统一处理攻击/受击相关的特效与音效。
 /// - 订阅 CombatEvents 中的战斗事件
 /// - 根据 AttackEffectData / HitEffectData 播放对应的 VFX / SFX
@@ -111,6 +119,7 @@ public class EffectsManager : MonoBehaviour
                 if (instance != null)
                 {
                     instance.transform.localScale = effectData.SwingVfxScale;
+                    TryInitializeAttackVfx(instance, args);
                 }
                 ScheduleDestroyVfx(instance, effectData.SwingVfxDuration);
             }
@@ -211,6 +220,23 @@ public class EffectsManager : MonoBehaviour
         if (duration > 0f)
         {
             Destroy(instance, duration);
+        }
+    }
+
+    private void TryInitializeAttackVfx(GameObject instance, AttackEventArgs args)
+    {
+        if (instance == null) return;
+
+        // Unity can't directly GetComponentsInChildren by interface type reliably in all versions;
+        // scan MonoBehaviours and invoke interface when present.
+        var behaviours = instance.GetComponentsInChildren<MonoBehaviour>(true);
+        for (int i = 0; i < behaviours.Length; i++)
+        {
+            var b = behaviours[i];
+            if (b is IAttackVfxInitializable initializable)
+            {
+                initializable.Initialize(args);
+            }
         }
     }
 
