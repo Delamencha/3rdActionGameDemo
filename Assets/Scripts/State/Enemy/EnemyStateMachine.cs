@@ -28,6 +28,12 @@ public class EnemyStateMachine : StateMachine
 
     public Health Player { get; private set; }
 
+    [Header("SFX (Local)")]
+    [Tooltip("角色本地的 AudioSource（用于挥舞音效等需要动画帧事件重复播放的音效）。")]
+    [SerializeField] private AudioSource sfxSource;
+
+    private AudioClip lastSwingSfx;
+
     // Root motion tuning (used by attacks / dodges that rely on root motion)
     private Transform rootMotionTarget;
     private float rootMotionStopDistance;
@@ -40,6 +46,14 @@ public class EnemyStateMachine : StateMachine
     private bool isMeasuringRootMotionDistance;
     private float measuredRootMotionDistance;
 
+    private void Awake()
+    {
+        if (sfxSource == null)
+        {
+            sfxSource = GetComponent<AudioSource>();
+        }
+    }
+
     private void Start()
     {
 
@@ -49,6 +63,21 @@ public class EnemyStateMachine : StateMachine
         Agent.updateRotation = false;
 
         SwitchState(new EnemyIdleState(this));
+    }
+
+    public void CacheLastSwingSfx(AudioClip clip)
+    {
+        lastSwingSfx = clip;
+    }
+
+    /// <summary>
+    /// 由动画帧事件/代码调用：重放当前攻击缓存的挥舞音效。
+    /// </summary>
+    public void ReplayLastSwingSfx()
+    {
+        if (sfxSource == null) return;
+        if (lastSwingSfx == null) return;
+        sfxSource.PlayOneShot(lastSwingSfx);
     }
 
     /// <summary>

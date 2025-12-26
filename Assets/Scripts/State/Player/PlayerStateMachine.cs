@@ -30,6 +30,12 @@ public class PlayerStateMachine : StateMachine
     [field: SerializeField] public float FaceTargetTurnSpeed { get; private set; } = 360f;
     //[field: SerializeField] public InputWeightsSO InputWeights { get; private set; }
 
+    [Header("SFX (Local)")]
+    [Tooltip("角色本地的 AudioSource（用于挥舞音效等需要动画帧事件重复播放的音效）。")]
+    [SerializeField] private AudioSource sfxSource;
+
+    private AudioClip lastSwingSfx;
+
     public float PreviousDodgeTime { get; private set; } = Mathf.NegativeInfinity;
     public InputBuffer Buffer { get; private set; } = new InputBuffer();
     public Transform MainCameraTransform { get; private set; }
@@ -56,6 +62,11 @@ public class PlayerStateMachine : StateMachine
         // Seed known player states; default to true (allowed)
         InitializeTransitionMap();
         InitializePriorityAndInputMaps();
+
+        if (sfxSource == null)
+        {
+            sfxSource = GetComponent<AudioSource>();
+        }
     }
 
     private void Start()
@@ -69,6 +80,21 @@ public class PlayerStateMachine : StateMachine
 
         SwitchState(new PlayerFreeLookState(this));
 
+    }
+
+    public void CacheLastSwingSfx(AudioClip clip)
+    {
+        lastSwingSfx = clip;
+    }
+
+    /// <summary>
+    /// 由动画帧事件/代码调用：重放当前攻击缓存的挥舞音效。
+    /// </summary>
+    public void ReplayLastSwingSfx()
+    {
+        if (sfxSource == null) return;
+        if (lastSwingSfx == null) return;
+        sfxSource.PlayOneShot(lastSwingSfx);
     }
 
     private void OnEnable()

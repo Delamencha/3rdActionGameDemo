@@ -18,26 +18,37 @@ public interface IAttackVfxInitializable
 /// </summary>
 public class EffectsManager : MonoBehaviour
 {
+    public static EffectsManager Instance { get; private set; }
+
     [Header("Audio")]
-    [Tooltip("用于播放攻击/受击音效的 AudioSource；若为空，则会在运行时自动尝试获取自身的 AudioSource。")]
-    [SerializeField] private AudioSource audioSource;
+    [Tooltip("备用音频源：当播放者对象上找不到 AudioSource 时使用；若为空，会在运行时自动尝试获取自身 AudioSource。")]
+    [SerializeField] private AudioSource fallbackAudioSource;
 
     [Header("Camera Impulse (Cinemachine)")]
     [Tooltip("用于生成震动的 CinemachineImpulseSource（请在 Inspector 中拖拽设置）。")]
     [SerializeField] private CinemachineImpulseSource impulseSource;
 
     [Header("VFX")]
-    [Tooltip("场景中的特效根节点名称；不存在时会在原点自动创建。")]
+    [Tooltip("角色/世界特效根节点名称；会在需要时创建到对应对象层级下。")]
     [SerializeField] private string vfxRootName = "VFXRoot";
 
-    private Transform vfxRoot;
+    // World root is used for VFX that should stay in world space (e.g., hit point sparks).
+    private Transform worldVfxRoot;
     private Transform mainCameraTransform;
 
     private void Awake()
     {
-        if (audioSource == null)
+        if (Instance != null && Instance != this)
         {
-            audioSource = GetComponent<AudioSource>();
+            Debug.LogWarning("[EffectsManager] Duplicate instance found. Destroying this one.");
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+
+        if (fallbackAudioSource == null)
+        {
+            fallbackAudioSource = GetComponent<AudioSource>();
         }
 
         EnsureVfxRoot();
@@ -52,17 +63,40 @@ public class EffectsManager : MonoBehaviour
 
     private void EnsureVfxRoot()
     {
-        if (vfxRoot != null) return;
+        if (worldVfxRoot != null) return;
 
-        GameObject root = GameObject.Find(vfxRootName);
-        if (root == null)
+        // Create world root under EffectsManager to keep scene hierarchy tidy.
+        Transform existing = transform.Find(vfxRootName);
+        if (existing != null)
         {
-            root = new GameObject(vfxRootName);
-            root.transform.position = Vector3.zero;
-            root.transform.rotation = Quaternion.identity;
+            worldVfxRoot = existing;
+            return;
         }
 
-        vfxRoot = root.transform;
+        var root = new GameObject(vfxRootName);
+        root.transform.SetParent(transform, worldPositionStays: false);
+        root.transform.localPosition = Vector3.zero;
+        root.transform.localRotation = Quaternion.identity;
+        worldVfxRoot = root.transform;
+    }
+
+    private Transform GetOrCreateVfxRootUnder(Transform owner)
+    {
+        if (owner == null)
+        {
+            EnsureVfxRoot();
+            return worldVfxRoot;
+        }
+
+        // Create a per-owner VFXRoot so attached effects follow movement.
+        Transform child = owner.Find(vfxRootName);
+        if (child != null) return child;
+
+        var go = new GameObject(vfxRootName);
+        go.transform.SetParent(owner, worldPositionStays: false);
+        go.transform.localPosition = Vector3.zero;
+        go.transform.localRotation = Quaternion.identity;
+        return go.transform;
     }
 
     private void OnEnable()
@@ -96,9 +130,10 @@ public class EffectsManager : MonoBehaviour
         if ((trigger & AttackEffectTrigger.Swing) != 0)
         {
             // 播放攻击挥舞音效（例如出手时）
-            if (effectData.SwingSfx != null && audioSource != null)
+            if (effectData.SwingSfx != null)
             {
-                audioSource.PlayOneShot(effectData.SwingSfx);
+                // Swing SFX is played from attacker (the swinger)
+                PlayOneShotFrom(args.Attacker, effectData.SwingSfx);
             }
 
             if (effectData.SwingVfxPrefab != null)
@@ -115,7 +150,9 @@ public class EffectsManager : MonoBehaviour
                     : Quaternion.Euler(effectData.SwingVfxLocalEuler);
 
                 EnsureVfxRoot();
-                var instance = Instantiate(effectData.SwingVfxPrefab, spawnPos, spawnRot, vfxRoot);
+                // Swing VFX should follow attacker.
+                Transform parentRoot = GetOrCreateVfxRootUnder(attackerTr);
+                var instance = Instantiate(effectData.SwingVfxPrefab, spawnPos, spawnRot, parentRoot);
                 if (instance != null)
                 {
                     instance.transform.localScale = effectData.SwingVfxScale;
@@ -135,9 +172,10 @@ public class EffectsManager : MonoBehaviour
         if ((trigger & AttackEffectTrigger.Hit) != 0)
         {
             // Hit SFX
-            if (effectData.HitSfx != null && audioSource != null)
+            if (effectData.HitSfx != null)
             {
-                audioSource.PlayOneShot(effectData.HitSfx);
+                // Prefer victim as the sound source; fallback to attacker.
+                PlayOneShotFrom(args.Target != null ? args.Target : args.Attacker, effectData.HitSfx);
             }
 
             // Hit VFX
@@ -176,7 +214,12 @@ public class EffectsManager : MonoBehaviour
                     }
                 }
 
-                var instance = Instantiate(effectData.HitVfxPrefab, spawnPos, spawnRot, vfxRoot);
+                // If we are NOT using hit point, treat it as "attached to target"; otherwise keep it in world space.
+                Transform hitParent = (args.Target != null && (!effectData.SpawnHitVfxAtHitPoint || args.HitPoint == Vector3.zero))
+                    ? GetOrCreateVfxRootUnder(args.Target.transform)
+                    : worldVfxRoot;
+
+                var instance = Instantiate(effectData.HitVfxPrefab, spawnPos, spawnRot, hitParent);
                 ScheduleDestroyVfx(instance, effectData.HitVfxDuration);
             }
         }
@@ -197,13 +240,13 @@ public class EffectsManager : MonoBehaviour
         if (hitData.HitVfxPrefab != null && args.Victim != null)
         {
             Vector3 spawnPos = args.Victim.transform.position + hitData.HitVfxOffset;
-            EnsureVfxRoot();
-            Instantiate(hitData.HitVfxPrefab, spawnPos, Quaternion.identity, vfxRoot);
+            Transform parentRoot = GetOrCreateVfxRootUnder(args.Victim.transform);
+            Instantiate(hitData.HitVfxPrefab, spawnPos, Quaternion.identity, parentRoot);
         }
 
-        if (hitData.HitSfx != null && audioSource != null)
+        if (hitData.HitSfx != null)
         {
-            audioSource.PlayOneShot(hitData.HitSfx);
+            PlayOneShotFrom(args.Victim, hitData.HitSfx);
         }
     }
 
@@ -300,6 +343,25 @@ public class EffectsManager : MonoBehaviour
         }
 
         StartCoroutine(DriveImpulseOverTime(impulseSource, dir, amplitude, duration, curve));
+    }
+
+    private void PlayOneShotFrom(GameObject owner, AudioClip clip)
+    {
+        if (clip == null) return;
+
+        AudioSource src = null;
+        if (owner != null)
+        {
+            // AudioSource is typically on the root/character object
+            src = owner.GetComponentInParent<AudioSource>();
+        }
+        if (src == null)
+        {
+            src = fallbackAudioSource;
+        }
+        if (src == null) return;
+
+        src.PlayOneShot(clip);
     }
 
     private IEnumerator DriveImpulseOverTime(CinemachineImpulseSource source, Vector3 dir, float amplitude, float duration, AnimationCurve curve)

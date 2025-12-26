@@ -192,6 +192,9 @@ public class PlayerAttackState : PlayerBaseState
                     hasPlayVFX = true;
                     Vector3 hitPoint = stateMachine.transform.position;
 
+                    // Cache swing SFX for potential repeated playback via animation events.
+                    stateMachine.CacheLastSwingSfx(currentAttack.AttackEffect != null ? currentAttack.AttackEffect.SwingSfx : null);
+
                     var args = new AttackEventArgs
                     {
                         Attacker = stateMachine.gameObject,

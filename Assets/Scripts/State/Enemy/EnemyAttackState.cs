@@ -136,6 +136,8 @@ public class EnemyAttackState : EnemyBaseState
 				if (normalizedTime >= vfxTime)
 				{
 					hasPlayVFX = true;
+					// Cache swing SFX for potential repeated playback via animation events.
+					stateMachine.CacheLastSwingSfx(attackData.AttackEffect != null ? attackData.AttackEffect.SwingSfx : null);
 					var args = new AttackEventArgs
 					{
 						Attacker = stateMachine.gameObject,
