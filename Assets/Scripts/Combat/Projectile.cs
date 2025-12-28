@@ -1,4 +1,5 @@
 using UnityEngine;
+using Combat;
 
 /// <summary>
 /// Simple projectile controller: lifetime, optional collider enable delay, straight/homing movement,
@@ -38,12 +39,14 @@ public class Projectile : MonoBehaviour
 	private bool hasHit;
 	private float aliveTime;
 	private float colliderTimer;
+	private AttackEffectData attackEffectData;
 
 	/// <summary>
 	/// Initialize the projectile. Call right after Instantiate.
 	/// </summary>
 	public void Initialize(GameObject attacker, Transform target, float damage, float knockBack, KnockbackType knockbackType,
-		float speed, float lifetime, float colliderEnableDelay, TrajectoryMode trajectory, float homingTurnSpeedDeg, float targetYOffset = 1.0f)
+		float speed, float lifetime, float colliderEnableDelay, TrajectoryMode trajectory, float homingTurnSpeedDeg,
+		AttackEffectData attackEffectData, float targetYOffset = 1.0f)
 	{
 		this.attacker = attacker;
 		this.attackerRoot = attacker != null ? attacker.transform.root : null;
@@ -59,6 +62,8 @@ public class Projectile : MonoBehaviour
 		this.trajectory = trajectory;
 		this.homingTurnSpeedDeg = Mathf.Max(0f, homingTurnSpeedDeg);
 		this.targetYOffset = targetYOffset;
+
+		this.attackEffectData = attackEffectData;
 
 		initialized = true;
 		aliveTime = 0f;
@@ -171,6 +176,21 @@ public class Projectile : MonoBehaviour
 
 		health.DealDamage(damage, knockBack);
 		ApplyKnockback(health, other);
+
+		// Raise "Hit" event for VFX/SFX/Hitstop systems only on successful damage.
+		if (attackEffectData != null)
+		{
+			var args = new AttackEventArgs
+			{
+				Attacker = attacker,
+				Target = health.gameObject,
+				HitPoint = other.ClosestPoint(transform.position),
+				EffectData = attackEffectData,
+				Trigger = AttackEffectTrigger.Hit
+			};
+
+			CombatEvents.RaiseAttackPerformed(args);
+		}
 
 		hasHit = true;
 		Destroy(gameObject);

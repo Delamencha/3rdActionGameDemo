@@ -79,14 +79,24 @@ public class PlayerDodgeState : PlayerBaseState
 
         //Move(movement, deltaTime);
         Move(deltaTime);
-        FaceTarget();
 
-        remainingDodgeTime -= deltaTime;
+        //不绕目标转，而是平移
+        if(normalizedTime > 0.9)
+        {
+            FaceTarget();
+        }     
 
-        if(remainingDodgeTime <= 0)
+        //remainingDodgeTime -= deltaTime;
+
+        //if(remainingDodgeTime <= 0)
+        //{
+        //    ReturnToLocomotion();
+        //    //stateMachine.SwitchState(new PlayerTargetingState(stateMachine));
+        //}
+
+        if(normalizedTime >= 1)
         {
             ReturnToLocomotion();
-            //stateMachine.SwitchState(new PlayerTargetingState(stateMachine));
         }
 
         

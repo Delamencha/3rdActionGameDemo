@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c423e011155b03546888181dcb31b1da, type: 3}
+  m_Name: EnemyVFX_Projectile1
+  m_EditorClassIdentifier: 
+  EffectId: ss11
+  SwingVfxPrefab: {fileID: 0}
+  SwingVfxLocalPosition: {x: 0, y: 0, z: 0}
+  SwingVfxLocalEuler: {x: 0, y: 0, z: 0}
+  SwingVfxScale: {x: 1, y: 1, z: 1}
+  SwingVfxSpawnNormalizedTime: 0
+  SwingVfxDuration: 0.5
+  HitVfxPrefab: {fileID: 6645898790245496318, guid: 07bbbff41c3be634ab54f368dccf351f,
+    type: 3}
+  HitVfxDuration: 1
+  HitVfxOffset: {x: 0, y: 0, z: 0}
+  AlignHitVfxToCamera: 1
+  HitVfxScreenRollDeg: -135
+  SwingSfx: {fileID: 0}
+  HitSfx: {fileID: 8300000, guid: 562dd574e3f6244718e3c528867cccfa, type: 3}
+  SpawnHitVfxAtHitPoint: 1
+  EnableHitstop: 0
+  HitstopAttackerDuration: 0.05
+  HitstopVictimDuration: 0.06
+  EnableCameraImpulse: 0
+  CameraImpulseNormalizedTime: 0.1
+  CameraImpulseDirection: {x: 0, y: 1, z: 0}
+  CameraImpulseDirectionIsLocalToAttacker: 1
+  CameraImpulseAmplitude: 0.06
+  CameraImpulseDuration: 0.05
+  CameraImpulseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.25730896
+      value: 0.5061226
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.50106514
+      value: -0.0041270643
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.74087894
+      value: -0.3076731
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1.0002279
+      value: 0.0016450831
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

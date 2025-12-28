@@ -247,7 +247,8 @@ public class EnemyAttackState : EnemyBaseState
 				lifetime: attackData.projectileLifetime,
 				colliderEnableDelay: attackData.projectileColliderEnableDelay,
 				trajectory: mode,
-				homingTurnSpeedDeg: attackData.projectileHomingTurnSpeedDeg
+				homingTurnSpeedDeg: attackData.projectileHomingTurnSpeedDeg,
+				attackEffectData: attackData.AttackEffect
 			);
 		}
 	}

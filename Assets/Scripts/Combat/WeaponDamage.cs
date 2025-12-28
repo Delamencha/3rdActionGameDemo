@@ -17,6 +17,11 @@ public class WeaponDamage : MonoBehaviour
     private AttackEffectData currentAttackEffect;
     
     public event Action<Target> OnTargetHit;
+    /// <summary>
+    /// Fired when this weapon successfully causes damage to a target (not blocked).
+    /// Useful for AI/behavior logic (e.g. counting "hit landed").
+    /// </summary>
+    public event Action OnCauseDamage;
 
     private void OnEnable()
     {
@@ -31,7 +36,7 @@ public class WeaponDamage : MonoBehaviour
 
         if (alreadyColliderWith.Contains(other)) return;
 
-        Debug.Log("Other: " + other.gameObject.name);
+       // Debug.Log("Other: " + other.gameObject.name);
 
         alreadyColliderWith.Add(other);
 
@@ -66,6 +71,7 @@ public class WeaponDamage : MonoBehaviour
             {
                 alreadyDamagedHealth.Add(health);
                 health.DealDamage(damageValue, knockBack);
+                OnCauseDamage?.Invoke();
 
                 // Raise "Hit" event for VFX/SFX/Hitstop systems only on successful damage.
                 if (currentAttackEffect != null)
@@ -74,7 +80,8 @@ public class WeaponDamage : MonoBehaviour
                     {
                         Attacker = myCollider != null ? myCollider.gameObject : null,
                         Target = health.gameObject,
-                        HitPoint = other.ClosestPoint(myCollider != null ? myCollider.transform.position : transform.position),
+                        //HitPoint = other.ClosestPoint(myCollider != null ? myCollider.transform.position : transform.position),
+                        HitPoint = other.ClosestPoint(transform.position),
                         EffectData = currentAttackEffect,
                         Trigger = AttackEffectTrigger.Hit
                     };

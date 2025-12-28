@@ -388,7 +388,14 @@ public class PlayerStateMachine : StateMachine
                 break;
             }
             case "PlayerBlockState":
-                SwitchState(new PlayerBlockState(this));
+                if (Targeter.CurrentTarget != null)
+                {
+                    SwitchState(new PlayerTargetBlockState(this));
+                }
+                else
+                {
+                    SwitchState(new PlayerBlockState(this));
+                }
                 break;
             case "PlayerJumpState":
                 SwitchState(new PlayerJumpState(this));

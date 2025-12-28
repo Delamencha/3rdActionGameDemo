@@ -25,8 +25,8 @@ MonoBehaviour:
     type: 3}
   projectileSpawnNormalizedTime: 0.1
   projectileSpawnOffset: {x: 0, y: 0, z: 0}
-  projectileSpeed: 5
-  projectileLifetime: 10
+  projectileSpeed: 10
+  projectileLifetime: 3
   projectileColliderEnableDelay: 0
   projectileHoming: 1
   projectileHomingTurnSpeedDeg: 360
@@ -34,4 +34,5 @@ MonoBehaviour:
   - 6
   knockbackValue: []
   knockbackType: 1
+  AttackEffect: {fileID: 11400000, guid: d74bb1594eccf3142ab3f130d0bd2498, type: 2}
   TotalTurnLimitDeg: 60
