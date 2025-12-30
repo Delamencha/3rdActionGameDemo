@@ -41,14 +41,14 @@ public class PlayerDodgeState : PlayerBaseState
         stateMachine.Animator.SetFloat(DodgeRightBlendHash, dodgingDirectionInput.x);
         stateMachine.Animator.CrossFadeInFixedTime(DodgeHash, CrossFadeDuration);
 
-        //Í¨¹ýnormalizedTimeÌí¼ÓÎÞµÐ´°¿Ú
+        //Í¨ï¿½ï¿½normalizedTimeï¿½ï¿½ï¿½ï¿½ï¿½ÞµÐ´ï¿½ï¿½ï¿½
 
 
     }
 
     public override void Tick(float deltaTime)
     {
-        //ÉèÖÃÎÞµÐÖ¡
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Þµï¿½Ö¡
         float normalizedTime = GetNormalizedTime(stateMachine.Animator, "Dodge");
         if (!isInvulnerable && normalizedTime >= InvulnerableStart && normalizedTime <= InvulnerableEnd )
         {
@@ -59,19 +59,21 @@ public class PlayerDodgeState : PlayerBaseState
             isInvulnerable = false;
             stateMachine.Health.DeactiveInvulnerable();
         }
-        //ÉèÖÃÍêÃÀÉÁ±Ü
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (!isPerfectDodge && normalizedTime >= PerfectDodgeStart && normalizedTime <= PerfectDodgeEnd)
         {
             isPerfectDodge = true;
+            stateMachine.Health.IsPerfectDodging = true;
             
         }
         else if (isPerfectDodge && (normalizedTime < PerfectDodgeStart || normalizedTime > PerfectDodgeEnd))
         {
             isPerfectDodge = false;
+            stateMachine.Health.IsPerfectDodging = false;
             
         }
 
-        //ÆúÓÃ£¬²ÉÓÃRootMotionÖÐ×Ô´øµÄ¹Ì¶¨Î»ÒÆ
+        //ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½RootMotionï¿½ï¿½ï¿½Ô´ï¿½ï¿½Ä¹Ì¶ï¿½Î»ï¿½ï¿½
         Vector3 movement = new Vector3();
 
         movement += stateMachine.transform.right * dodgingDirectionInput.x * stateMachine.DodgeDistance / stateMachine.DodgeDuration;
@@ -80,7 +82,7 @@ public class PlayerDodgeState : PlayerBaseState
         //Move(movement, deltaTime);
         Move(deltaTime);
 
-        //²»ÈÆÄ¿±ê×ª£¬¶øÊÇÆ½ÒÆ
+        //ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½
         if(normalizedTime > 0.9)
         {
             FaceTarget();
@@ -107,6 +109,7 @@ public class PlayerDodgeState : PlayerBaseState
     {
         
         stateMachine.Health.DeactiveInvulnerable();
+        stateMachine.Health.IsPerfectDodging = false;
         stateMachine.Animator.applyRootMotion = false;
     }
 

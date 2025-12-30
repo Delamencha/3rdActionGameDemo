@@ -13,6 +13,8 @@ public class PlayerBlockState : PlayerBaseState
     private const float CrossFadeDuration = 0.1f;
 
     private float unGroundedTimer = 0;
+    private float blockElapsed;
+    private bool isPerfectBlockWindow;
 
     public PlayerBlockState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
@@ -31,13 +33,27 @@ public class PlayerBlockState : PlayerBaseState
         if (stateMachine.Health != null)
         {
             stateMachine.Health.IsBlocking = true;
+            stateMachine.Health.IsPerfectBlocking = false;
         }
+
+        blockElapsed = 0f;
+        isPerfectBlockWindow = false;
 
     }
 
     public override void Tick(float deltaTime)
     {
         //Move(deltaTime);
+
+        // Perfect block window uses real elapsed time because block animation is looping.
+        // Current tuning (hard-coded): [0.16s, 0.24s] after entering BlockState.
+        blockElapsed += deltaTime;
+        bool inWindow = blockElapsed >= 0.16f && blockElapsed <= 0.24f;
+        if (stateMachine.Health != null && inWindow != isPerfectBlockWindow)
+        {
+            isPerfectBlockWindow = inWindow;
+            stateMachine.Health.IsPerfectBlocking = inWindow;
+        }
 
         if (!stateMachine.Controller.isGrounded)
         {
@@ -111,6 +127,7 @@ public class PlayerBlockState : PlayerBaseState
         if (stateMachine.Health != null)
         {
             stateMachine.Health.IsBlocking = false;
+            stateMachine.Health.IsPerfectBlocking = false;
         }
 
     }

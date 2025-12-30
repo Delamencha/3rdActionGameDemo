@@ -168,28 +168,18 @@ public class Projectile : MonoBehaviour
 		// Block logic: if player is blocking and projectile is in front, do no damage.
 		if (health.IsBlocking && IsFrontalHit(health.transform, transform))
 		{
+			health.NotifyBlocked(attacker, other.ClosestPoint(transform.position));
 			ApplyKnockback(health, other);
 			hasHit = true;
 			Destroy(gameObject);
 			return;
 		}
 
-		health.DealDamage(damage, knockBack);
-		ApplyKnockback(health, other);
-
-		// Raise "Hit" event for VFX/SFX/Hitstop systems only on successful damage.
-		if (attackEffectData != null)
+		Vector3 hitPoint = other.ClosestPoint(transform.position);
+		bool didDamage = health.TryApplyAttackHit(attacker, damage, knockBack, hitPoint, attackEffectData);
+		if (didDamage)
 		{
-			var args = new AttackEventArgs
-			{
-				Attacker = attacker,
-				Target = health.gameObject,
-				HitPoint = other.ClosestPoint(transform.position),
-				EffectData = attackEffectData,
-				Trigger = AttackEffectTrigger.Hit
-			};
-
-			CombatEvents.RaiseAttackPerformed(args);
+			ApplyKnockback(health, other);
 		}
 
 		hasHit = true;

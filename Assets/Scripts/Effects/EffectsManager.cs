@@ -1,6 +1,7 @@
 using UnityEngine;
 using Combat;
 using System.Collections;
+using System.Collections.Generic;
 using Cinemachine;
 
 /// <summary>
@@ -23,6 +24,12 @@ public class EffectsManager : MonoBehaviour
     [Header("Audio")]
     [Tooltip("备用音频源：当播放者对象上找不到 AudioSource 时使用；若为空，会在运行时自动尝试获取自身 AudioSource。")]
     [SerializeField] private AudioSource fallbackAudioSource;
+
+    [Header("Audio (Swing Channel)")]
+    [Tooltip("用于在角色层级下创建可停止的挥舞音效通道（一个角色一个）。")]
+    [SerializeField] private string swingSourceName = "SFX_Swing";
+
+    private readonly Dictionary<Transform, AudioSource> swingSourceByRoot = new Dictionary<Transform, AudioSource>();
 
     [Header("Camera Impulse (Cinemachine)")]
     [Tooltip("用于生成震动的 CinemachineImpulseSource（请在 Inspector 中拖拽设置）。")]
@@ -132,8 +139,8 @@ public class EffectsManager : MonoBehaviour
             // 播放攻击挥舞音效（例如出手时）
             if (effectData.SwingSfx != null)
             {
-                // Swing SFX is played from attacker (the swinger)
-                PlayOneShotFrom(args.Attacker, effectData.SwingSfx);
+                // Swing SFX should be stoppable when a hit happens, so play it via a dedicated channel.
+                PlaySwingSfx(args.Attacker, effectData.SwingSfx);
             }
 
             if (effectData.SwingVfxPrefab != null)
@@ -171,6 +178,9 @@ public class EffectsManager : MonoBehaviour
         // Hit: VFX + SFX
         if ((trigger & AttackEffectTrigger.Hit) != 0)
         {
+            // Stop attacker's swing sound when a hit lands.
+            StopSwingSfx(args.Attacker);
+
             // Hit SFX
             if (effectData.HitSfx != null)
             {
@@ -362,6 +372,70 @@ public class EffectsManager : MonoBehaviour
         if (src == null) return;
 
         src.PlayOneShot(clip);
+    }
+
+    private static Transform NormalizeOwnerRoot(GameObject owner)
+    {
+        if (owner == null) return null;
+        return owner.transform.root;
+    }
+
+    private AudioSource GetOrCreateSwingSource(GameObject owner)
+    {
+        Transform root = NormalizeOwnerRoot(owner);
+        if (root == null) return null;
+
+        if (swingSourceByRoot.TryGetValue(root, out var cached) && cached != null)
+        {
+            return cached;
+        }
+
+        // Try find existing child
+        Transform existing = root.Find(swingSourceName);
+        AudioSource src = null;
+        if (existing != null)
+        {
+            src = existing.GetComponent<AudioSource>();
+        }
+
+        if (src == null)
+        {
+            var go = existing != null ? existing.gameObject : new GameObject(swingSourceName);
+            go.transform.SetParent(root, worldPositionStays: false);
+            go.transform.localPosition = Vector3.zero;
+            go.transform.localRotation = Quaternion.identity;
+
+            src = go.GetComponent<AudioSource>();
+            if (src == null) src = go.AddComponent<AudioSource>();
+
+            // A dedicated channel for swing one-shots (stoppable)
+            src.playOnAwake = false;
+            src.loop = false;
+        }
+
+        swingSourceByRoot[root] = src;
+        return src;
+    }
+
+    private void PlaySwingSfx(GameObject attacker, AudioClip clip)
+    {
+        if (clip == null) return;
+        var src = GetOrCreateSwingSource(attacker);
+        if (src == null) return;
+
+        // Use clip+Play so we can Stop() it precisely when a hit lands.
+        src.clip = clip;
+        src.loop = false;
+        src.Play();
+    }
+
+    private void StopSwingSfx(GameObject attacker)
+    {
+        var src = GetOrCreateSwingSource(attacker);
+        if (src == null) return;
+        if (!src.isPlaying) return;
+        src.Stop();
+        src.clip = null;
     }
 
     private IEnumerator DriveImpulseOverTime(CinemachineImpulseSource source, Vector3 dir, float amplitude, float duration, AnimationCurve curve)

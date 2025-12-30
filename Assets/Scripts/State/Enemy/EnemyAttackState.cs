@@ -8,6 +8,7 @@ public class EnemyAttackState : EnemyBaseState
 	private int animationHash;
 
 	public bool IsFinished { get; private set; }
+	public AttackHitState AttackHitState { get; private set; } = AttackHitState.None;
 
 	private bool projectileSpawned;
 	private bool weaponDamageWasActive;
@@ -40,6 +41,7 @@ public class EnemyAttackState : EnemyBaseState
 	public override void Enter()
 	{
 		IsFinished = false;
+		AttackHitState = AttackHitState.None;
 		projectileSpawned = false;
 		hasPlayVFX = false;
 		hasPlayImpulse = false;
@@ -79,6 +81,7 @@ public class EnemyAttackState : EnemyBaseState
 			{
 				// Pass AttackEffect so WeaponDamage can raise Hit events for VFX/SFX/Hitstop on successful damage.
 				stateMachine.WeaponDamage.SetAttack(damage0, knock0, attackData.knockbackType, attackData.AttackEffect);
+				stateMachine.WeaponDamage.OnAttackHitState += HandleAttackHitState;
 			}
 		}
 
@@ -190,6 +193,11 @@ public class EnemyAttackState : EnemyBaseState
 
 	public override void Exit()
 	{
+		if (stateMachine.WeaponDamage != null)
+		{
+			stateMachine.WeaponDamage.OnAttackHitState -= HandleAttackHitState;
+		}
+
 		//Debug.Log($"[EnemyAttackState] Total turned degrees this attack: {accumulatedTurnDeg:F2}");
 		// Reset root motion to default (disabled) after attack
 		stateMachine.Animator.applyRootMotion = false;
@@ -209,6 +217,27 @@ public class EnemyAttackState : EnemyBaseState
 		if (attackData != null && attackData.EnemyAttackType == EnemyAttackType.RangeAttack && stateMachine.WeaponDamage != null)
 		{
 			stateMachine.WeaponDamage.gameObject.SetActive(weaponDamageWasActive);
+		}
+	}
+
+	private void HandleAttackHitState(AttackHitState newState)
+	{
+		// Priority: Damaged(1) > Blocked(2) > Dodged(3) > None(0)
+		if (GetHitPriority(newState) > GetHitPriority(AttackHitState))
+		{
+			AttackHitState = newState;
+		}
+	}
+
+	private static int GetHitPriority(AttackHitState s)
+	{
+		switch (s)
+		{
+			case AttackHitState.Damaged: return 4;
+			case AttackHitState.Blocked: return 3;
+			case AttackHitState.Dodged: return 2;
+			case AttackHitState.None:
+			default: return 1;
 		}
 	}
 

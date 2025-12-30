@@ -30,6 +30,8 @@ public class PlayerStateMachine : StateMachine
     [field: SerializeField] public float FaceTargetTurnSpeed { get; private set; } = 360f;
     //[field: SerializeField] public InputWeightsSO InputWeights { get; private set; }
 
+    [field: SerializeField] public CommonEffectsData CommonEffectsData { get; private set; }
+
     [Header("SFX (Local)")]
     [Tooltip("角色本地的 AudioSource（用于挥舞音效等需要动画帧事件重复播放的音效）。")]
     [SerializeField] private AudioSource sfxSource;
@@ -95,6 +97,13 @@ public class PlayerStateMachine : StateMachine
         if (sfxSource == null) return;
         if (lastSwingSfx == null) return;
         sfxSource.PlayOneShot(lastSwingSfx);
+    }
+
+    public void PlayCommonSfx(AudioClip clip)
+    {
+        if (sfxSource == null) return;
+        if (clip == null) return;
+        sfxSource.PlayOneShot(clip);
     }
 
     private void OnEnable()

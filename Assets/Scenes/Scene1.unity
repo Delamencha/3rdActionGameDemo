@@ -1239,6 +1239,7 @@ MonoBehaviour:
   <AttackKnockBack>k__BackingField: 5
   <EnemyAttackLibrary>k__BackingField: {fileID: 11400000, guid: d7d04c5fd0d8bcc4a809f1f5e75210a2,
     type: 2}
+  <CommonEffectsData>k__BackingField: {fileID: 0}
   sfxSource: {fileID: 0}
 --- !u!1 &508721811
 GameObject:
@@ -1405,7 +1406,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 508721811}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.08228676, y: 0.1973187, z: -0.016623402, w: 0.9767384}
+  m_LocalRotation: {x: 0.08185012, y: 0.22143221, z: -0.01865488, w: 0.97155565}
   m_LocalPosition: {x: 2.6424835, y: 2.1830003, z: -22.41077}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1685,6 +1686,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fallbackAudioSource: {fileID: 656201462}
+  swingSourceName: SFX_Swing
   impulseSource: {fileID: 656201461}
   vfxRootName: VFXRoot
 --- !u!1 &673806824
@@ -6566,6 +6568,7 @@ MonoBehaviour:
   <AttackKnockBack>k__BackingField: 5
   <EnemyAttackLibrary>k__BackingField: {fileID: 11400000, guid: d7d04c5fd0d8bcc4a809f1f5e75210a2,
     type: 2}
+  <CommonEffectsData>k__BackingField: {fileID: 0}
   sfxSource: {fileID: 8580886590344502176}
 --- !u!4 &1040537388779899362
 Transform:
@@ -7395,7 +7398,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1138146231466859821}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.13991481, y: 0.4200484, z: -0.0055868756, w: 0.89663374}
+  m_LocalRotation: {x: 0.13826899, y: 0.44237772, z: -0.0058838823, w: 0.8860864}
   m_LocalPosition: {x: 8.881784e-16, y: 0.00000023603585, z: 0.00000003362292}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8904,7 +8907,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3390374047344961458}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.13991483, y: 0.4200484, z: -0.0055868793, w: 0.89663374}
+  m_LocalRotation: {x: 0.13826899, y: 0.44237772, z: -0.0058838823, w: 0.8860864}
   m_LocalPosition: {x: 8.881784e-16, y: 0.00000023603585, z: 0.00000003362292}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9584,7 +9587,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8030675051644067513}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.13991483, y: 0.4200484, z: -0.0055868793, w: 0.89663374}
+  m_LocalRotation: {x: 0.13826899, y: 0.44237772, z: -0.0058838823, w: 0.8860864}
   m_LocalPosition: {x: 8.881784e-16, y: 0.00000023603585, z: 0.00000003362292}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -12256,7 +12259,7 @@ MonoBehaviour:
         Comparison","Instant":true,"Operationoperation":"GreaterThan","SharedIntinteger1":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":"TaskInt","IsShared":true,"Int32mValue":100},"SharedIntinteger2":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":4}},{"Type":"BehaviorDesigner.Runtime.Tasks.Unity.Math.FloatComparison","NodeData":{"Offset":"(-341.724854,209.411743)"},"ID":96,"Name":"Float
         Comparison","Instant":true,"Operationoperation":"LessThan","SharedFloatfloat1":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"PlayerDis","IsShared":true,"SinglemValue":0},"SharedFloatfloat2":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":4}},{"Type":"RandomCompareonce","NodeData":{"Offset":"(-167.50885,210.079468)"},"ID":97,"Name":"Random
         Compareonce","Instant":true,"SharedFloatsuccessProbability":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":0.5}},{"Type":"BehaviorDesigner.Runtime.Tasks.RandomSelector","NodeData":{"Offset":"(-2.869707,230)"},"ID":98,"Name":"Random
-        Selector","Instant":true,"Int32seed":0,"BooleanuseSeed":false,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-309.2592,184.117615)"},"ID":99,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.MeleeAttack","NodeData":{"Offset":"(0,128.3194)"},"ID":100,"Name":"Melee
+        Selector","Instant":true,"Int32seed":0,"BooleanuseSeed":false,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-309.2592,184.117615)"},"ID":99,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.MeleeAttack","NodeData":{"Offset":"(-0.411840439,128.7723)"},"ID":100,"Name":"Melee
         Attack","Instant":true,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Player","IsShared":true,"GameObjectmValue":12},"SharedStringAttackName":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":null,"StringmValue":"MeleeAttack1"},"SharedInttaskAllowed":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":"TaskInt","IsShared":true,"Int32mValue":100}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(-131.110947,188.823486)"},"ID":101,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.MeleeAttack","NodeData":{"Offset":"(6.10351563E-05,115.504875)"},"ID":102,"Name":"Melee
         Attack","Instant":true,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Player","IsShared":true,"GameObjectmValue":13},"SharedStringAttackName":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":null,"StringmValue":"MeleeAttack2"},"SharedInttaskAllowed":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":"TaskInt","IsShared":true,"Int32mValue":100}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(21.7889633,178.823486)"},"ID":103,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.MeleeAttack","NodeData":{"Offset":"(0,128.176773)"},"ID":104,"Name":"Melee
         Attack","Instant":true,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Player","IsShared":true,"GameObjectmValue":14},"SharedStringAttackName":{"Type":"BehaviorDesigner.Runtime.SharedString","Name":null,"StringmValue":"MeleeAttack3"},"SharedInttaskAllowed":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":"TaskInt","IsShared":true,"Int32mValue":100}}]}]},{"Type":"BehaviorDesigner.Runtime.Tasks.ReturnSuccess","NodeData":{"Offset":"(273.2083,188.5185)"},"ID":105,"Name":"Return
@@ -12294,7 +12297,7 @@ MonoBehaviour:
         Compareonce","Instant":true,"SharedFloatsuccessProbability":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":0.5}},{"Type":"BehaviorDesigner.Runtime.Tasks.Unity.Math.SetInt","NodeData":{"Offset":"(199.496063,164.992752)"},"ID":141,"Name":"Set
         Int","Instant":true,"SharedIntintValue":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":null,"Int32mValue":1},"SharedIntstoreResult":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":"TaskInt","IsShared":true,"Int32mValue":100}},{"Type":"BehaviorDesigner.Runtime.Tasks.Dodge","NodeData":{"Offset":"(336.556183,163.697769)"},"ID":142,"Name":"Dodge","Instant":true,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Player","IsShared":true,"GameObjectmValue":19},"SharedVector2DodgeDirection":{"Type":"BehaviorDesigner.Runtime.SharedVector2","Name":null,"Vector2mValue":"(0,1)"},"SharedInttaskAllowed":{"Type":"BehaviorDesigner.Runtime.SharedInt","Name":"TaskInt","IsShared":true,"Int32mValue":100}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Parallel","NodeData":{"Offset":"(1949.3302,213.869034)","Comment":"move
         untill\nclose enough"},"ID":143,"Name":"Parallel","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Selector","NodeData":{"Offset":"(-70,170)"},"ID":144,"Name":"Selector","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Interrupt","NodeData":{"Offset":"(-100,186.129013)"},"ID":145,"Name":"Interrupt","Instant":true,"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.MoveTo","NodeData":{"Offset":"(0,140)"},"ID":146,"Name":"Move
-        To","Instant":true,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Player","IsShared":true,"GameObjectmValue":20},"SharedFloatspeed":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":3}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.ReturnFailure","NodeData":{"Offset":"(60,180)"},"ID":147,"Name":"Return
+        To","Instant":true,"SharedGameObjecttarget":{"Type":"BehaviorDesigner.Runtime.SharedGameObject","Name":"Player","IsShared":true,"GameObjectmValue":20},"SharedFloatspeed":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":3}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.ReturnFailure","NodeData":{"Offset":"(60,190.204086)"},"ID":147,"Name":"Return
         Failure","Instant":true,"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Locomotion","NodeData":{"Offset":"(0,140)"},"ID":148,"Name":"Locomotion","Instant":true}]}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(300,170)"},"ID":149,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.UntilSuccess","NodeData":{"Offset":"(-110,180)"},"ID":150,"Name":"Until
         Success","Instant":true,"Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.Unity.Math.FloatComparison","NodeData":{"Offset":"(0,140)"},"ID":151,"Name":"Float
         Comparison","Instant":true,"Operationoperation":"LessThanOrEqualTo","SharedFloatfloat1":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":"PlayerDis","IsShared":true,"SinglemValue":0},"SharedFloatfloat2":{"Type":"BehaviorDesigner.Runtime.SharedFloat","Name":null,"SinglemValue":3}}]},{"Type":"BehaviorDesigner.Runtime.Tasks.Sequence","NodeData":{"Offset":"(130,200)"},"ID":152,"Name":"Sequence","Instant":true,"AbortTypeabortType":"None","Children":[{"Type":"BehaviorDesigner.Runtime.Tasks.PerformInterruption","NodeData":{"Offset":"(0,120)"},"ID":153,"Name":"Perform

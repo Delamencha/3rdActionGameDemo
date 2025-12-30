@@ -23,6 +23,13 @@ public class WeaponDamage : MonoBehaviour
     /// </summary>
     public event Action OnCauseDamage;
 
+    /// <summary>
+    /// Fired when this weapon resolves a contact outcome for the current attack.
+    /// Used by AI/state logic to track whether the current attack damaged / was blocked / was dodged.
+    /// Note: This is raised per resolved contact (still respecting internal "already hit" filters).
+    /// </summary>
+    public event Action<AttackHitState> OnAttackHitState;
+
     private void OnEnable()
     {
         alreadyColliderWith.Clear();
@@ -66,27 +73,26 @@ public class WeaponDamage : MonoBehaviour
             {
                 // Blocked: no damage, and also do not raise Hit events (same behavior as old shield path).
                 isBlocked = true;
+                health.NotifyBlocked(myCollider != null ? myCollider.gameObject : null, other.ClosestPoint(transform.position));
+                OnAttackHitState?.Invoke(AttackHitState.Blocked);
             }
             else
             {
                 alreadyDamagedHealth.Add(health);
-                health.DealDamage(damageValue, knockBack);
-                OnCauseDamage?.Invoke();
-
-                // Raise "Hit" event for VFX/SFX/Hitstop systems only on successful damage.
-                if (currentAttackEffect != null)
+                Vector3 hitPoint = other.ClosestPoint(transform.position);
+                bool didDamage = health.TryApplyAttackHit(myCollider != null ? myCollider.gameObject : null, damageValue, knockBack, hitPoint, currentAttackEffect);
+                if (didDamage)
                 {
-                    var args = new AttackEventArgs
+                    OnCauseDamage?.Invoke();
+                    OnAttackHitState?.Invoke(AttackHitState.Damaged);
+                }
+                else
+                {
+                    // No damage and not blocked: treat invulnerable as a dodge (i-frames/perfect dodge).
+                    if (health.IsInvulnerable)
                     {
-                        Attacker = myCollider != null ? myCollider.gameObject : null,
-                        Target = health.gameObject,
-                        //HitPoint = other.ClosestPoint(myCollider != null ? myCollider.transform.position : transform.position),
-                        HitPoint = other.ClosestPoint(transform.position),
-                        EffectData = currentAttackEffect,
-                        Trigger = AttackEffectTrigger.Hit
-                    };
-
-                    CombatEvents.RaiseAttackPerformed(args);
+                        OnAttackHitState?.Invoke(AttackHitState.Dodged);
+                    }
                 }
             }
         }

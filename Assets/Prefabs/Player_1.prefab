@@ -3606,6 +3606,8 @@ MonoBehaviour:
   <ComboSequence>k__BackingField: {fileID: 0}
   <ImpulseSource>k__BackingField: {fileID: 0}
   <FaceTargetTurnSpeed>k__BackingField: 40
+  <CommonEffectsData>k__BackingField: {fileID: 11400000, guid: c2be039c2613614429591f6e754620cf,
+    type: 2}
   sfxSource: {fileID: 58278186781280015}
   <BufferWindowDuration>k__BackingField: 0.3
 --- !u!143 &8540260697606583193

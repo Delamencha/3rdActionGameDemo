@@ -25,6 +25,7 @@ public class EnemyStateMachine : StateMachine
 
     [field: SerializeField] public float AttackKnockBack { get; private set; }
     [field: SerializeField] public EnemyAttackLibrary EnemyAttackLibrary { get; private set; }
+    [field: SerializeField] public CommonEffectsData CommonEffectsData { get; private set; }
 
     public Health Player { get; private set; }
 
@@ -78,6 +79,13 @@ public class EnemyStateMachine : StateMachine
         if (sfxSource == null) return;
         if (lastSwingSfx == null) return;
         sfxSource.PlayOneShot(lastSwingSfx);
+    }
+
+    public void PlayCommonSfx(AudioClip clip)
+    {
+        if (sfxSource == null) return;
+        if (clip == null) return;
+        sfxSource.PlayOneShot(clip);
     }
 
     /// <summary>

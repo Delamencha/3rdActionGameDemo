@@ -1,6 +1,7 @@
 using BehaviorDesigner.Runtime;
 using BehaviorDesigner.Runtime.Tasks;
 using UnityEngine;
+using Combat;
 
 namespace BehaviorDesigner.Runtime.Tasks
 {
@@ -34,7 +35,10 @@ namespace BehaviorDesigner.Runtime.Tasks
 
 			if (esm.currentState is EnemyAttackState attack)
 			{
-				return attack.IsFinished ? TaskStatus.Success : TaskStatus.Running;
+				if (!attack.IsFinished) return TaskStatus.Running;
+
+				// Success only when the attack ended having damaged the target at least once.
+				return attack.AttackHitState == AttackHitState.Damaged ? TaskStatus.Success : TaskStatus.Failure;
 			}
 
 			// State was interrupted by other transitions
