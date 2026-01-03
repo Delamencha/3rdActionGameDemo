@@ -25,7 +25,7 @@ MonoBehaviour:
     type: 3}
   projectileSpawnNormalizedTime: 0.1
   projectileSpawnOffset: {x: 0, y: 0, z: 0}
-  projectileSpeed: 10
+  projectileSpeed: 15
   projectileLifetime: 3
   projectileColliderEnableDelay: 0
   projectileHoming: 1

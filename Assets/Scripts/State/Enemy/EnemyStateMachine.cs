@@ -29,6 +29,8 @@ public class EnemyStateMachine : StateMachine
 
     public Health Player { get; private set; }
 
+    public bool hasImpact;
+
     [Header("SFX (Local)")]
     [Tooltip("角色本地的 AudioSource（用于挥舞音效等需要动画帧事件重复播放的音效）。")]
     [SerializeField] private AudioSource sfxSource;
@@ -206,19 +208,23 @@ public class EnemyStateMachine : StateMachine
 
     private void OnEnable()
     {
-        //Health.OnTakeDamage += HandleTakeDamage;
+        Health.OnTakeDamage += HandleTakeDamage;
         //Health.OnDie += HandleDeath;
     }
 
     private void OnDisable()
     {
-        //Health.OnTakeDamage -= HandleTakeDamage;
+        Health.OnTakeDamage -= HandleTakeDamage;
         //Health.OnDie -= HandleDeath;
     }
 
     private void HandleTakeDamage(ImpactType impactType)
     {
-        SwitchState(new EnemyImpactState(this));
+        if (hasImpact)
+        {
+            SwitchState(new EnemyImpactState(this));
+        }
+        
     }
 
     private void HandleDeath()

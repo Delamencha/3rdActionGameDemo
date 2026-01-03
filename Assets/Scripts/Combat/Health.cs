@@ -84,14 +84,15 @@ public class Health : MonoBehaviour
         if (isInvunerable)
         {
             // Perfect dodge feedback (optional): play common SFX when in perfect dodge window.
-            if (IsPerfectDodging)
-            {
+            //暂时不区分dodge是否perfect
+            //if (IsPerfectDodging)
+            //{
                 var psm = GetComponentInParent<PlayerStateMachine>();
                 if (psm != null && psm.CommonEffectsData != null && psm.CommonEffectsData.perfectDodgeSFX != null)
                 {
                     psm.PlayCommonSfx(psm.CommonEffectsData.perfectDodgeSFX);
                 }
-            }
+            //}
 
             return false;
         }

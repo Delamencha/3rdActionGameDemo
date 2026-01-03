@@ -30,13 +30,13 @@ MonoBehaviour:
   HitSfx: {fileID: 8300000, guid: abc2dc2609eb24ca3944b4459bf37931, type: 3}
   SpawnHitVfxAtHitPoint: 1
   EnableHitstop: 1
-  HitstopAttackerDuration: 0.1
-  HitstopVictimDuration: 0.11
+  HitstopAttackerDuration: 0.18
+  HitstopVictimDuration: 0.2
   EnableCameraImpulse: 1
   CameraImpulseNormalizedTime: 0.1
   CameraImpulseDirection: {x: 0, y: 1, z: 0}
   CameraImpulseDirectionIsLocalToAttacker: 1
-  CameraImpulseAmplitude: 0.06
+  CameraImpulseAmplitude: 0.25
   CameraImpulseDuration: 0.05
   CameraImpulseCurve:
     serializedVersion: 2

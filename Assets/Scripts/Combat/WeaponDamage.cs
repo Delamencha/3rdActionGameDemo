@@ -92,6 +92,7 @@ public class WeaponDamage : MonoBehaviour
                     if (health.IsInvulnerable)
                     {
                         OnAttackHitState?.Invoke(AttackHitState.Dodged);
+                        Debug.Log("Attack being Dodged");
                     }
                 }
             }

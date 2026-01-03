@@ -28,6 +28,7 @@ public class PlayerAttackState : PlayerBaseState
     private bool hasPlayVFX;
     private bool hasPlayImpulse;
 
+    private float unGroundedTimer = 0;
 
     public PlayerAttackState(PlayerStateMachine stateMachine, int attackIndex, Target curSoftLockTarget = null) : base(stateMachine)
     {
@@ -85,6 +86,21 @@ public class PlayerAttackState : PlayerBaseState
         movementThisFrame = calculateMovement();
 
         Move(deltaTime);
+
+
+        if (!stateMachine.Controller.isGrounded)
+        {
+            unGroundedTimer += deltaTime;
+            if (unGroundedTimer > 0.5f)
+            {
+                stateMachine.SwitchState(new PlayerFallState(stateMachine));
+                return;
+            }
+        }
+        else
+        {
+            unGroundedTimer = 0;
+        }
 
         // Validate/break soft lock conditions when not hard locked
         if (stateMachine.Targeter.CurrentTarget == null && stateMachine.Targeter.CurrentSoftLockTarget != null)

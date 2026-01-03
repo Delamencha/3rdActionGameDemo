@@ -21,7 +21,7 @@ MonoBehaviour:
   ForceTime: 0
   AttackForce: 0
   DamageValue: 10
-  Knockback: 0
+  Knockback: 6
   knockbackType: 1
   TotalTurnLimitDeg: 90
   AttackEffect: {fileID: 11400000, guid: 76f8143a6f5d203408089ad69b95f618, type: 2}

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b81347623bb8fb49be1398fdbd6247b, type: 3}
   m_Name: PlayerCommonEffects
   m_EditorClassIdentifier: 
-  perfectDodgeSFX: {fileID: 0}
+  perfectDodgeSFX: {fileID: 8300000, guid: ea639bf5bb2e247cfa59eef84d01c5fd, type: 3}
   perfectBlockSFX: {fileID: 0}
-  blockSFX: {fileID: 0}
+  blockSFX: {fileID: 8300000, guid: 53095e7f9ab68412eac49ef285bf2e15, type: 3}
