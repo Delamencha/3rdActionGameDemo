@@ -36,8 +36,8 @@ MonoBehaviour:
   CameraImpulseNormalizedTime: 0.1
   CameraImpulseDirection: {x: 0, y: 1, z: 0}
   CameraImpulseDirectionIsLocalToAttacker: 1
-  CameraImpulseAmplitude: 0.25
-  CameraImpulseDuration: 0.05
+  CameraImpulseAmplitude: 0.4
+  CameraImpulseDuration: 0.15
   CameraImpulseCurve:
     serializedVersion: 2
     m_Curve:

@@ -37,7 +37,7 @@ MonoBehaviour:
   CameraImpulseDirection: {x: 0, y: 1, z: 0}
   CameraImpulseDirectionIsLocalToAttacker: 1
   CameraImpulseAmplitude: 0.2
-  CameraImpulseDuration: 0.05
+  CameraImpulseDuration: 0.1
   CameraImpulseCurve:
     serializedVersion: 2
     m_Curve:

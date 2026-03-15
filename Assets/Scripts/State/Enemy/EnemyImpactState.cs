@@ -26,8 +26,8 @@ public class EnemyImpactState : EnemyBaseState
 
     // Impact shake (visual-only): jitter on XZ plane for hit feel.
     // NOTE: We shake the visual transform (usually the Animator child), NOT the root with CharacterController.
-    private const float ShakeDuration = 0.16f;
-    private const float ShakeAmplitude = 0.5f;   // meters
+    private const float ShakeDuration = 0.28f;
+    private const float ShakeAmplitude = 0.6f;   // meters
     private const float ShakeFrequency = 32f;     // Hz-ish (used as noise speed)
 
     private Transform shakeTarget;

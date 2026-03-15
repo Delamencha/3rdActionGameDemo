@@ -15,7 +15,7 @@ MonoBehaviour:
   AnimationName: Attack2-2
   TransitionDuration: 0.1
   LightComboStateIndex: 6
-  HeavyComboStateIndex: 13
+  HeavyComboStateIndex: 12
   ComboAttackTime: 0.5
   AnimationCancelTime: 0.5
   ForceTime: 0
